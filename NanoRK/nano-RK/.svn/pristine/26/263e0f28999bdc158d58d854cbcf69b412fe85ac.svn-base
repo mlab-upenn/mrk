@@ -1,0 +1,1330 @@
+   1               		.file	"HMC5883L.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.global __do_copy_data
+   8               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+ 297               	.global	mag_write
+ 299               	mag_write:
+ 300               		.stabd	46,0,0
+   1:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** /*
+   2:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** HMC5883L.cpp - Class file for the HMC5883L Triple Axis Magnetometer Arduino Library.
+   3:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** Copyright (C) 2011 Love Electronics (loveelectronics.co.uk)
+   4:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 
+   5:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** This program is free software: you can redistribute it and/or modify
+   6:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** it under the terms of the version 3 GNU General Public License as
+   7:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** published by the Free Software Foundation.
+   8:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 
+   9:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** This program is distributed in the hope that it will be useful,
+  10:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** but WITHOUT ANY WARRANTY; without even the implied warranty of
+  11:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  12:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** GNU General Public License for more details.
+  13:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 
+  14:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** You should have received a copy of the GNU General Public License
+  15:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  16:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 
+  17:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****  WARNING: THE HMC5883L IS NOT IDENTICAL TO THE HMC5883!
+  18:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****  Datasheet for HMC5883L:
+  19:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****  http://www51.honeywell.com/aero/common/documents/myaerospacecatalog-documents/Defense_Brochures-do
+  20:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** */
+  21:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** #include <nrk.h>
+  22:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** #include <nrk_driver_list.h> 
+  23:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** #include <HMC5883L.h>
+  24:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** #include <include.h>
+  25:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** #include <stdio.h>
+  26:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** #include <ulib.h>
+  27:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** #include <nrk_error.h>
+  28:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** #include <nrk.h>
+  29:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** #include <stdint.h>
+  30:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** #include <basic_rf.h>
+  31:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** //#include <nrk_timer.h>
+  32:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** #include <hal.h>
+  33:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** #include <Wire.h>
+  34:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** #include <math.h>
+  35:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 
+  36:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** int8_t* set_up_HMC5883L()
+  37:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+  38:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	Mag_m_scale = 1;
+  39:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	int8_t error[2];
+  40:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	int8_t temp;
+  41:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	
+  42:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	/* set data rate to 75 HZ
+  43:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	 * set measurement mode to NORMAL
+  44:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	 * Set the averging to 8 samples per output
+  45:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	 */
+  46:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	set_mag_data_rate_75_Hz_max();
+  47:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	nrk_kprintf( PSTR("HMC5883L(Magnetometer)data rate 75Hz. Averaging 8 samples. . .\r\n") );
+  48:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	//set scale
+  49:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	error[0] =  set_mag_scale(1.3);
+  50:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 
+  51:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	//set measurement mode to Continous
+  52:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	temp =  set_mag_measurement_mode(Measurement_Continuous); // Set the measurement mode to Continuou
+  53:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	
+  54:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	if(temp != 0)
+  55:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	{
+  56:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	    error[1] = 0;
+  57:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		//printf("HMC error: continous mode . . .\r\n"); 
+  58:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	}
+  59:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else
+  60:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	{
+  61:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		error[1] = 1;
+  62:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		//printf("HMC measurement mode: continuous . .\r\n");						   
+  63:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	}
+  64:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	return error;
+  65:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+  66:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 
+  67:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** magnetometer_raw read_magneto_raw_axis()
+  68:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+  69:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   magnetometer_raw raw;
+  70:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   uint8_t* buffer = mag_read(DataRegisterBegin, 6);
+  71:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   
+  72:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	
+  73:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   raw.XAxis = (buffer[0] << 8) | buffer[1];
+  74:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   raw.ZAxis = (buffer[2] << 8) | buffer[3];
+  75:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   raw.YAxis = (buffer[4] << 8) | buffer[5];
+  76:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   return raw;
+  77:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+  78:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 
+  79:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** magnetometer_scaled read_magneto_scaled_axis()
+  80:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+  81:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   magnetometer_raw raw = read_magneto_raw_axis();
+  82:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   magnetometer_scaled scaled;
+  83:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	
+  84:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   scaled.XAxis = (int16_t)((raw.XAxis *  Mag_m_scale) * INT_SCALER_MAG);
+  85:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   scaled.ZAxis = (int16_t)((raw.ZAxis *  Mag_m_scale) * INT_SCALER_MAG);
+  86:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   scaled.YAxis = (int16_t)((raw.YAxis *  Mag_m_scale) * INT_SCALER_MAG);
+  87:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   return scaled;
+  88:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+  89:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 					
+  90:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** void get_Magneto_Values_scaled(int16_t * result)
+  91:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+  92:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	magnetometer_scaled scaled;
+  93:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	scaled = read_magneto_scaled_axis();
+  94:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	
+  95:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*result = scaled.XAxis; 
+  96:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*(result+1) = scaled.YAxis;
+  97:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*(result+2) = scaled.ZAxis; 
+  98:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+  99:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** void get_Magneto_Values_flat(int16_t * result) // only good for when compass is level
+ 100:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+ 101:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	// Calculate heading when the magnetometer is level, then correct for signs of axis.
+ 102:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	magnetometer_raw MagrawReading;
+ 103:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	MagrawReading = read_magneto_raw_axis();
+ 104:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*result = MagrawReading.XAxis;
+ 105:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*(result+1) = MagrawReading.YAxis;
+ 106:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*(result+2) = MagrawReading.ZAxis;
+ 107:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 			
+ 108:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*(result+3) = atan2((read_magneto_raw_axis()).YAxis, (read_magneto_raw_axis()).XAxis);
+ 109:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 			
+ 110:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	// Correct for when signs are reversed.
+ 111:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	if((*(result+3)) < 0) (*(result+3)) += 2*M_PI;
+ 112:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		
+ 113:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	// Convert radians to degrees for readability.
+ 114:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*(result+4)= (int)( ((*(result+3)) * 180/M_PI) * INT_SCALER_MAG); 
+ 115:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }					
+ 116:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 					
+ 117:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 					
+ 118:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** int  set_mag_scale(float gauss)
+ 119:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+ 120:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	uint8_t regValue = 0x00;
+ 121:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	if(gauss == 0.88)
+ 122:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	{
+ 123:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x00;
+ 124:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 0.73;
+ 125:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	}
+ 126:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else if(gauss == 1.3)
+ 127:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	{
+ 128:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x01;
+ 129:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 0.92;
+ 130:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	}
+ 131:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else if(gauss == 1.9)
+ 132:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	{
+ 133:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x02;
+ 134:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 1.22;
+ 135:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	}
+ 136:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else if(gauss == 2.5)
+ 137:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	{
+ 138:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x03;
+ 139:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 1.52;
+ 140:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	}
+ 141:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else if(gauss == 4.0)
+ 142:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	{
+ 143:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x04;
+ 144:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 2.27;
+ 145:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	}
+ 146:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else if(gauss == 4.7)
+ 147:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	{
+ 148:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x05;
+ 149:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 2.56;
+ 150:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	}
+ 151:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else if(gauss == 5.6)
+ 152:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	{
+ 153:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x06;
+ 154:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 3.03;
+ 155:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	}
+ 156:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else if(gauss == 8.1)
+ 157:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	{
+ 158:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x07;
+ 159:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 4.35;
+ 160:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	}
+ 161:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else
+ 162:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	{
+ 163:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 0.73;
+ 164:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		return ErrorCode_1_Num_accwr;
+ 165:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	}
+ 166:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	// Setting is in the top 3 bits of the register.
+ 167:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	regValue = regValue << 5;
+ 168:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	mag_write(ConfigurationRegisterB, regValue);
+ 169:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	
+ 170:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	return ErrorCode_1_Num;// success
+ 171:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+ 172:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 
+ 173:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** int  set_mag_measurement_mode(uint8_t mode)
+ 174:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+ 175:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	mag_write(ModeRegister, mode);
+ 176:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+ 177:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 
+ 178:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** void set_mag_data_rate_75_Hz_max()
+ 179:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+ 180:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	mag_write(ConfigurationRegisterA,AVERAGE_8_75_HZ);
+ 181:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+ 182:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 
+ 183:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** void mag_write(int address, int data)
+ 184:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+ 302               	.LM0:
+ 303               	.LFBB1:
+ 304 0000 0F93      		push r16
+ 305 0002 1F93      		push r17
+ 306 0004 CF93      		push r28
+ 307 0006 DF93      		push r29
+ 308               	/* prologue: function */
+ 309               	/* frame size = 0 */
+ 310               	/* stack size = 4 */
+ 311               	.L__stack_usage = 4
+ 312 0008 8C01      		movw r16,r24
+ 313 000a EB01      		movw r28,r22
+ 185:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   beginTransmission_int(HMC5883L_Address);
+ 315               	.LM1:
+ 316 000c 8EE1      		ldi r24,lo8(30)
+ 317 000e 90E0      		ldi r25,hi8(30)
+ 318 0010 0E94 0000 		call beginTransmission_int
+ 186:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   send_int(address);
+ 320               	.LM2:
+ 321 0014 C801      		movw r24,r16
+ 322 0016 0E94 0000 		call send_int
+ 187:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   send_int(data);
+ 324               	.LM3:
+ 325 001a CE01      		movw r24,r28
+ 326 001c 0E94 0000 		call send_int
+ 188:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   endTransmission();
+ 328               	.LM4:
+ 329 0020 0E94 0000 		call endTransmission
+ 330               	/* epilogue start */
+ 189:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+ 332               	.LM5:
+ 333 0024 DF91      		pop r29
+ 334 0026 CF91      		pop r28
+ 335 0028 1F91      		pop r17
+ 336 002a 0F91      		pop r16
+ 337 002c 0895      		ret
+ 339               	.Lscope1:
+ 341               		.stabd	78,0,0
+ 343               	.global	set_mag_data_rate_75_Hz_max
+ 345               	set_mag_data_rate_75_Hz_max:
+ 346               		.stabd	46,0,0
+ 179:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+ 348               	.LM6:
+ 349               	.LFBB2:
+ 350               	/* prologue: function */
+ 351               	/* frame size = 0 */
+ 352               	/* stack size = 0 */
+ 353               	.L__stack_usage = 0
+ 180:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	mag_write(ConfigurationRegisterA,AVERAGE_8_75_HZ);
+ 355               	.LM7:
+ 356 002e 80E0      		ldi r24,lo8(0)
+ 357 0030 90E0      		ldi r25,hi8(0)
+ 358 0032 68E7      		ldi r22,lo8(120)
+ 359 0034 70E0      		ldi r23,hi8(120)
+ 360 0036 0E94 0000 		call mag_write
+ 361               	/* epilogue start */
+ 181:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+ 363               	.LM8:
+ 364 003a 0895      		ret
+ 366               	.Lscope2:
+ 368               		.stabd	78,0,0
+ 371               	.global	set_mag_measurement_mode
+ 373               	set_mag_measurement_mode:
+ 374               		.stabd	46,0,0
+ 174:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+ 376               	.LM9:
+ 377               	.LFBB3:
+ 378               	/* prologue: function */
+ 379               	/* frame size = 0 */
+ 380               	/* stack size = 0 */
+ 381               	.L__stack_usage = 0
+ 382 003c 682F      		mov r22,r24
+ 175:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	mag_write(ModeRegister, mode);
+ 384               	.LM10:
+ 385 003e 82E0      		ldi r24,lo8(2)
+ 386 0040 90E0      		ldi r25,hi8(2)
+ 387 0042 70E0      		ldi r23,lo8(0)
+ 388 0044 0E94 0000 		call mag_write
+ 389               	/* epilogue start */
+ 176:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+ 391               	.LM11:
+ 392 0048 0895      		ret
+ 394               	.Lscope3:
+ 396               		.stabd	78,0,0
+ 399               	.global	set_mag_scale
+ 401               	set_mag_scale:
+ 402               		.stabd	46,0,0
+ 119:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+ 404               	.LM12:
+ 405               	.LFBB4:
+ 406 004a CF92      		push r12
+ 407 004c DF92      		push r13
+ 408 004e EF92      		push r14
+ 409 0050 FF92      		push r15
+ 410               	/* prologue: function */
+ 411               	/* frame size = 0 */
+ 412               	/* stack size = 4 */
+ 413               	.L__stack_usage = 4
+ 414 0052 6B01      		movw r12,r22
+ 415 0054 7C01      		movw r14,r24
+ 121:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	if(gauss == 0.88)
+ 417               	.LM13:
+ 418 0056 2EEA      		ldi r18,lo8(0x3f6147ae)
+ 419 0058 37E4      		ldi r19,hi8(0x3f6147ae)
+ 420 005a 41E6      		ldi r20,hlo8(0x3f6147ae)
+ 421 005c 5FE3      		ldi r21,hhi8(0x3f6147ae)
+ 422 005e 0E94 0000 		call __eqsf2
+ 423 0062 8823      		tst r24
+ 424 0064 01F4      		brne .L31
+ 124:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 0.73;
+ 426               	.LM14:
+ 427 0066 88E4      		ldi r24,lo8(0x3f3ae148)
+ 428 0068 91EE      		ldi r25,hi8(0x3f3ae148)
+ 429 006a AAE3      		ldi r26,hlo8(0x3f3ae148)
+ 430 006c BFE3      		ldi r27,hhi8(0x3f3ae148)
+ 431 006e 8093 0000 		sts Mag_m_scale,r24
+ 432 0072 9093 0000 		sts Mag_m_scale+1,r25
+ 433 0076 A093 0000 		sts Mag_m_scale+2,r26
+ 434 007a B093 0000 		sts Mag_m_scale+3,r27
+ 123:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x00;
+ 436               	.LM15:
+ 437 007e 60E0      		ldi r22,lo8(0)
+ 438 0080 00C0      		rjmp .L7
+ 439               	.L31:
+ 126:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else if(gauss == 1.3)
+ 441               	.LM16:
+ 442 0082 C701      		movw r24,r14
+ 443 0084 B601      		movw r22,r12
+ 444 0086 26E6      		ldi r18,lo8(0x3fa66666)
+ 445 0088 36E6      		ldi r19,hi8(0x3fa66666)
+ 446 008a 46EA      		ldi r20,hlo8(0x3fa66666)
+ 447 008c 5FE3      		ldi r21,hhi8(0x3fa66666)
+ 448 008e 0E94 0000 		call __eqsf2
+ 449 0092 8823      		tst r24
+ 450 0094 01F4      		brne .L32
+ 129:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 0.92;
+ 452               	.LM17:
+ 453 0096 8FE1      		ldi r24,lo8(0x3f6b851f)
+ 454 0098 95E8      		ldi r25,hi8(0x3f6b851f)
+ 455 009a ABE6      		ldi r26,hlo8(0x3f6b851f)
+ 456 009c BFE3      		ldi r27,hhi8(0x3f6b851f)
+ 457 009e 8093 0000 		sts Mag_m_scale,r24
+ 458 00a2 9093 0000 		sts Mag_m_scale+1,r25
+ 459 00a6 A093 0000 		sts Mag_m_scale+2,r26
+ 460 00aa B093 0000 		sts Mag_m_scale+3,r27
+ 128:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x01;
+ 462               	.LM18:
+ 463 00ae 61E0      		ldi r22,lo8(1)
+ 464 00b0 00C0      		rjmp .L7
+ 465               	.L32:
+ 131:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else if(gauss == 1.9)
+ 467               	.LM19:
+ 468 00b2 C701      		movw r24,r14
+ 469 00b4 B601      		movw r22,r12
+ 470 00b6 23E3      		ldi r18,lo8(0x3ff33333)
+ 471 00b8 33E3      		ldi r19,hi8(0x3ff33333)
+ 472 00ba 43EF      		ldi r20,hlo8(0x3ff33333)
+ 473 00bc 5FE3      		ldi r21,hhi8(0x3ff33333)
+ 474 00be 0E94 0000 		call __eqsf2
+ 475 00c2 8823      		tst r24
+ 476 00c4 01F4      		brne .L33
+ 134:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 1.22;
+ 478               	.LM20:
+ 479 00c6 86EF      		ldi r24,lo8(0x3f9c28f6)
+ 480 00c8 98E2      		ldi r25,hi8(0x3f9c28f6)
+ 481 00ca ACE9      		ldi r26,hlo8(0x3f9c28f6)
+ 482 00cc BFE3      		ldi r27,hhi8(0x3f9c28f6)
+ 483 00ce 8093 0000 		sts Mag_m_scale,r24
+ 484 00d2 9093 0000 		sts Mag_m_scale+1,r25
+ 485 00d6 A093 0000 		sts Mag_m_scale+2,r26
+ 486 00da B093 0000 		sts Mag_m_scale+3,r27
+ 133:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x02;
+ 488               	.LM21:
+ 489 00de 62E0      		ldi r22,lo8(2)
+ 490 00e0 00C0      		rjmp .L7
+ 491               	.L33:
+ 136:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else if(gauss == 2.5)
+ 493               	.LM22:
+ 494 00e2 C701      		movw r24,r14
+ 495 00e4 B601      		movw r22,r12
+ 496 00e6 20E0      		ldi r18,lo8(0x40200000)
+ 497 00e8 30E0      		ldi r19,hi8(0x40200000)
+ 498 00ea 40E2      		ldi r20,hlo8(0x40200000)
+ 499 00ec 50E4      		ldi r21,hhi8(0x40200000)
+ 500 00ee 0E94 0000 		call __eqsf2
+ 501 00f2 8823      		tst r24
+ 502 00f4 01F4      		brne .L34
+ 139:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 1.52;
+ 504               	.LM23:
+ 505 00f6 8CE5      		ldi r24,lo8(0x3fc28f5c)
+ 506 00f8 9FE8      		ldi r25,hi8(0x3fc28f5c)
+ 507 00fa A2EC      		ldi r26,hlo8(0x3fc28f5c)
+ 508 00fc BFE3      		ldi r27,hhi8(0x3fc28f5c)
+ 509 00fe 8093 0000 		sts Mag_m_scale,r24
+ 510 0102 9093 0000 		sts Mag_m_scale+1,r25
+ 511 0106 A093 0000 		sts Mag_m_scale+2,r26
+ 512 010a B093 0000 		sts Mag_m_scale+3,r27
+ 138:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x03;
+ 514               	.LM24:
+ 515 010e 63E0      		ldi r22,lo8(3)
+ 516 0110 00C0      		rjmp .L7
+ 517               	.L34:
+ 141:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else if(gauss == 4.0)
+ 519               	.LM25:
+ 520 0112 C701      		movw r24,r14
+ 521 0114 B601      		movw r22,r12
+ 522 0116 20E0      		ldi r18,lo8(0x40800000)
+ 523 0118 30E0      		ldi r19,hi8(0x40800000)
+ 524 011a 40E8      		ldi r20,hlo8(0x40800000)
+ 525 011c 50E4      		ldi r21,hhi8(0x40800000)
+ 526 011e 0E94 0000 		call __eqsf2
+ 527 0122 8823      		tst r24
+ 528 0124 01F4      		brne .L35
+ 144:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 2.27;
+ 530               	.LM26:
+ 531 0126 8EEA      		ldi r24,lo8(0x401147ae)
+ 532 0128 97E4      		ldi r25,hi8(0x401147ae)
+ 533 012a A1E1      		ldi r26,hlo8(0x401147ae)
+ 534 012c B0E4      		ldi r27,hhi8(0x401147ae)
+ 535 012e 8093 0000 		sts Mag_m_scale,r24
+ 536 0132 9093 0000 		sts Mag_m_scale+1,r25
+ 537 0136 A093 0000 		sts Mag_m_scale+2,r26
+ 538 013a B093 0000 		sts Mag_m_scale+3,r27
+ 143:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x04;
+ 540               	.LM27:
+ 541 013e 64E0      		ldi r22,lo8(4)
+ 542 0140 00C0      		rjmp .L7
+ 543               	.L35:
+ 146:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else if(gauss == 4.7)
+ 545               	.LM28:
+ 546 0142 C701      		movw r24,r14
+ 547 0144 B601      		movw r22,r12
+ 548 0146 26E6      		ldi r18,lo8(0x40966666)
+ 549 0148 36E6      		ldi r19,hi8(0x40966666)
+ 550 014a 46E9      		ldi r20,hlo8(0x40966666)
+ 551 014c 50E4      		ldi r21,hhi8(0x40966666)
+ 552 014e 0E94 0000 		call __eqsf2
+ 553 0152 8823      		tst r24
+ 554 0154 01F4      		brne .L36
+ 149:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 2.56;
+ 556               	.LM29:
+ 557 0156 8AE0      		ldi r24,lo8(0x4023d70a)
+ 558 0158 97ED      		ldi r25,hi8(0x4023d70a)
+ 559 015a A3E2      		ldi r26,hlo8(0x4023d70a)
+ 560 015c B0E4      		ldi r27,hhi8(0x4023d70a)
+ 561 015e 8093 0000 		sts Mag_m_scale,r24
+ 562 0162 9093 0000 		sts Mag_m_scale+1,r25
+ 563 0166 A093 0000 		sts Mag_m_scale+2,r26
+ 564 016a B093 0000 		sts Mag_m_scale+3,r27
+ 148:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x05;
+ 566               	.LM30:
+ 567 016e 65E0      		ldi r22,lo8(5)
+ 568 0170 00C0      		rjmp .L7
+ 569               	.L36:
+ 151:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else if(gauss == 5.6)
+ 571               	.LM31:
+ 572 0172 C701      		movw r24,r14
+ 573 0174 B601      		movw r22,r12
+ 574 0176 23E3      		ldi r18,lo8(0x40b33333)
+ 575 0178 33E3      		ldi r19,hi8(0x40b33333)
+ 576 017a 43EB      		ldi r20,hlo8(0x40b33333)
+ 577 017c 50E4      		ldi r21,hhi8(0x40b33333)
+ 578 017e 0E94 0000 		call __eqsf2
+ 579 0182 8823      		tst r24
+ 580 0184 01F4      		brne .L37
+ 154:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 3.03;
+ 582               	.LM32:
+ 583 0186 85E8      		ldi r24,lo8(0x4041eb85)
+ 584 0188 9BEE      		ldi r25,hi8(0x4041eb85)
+ 585 018a A1E4      		ldi r26,hlo8(0x4041eb85)
+ 586 018c B0E4      		ldi r27,hhi8(0x4041eb85)
+ 587 018e 8093 0000 		sts Mag_m_scale,r24
+ 588 0192 9093 0000 		sts Mag_m_scale+1,r25
+ 589 0196 A093 0000 		sts Mag_m_scale+2,r26
+ 590 019a B093 0000 		sts Mag_m_scale+3,r27
+ 153:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x06;
+ 592               	.LM33:
+ 593 019e 66E0      		ldi r22,lo8(6)
+ 594 01a0 00C0      		rjmp .L7
+ 595               	.L37:
+ 156:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	else if(gauss == 8.1)
+ 597               	.LM34:
+ 598 01a2 C701      		movw r24,r14
+ 599 01a4 B601      		movw r22,r12
+ 600 01a6 2AE9      		ldi r18,lo8(0x4101999a)
+ 601 01a8 39E9      		ldi r19,hi8(0x4101999a)
+ 602 01aa 41E0      		ldi r20,hlo8(0x4101999a)
+ 603 01ac 51E4      		ldi r21,hhi8(0x4101999a)
+ 604 01ae 0E94 0000 		call __eqsf2
+ 605 01b2 8823      		tst r24
+ 606 01b4 01F4      		brne .L38
+ 159:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 4.35;
+ 608               	.LM35:
+ 609 01b6 83E3      		ldi r24,lo8(0x408b3333)
+ 610 01b8 93E3      		ldi r25,hi8(0x408b3333)
+ 611 01ba ABE8      		ldi r26,hlo8(0x408b3333)
+ 612 01bc B0E4      		ldi r27,hhi8(0x408b3333)
+ 613 01be 8093 0000 		sts Mag_m_scale,r24
+ 614 01c2 9093 0000 		sts Mag_m_scale+1,r25
+ 615 01c6 A093 0000 		sts Mag_m_scale+2,r26
+ 616 01ca B093 0000 		sts Mag_m_scale+3,r27
+ 158:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		regValue = 0x07;
+ 618               	.LM36:
+ 619 01ce 67E0      		ldi r22,lo8(7)
+ 620 01d0 00C0      		rjmp .L7
+ 621               	.L38:
+ 163:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		 Mag_m_scale = 0.73;
+ 623               	.LM37:
+ 624 01d2 88E4      		ldi r24,lo8(0x3f3ae148)
+ 625 01d4 91EE      		ldi r25,hi8(0x3f3ae148)
+ 626 01d6 AAE3      		ldi r26,hlo8(0x3f3ae148)
+ 627 01d8 BFE3      		ldi r27,hhi8(0x3f3ae148)
+ 628 01da 8093 0000 		sts Mag_m_scale,r24
+ 629 01de 9093 0000 		sts Mag_m_scale+1,r25
+ 630 01e2 A093 0000 		sts Mag_m_scale+2,r26
+ 631 01e6 B093 0000 		sts Mag_m_scale+3,r27
+ 164:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		return ErrorCode_1_Num_accwr;
+ 633               	.LM38:
+ 634 01ea 8FEF      		ldi r24,lo8(-1)
+ 635 01ec 9FEF      		ldi r25,hi8(-1)
+ 636 01ee 00C0      		rjmp .L22
+ 637               	.L7:
+ 167:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	regValue = regValue << 5;
+ 639               	.LM39:
+ 640 01f0 6295      		swap r22
+ 641 01f2 660F      		lsl r22
+ 642 01f4 607E      		andi r22,lo8(-32)
+ 168:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	mag_write(ConfigurationRegisterB, regValue);
+ 644               	.LM40:
+ 645 01f6 81E0      		ldi r24,lo8(1)
+ 646 01f8 90E0      		ldi r25,hi8(1)
+ 647 01fa 70E0      		ldi r23,lo8(0)
+ 648 01fc 0E94 0000 		call mag_write
+ 170:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	return ErrorCode_1_Num;// success
+ 650               	.LM41:
+ 651 0200 81E0      		ldi r24,lo8(1)
+ 652 0202 90E0      		ldi r25,hi8(1)
+ 653               	.L22:
+ 654               	/* epilogue start */
+ 171:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+ 656               	.LM42:
+ 657 0204 FF90      		pop r15
+ 658 0206 EF90      		pop r14
+ 659 0208 DF90      		pop r13
+ 660 020a CF90      		pop r12
+ 661 020c 0895      		ret
+ 663               	.Lscope4:
+ 665               		.stabd	78,0,0
+ 667               	.global	set_up_HMC5883L
+ 669               	set_up_HMC5883L:
+ 670               		.stabd	46,0,0
+  37:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+ 672               	.LM43:
+ 673               	.LFBB5:
+ 674 020e CF93      		push r28
+ 675 0210 DF93      		push r29
+ 676 0212 00D0      		rcall .
+ 677 0214 CDB7      		in r28,__SP_L__
+ 678 0216 DEB7      		in r29,__SP_H__
+ 679               	/* prologue: function */
+ 680               	/* frame size = 2 */
+ 681               	/* stack size = 4 */
+ 682               	.L__stack_usage = 4
+  38:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	Mag_m_scale = 1;
+ 684               	.LM44:
+ 685 0218 80E0      		ldi r24,lo8(0x3f800000)
+ 686 021a 90E0      		ldi r25,hi8(0x3f800000)
+ 687 021c A0E8      		ldi r26,hlo8(0x3f800000)
+ 688 021e BFE3      		ldi r27,hhi8(0x3f800000)
+ 689 0220 8093 0000 		sts Mag_m_scale,r24
+ 690 0224 9093 0000 		sts Mag_m_scale+1,r25
+ 691 0228 A093 0000 		sts Mag_m_scale+2,r26
+ 692 022c B093 0000 		sts Mag_m_scale+3,r27
+  46:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	set_mag_data_rate_75_Hz_max();
+ 694               	.LM45:
+ 695 0230 0E94 0000 		call set_mag_data_rate_75_Hz_max
+  47:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	nrk_kprintf( PSTR("HMC5883L(Magnetometer)data rate 75Hz. Averaging 8 samples. . .\r\n") );
+ 697               	.LM46:
+ 698 0234 80E0      		ldi r24,lo8(__c.2925)
+ 699 0236 90E0      		ldi r25,hi8(__c.2925)
+ 700 0238 0E94 0000 		call nrk_kprintf
+  49:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	error[0] =  set_mag_scale(1.3);
+ 702               	.LM47:
+ 703 023c 66E6      		ldi r22,lo8(0x3fa66666)
+ 704 023e 76E6      		ldi r23,hi8(0x3fa66666)
+ 705 0240 86EA      		ldi r24,hlo8(0x3fa66666)
+ 706 0242 9FE3      		ldi r25,hhi8(0x3fa66666)
+ 707 0244 0E94 0000 		call set_mag_scale
+ 708 0248 8983      		std Y+1,r24
+ 709               	.LBB5:
+ 710               	.LBB6:
+ 175:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	mag_write(ModeRegister, mode);
+ 712               	.LM48:
+ 713 024a 82E0      		ldi r24,lo8(2)
+ 714 024c 90E0      		ldi r25,hi8(2)
+ 715 024e 60E0      		ldi r22,lo8(0)
+ 716 0250 70E0      		ldi r23,hi8(0)
+ 717 0252 0E94 0000 		call mag_write
+ 718               	.LBE6:
+ 719               	.LBE5:
+  65:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+ 721               	.LM49:
+ 722 0256 CE01      		movw r24,r28
+ 723 0258 0196      		adiw r24,1
+ 724               	/* epilogue start */
+ 725 025a 0F90      		pop __tmp_reg__
+ 726 025c 0F90      		pop __tmp_reg__
+ 727 025e DF91      		pop r29
+ 728 0260 CF91      		pop r28
+ 729 0262 0895      		ret
+ 734               	.Lscope5:
+ 736               		.stabd	78,0,0
+ 740               	.global	mag_read
+ 742               	mag_read:
+ 743               		.stabd	46,0,0
+ 190:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 
+ 191:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** uint8_t* mag_read(int address, int length)
+ 192:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+ 745               	.LM50:
+ 746               	.LFBB6:
+ 747 0264 8F92      		push r8
+ 748 0266 9F92      		push r9
+ 749 0268 AF92      		push r10
+ 750 026a BF92      		push r11
+ 751 026c DF92      		push r13
+ 752 026e EF92      		push r14
+ 753 0270 FF92      		push r15
+ 754 0272 0F93      		push r16
+ 755 0274 1F93      		push r17
+ 756 0276 CF93      		push r28
+ 757 0278 DF93      		push r29
+ 758 027a CDB7      		in r28,__SP_L__
+ 759 027c DEB7      		in r29,__SP_H__
+ 760               	/* prologue: function */
+ 761               	/* frame size = 0 */
+ 762               	/* stack size = 11 */
+ 763               	.L__stack_usage = 11
+ 764 027e 7C01      		movw r14,r24
+ 765 0280 8B01      		movw r16,r22
+ 193:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   beginTransmission_int(HMC5883L_Address);
+ 194:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   send_int(address);
+ 195:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   endTransmission();
+ 196:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   
+ 197:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   beginTransmission_int(HMC5883L_Address);
+ 198:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****  requestFrom_2int(HMC5883L_Address, length);
+ 199:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 
+ 200:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   uint8_t buffer[length];
+ 201:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   if(available() == length)
+ 202:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   {
+ 203:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	  for(uint8_t i = 0; i < length; i++)
+ 204:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	  {
+ 205:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		  buffer[i] = receive();
+ 206:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	  }
+ 207:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   }
+ 208:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   endTransmission();
+ 209:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 
+ 210:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   return buffer;
+ 211:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+ 767               	.LM51:
+ 768 0282 8DB6      		in r8,__SP_L__
+ 769 0284 9EB6      		in r9,__SP_H__
+ 193:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   beginTransmission_int(HMC5883L_Address);
+ 771               	.LM52:
+ 772 0286 8EE1      		ldi r24,lo8(30)
+ 773 0288 90E0      		ldi r25,hi8(30)
+ 774 028a 0E94 0000 		call beginTransmission_int
+ 194:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   send_int(address);
+ 776               	.LM53:
+ 777 028e C701      		movw r24,r14
+ 778 0290 0E94 0000 		call send_int
+ 195:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   endTransmission();
+ 780               	.LM54:
+ 781 0294 0E94 0000 		call endTransmission
+ 197:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   beginTransmission_int(HMC5883L_Address);
+ 783               	.LM55:
+ 784 0298 8EE1      		ldi r24,lo8(30)
+ 785 029a 90E0      		ldi r25,hi8(30)
+ 786 029c 0E94 0000 		call beginTransmission_int
+ 198:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****  requestFrom_2int(HMC5883L_Address, length);
+ 788               	.LM56:
+ 789 02a0 8EE1      		ldi r24,lo8(30)
+ 790 02a2 90E0      		ldi r25,hi8(30)
+ 791 02a4 B801      		movw r22,r16
+ 792 02a6 0E94 0000 		call requestFrom_2int
+ 200:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   uint8_t buffer[length];
+ 794               	.LM57:
+ 795 02aa 8DB7      		in r24,__SP_L__
+ 796 02ac 9EB7      		in r25,__SP_H__
+ 797 02ae 801B      		sub r24,r16
+ 798 02b0 910B      		sbc r25,r17
+ 799 02b2 0FB6      		in __tmp_reg__,__SREG__
+ 800 02b4 F894      		cli
+ 801 02b6 9EBF      		out __SP_H__,r25
+ 802 02b8 0FBE      		out __SREG__,__tmp_reg__
+ 803 02ba 8DBF      		out __SP_L__,r24
+ 804 02bc ADB6      		in r10,__SP_L__
+ 805 02be BEB6      		in r11,__SP_H__
+ 806 02c0 0894      		sec
+ 807 02c2 A11C      		adc r10,__zero_reg__
+ 808 02c4 B11C      		adc r11,__zero_reg__
+ 201:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   if(available() == length)
+ 810               	.LM58:
+ 811 02c6 0E94 0000 		call available
+ 812 02ca E82E      		mov r14,r24
+ 813 02cc FF24      		clr r15
+ 814 02ce E016      		cp r14,r16
+ 815 02d0 F106      		cpc r15,r17
+ 816 02d2 01F4      		brne .L42
+ 817 02d4 00C0      		rjmp .L45
+ 818               	.L43:
+ 819               	.LBB7:
+ 205:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 		  buffer[i] = receive();
+ 821               	.LM59:
+ 822 02d6 0E94 0000 		call receive
+ 823 02da F501      		movw r30,r10
+ 824 02dc E00F      		add r30,r16
+ 825 02de F11F      		adc r31,r17
+ 826 02e0 8083      		st Z,r24
+ 203:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	  for(uint8_t i = 0; i < length; i++)
+ 828               	.LM60:
+ 829 02e2 D394      		inc r13
+ 830 02e4 00C0      		rjmp .L41
+ 831               	.L45:
+ 832               	.LBE7:
+ 201:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   if(available() == length)
+ 834               	.LM61:
+ 835 02e6 DD24      		clr r13
+ 836               	.L41:
+ 837               	.LBB8:
+ 203:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	  for(uint8_t i = 0; i < length; i++)
+ 839               	.LM62:
+ 840 02e8 0D2D      		mov r16,r13
+ 841 02ea 10E0      		ldi r17,lo8(0)
+ 842 02ec 0E15      		cp r16,r14
+ 843 02ee 1F05      		cpc r17,r15
+ 844 02f0 04F0      		brlt .L43
+ 845               	.L42:
+ 846               	.LBE8:
+ 208:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   endTransmission();
+ 848               	.LM63:
+ 849 02f2 0E94 0000 		call endTransmission
+ 851               	.LM64:
+ 852 02f6 C501      		movw r24,r10
+ 853 02f8 0FB6      		in __tmp_reg__,__SREG__
+ 854 02fa F894      		cli
+ 855 02fc 9EBE      		out __SP_H__,r9
+ 856 02fe 0FBE      		out __SREG__,__tmp_reg__
+ 857 0300 8DBE      		out __SP_L__,r8
+ 858               	/* epilogue start */
+ 859 0302 DF91      		pop r29
+ 860 0304 CF91      		pop r28
+ 861 0306 1F91      		pop r17
+ 862 0308 0F91      		pop r16
+ 863 030a FF90      		pop r15
+ 864 030c EF90      		pop r14
+ 865 030e DF90      		pop r13
+ 866 0310 BF90      		pop r11
+ 867 0312 AF90      		pop r10
+ 868 0314 9F90      		pop r9
+ 869 0316 8F90      		pop r8
+ 870 0318 0895      		ret
+ 878               	.Lscope6:
+ 880               		.stabd	78,0,0
+ 882               	.global	read_magneto_raw_axis
+ 884               	read_magneto_raw_axis:
+ 885               		.stabd	46,0,0
+  68:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+ 887               	.LM65:
+ 888               	.LFBB7:
+ 889 031a CF93      		push r28
+ 890 031c DF93      		push r29
+ 891 031e 00D0      		rcall .
+ 892 0320 00D0      		rcall .
+ 893 0322 00D0      		rcall .
+ 894 0324 CDB7      		in r28,__SP_L__
+ 895 0326 DEB7      		in r29,__SP_H__
+ 896               	/* prologue: function */
+ 897               	/* frame size = 6 */
+ 898               	/* stack size = 8 */
+ 899               	.L__stack_usage = 8
+  70:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   uint8_t* buffer = mag_read(DataRegisterBegin, 6);
+ 901               	.LM66:
+ 902 0328 83E0      		ldi r24,lo8(3)
+ 903 032a 90E0      		ldi r25,hi8(3)
+ 904 032c 66E0      		ldi r22,lo8(6)
+ 905 032e 70E0      		ldi r23,hi8(6)
+ 906 0330 0E94 0000 		call mag_read
+ 907 0334 FC01      		movw r30,r24
+  74:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   raw.ZAxis = (buffer[2] << 8) | buffer[3];
+ 909               	.LM67:
+ 910 0336 9281      		ldd r25,Z+2
+ 911 0338 80E0      		ldi r24,lo8(0)
+ 912 033a 6381      		ldd r22,Z+3
+ 913 033c 70E0      		ldi r23,lo8(0)
+ 914 033e 682B      		or r22,r24
+ 915 0340 792B      		or r23,r25
+  75:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   raw.YAxis = (buffer[4] << 8) | buffer[5];
+ 917               	.LM68:
+ 918 0342 9481      		ldd r25,Z+4
+ 919 0344 80E0      		ldi r24,lo8(0)
+ 920 0346 4581      		ldd r20,Z+5
+ 921 0348 50E0      		ldi r21,lo8(0)
+ 922 034a 482B      		or r20,r24
+ 923 034c 592B      		or r21,r25
+  73:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   raw.XAxis = (buffer[0] << 8) | buffer[1];
+ 925               	.LM69:
+ 926 034e 9081      		ld r25,Z
+ 927 0350 80E0      		ldi r24,lo8(0)
+ 928 0352 2181      		ldd r18,Z+1
+ 929 0354 30E0      		ldi r19,lo8(0)
+ 930 0356 282B      		or r18,r24
+ 931 0358 392B      		or r19,r25
+  76:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   return raw;
+ 933               	.LM70:
+ 934 035a 3A83      		std Y+2,r19
+ 935 035c 2983      		std Y+1,r18
+ 936 035e 5C83      		std Y+4,r21
+ 937 0360 4B83      		std Y+3,r20
+ 938 0362 7E83      		std Y+6,r23
+ 939 0364 6D83      		std Y+5,r22
+ 940 0366 3A81      		ldd r19,Y+2
+ 941 0368 5C81      		ldd r21,Y+4
+ 942 036a 7E81      		ldd r23,Y+6
+  77:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+ 944               	.LM71:
+ 945 036c 90E0      		ldi r25,lo8(0)
+ 946               	/* epilogue start */
+ 947 036e 2696      		adiw r28,6
+ 948 0370 0FB6      		in __tmp_reg__,__SREG__
+ 949 0372 F894      		cli
+ 950 0374 DEBF      		out __SP_H__,r29
+ 951 0376 0FBE      		out __SREG__,__tmp_reg__
+ 952 0378 CDBF      		out __SP_L__,r28
+ 953 037a DF91      		pop r29
+ 954 037c CF91      		pop r28
+ 955 037e 0895      		ret
+ 960               	.Lscope7:
+ 962               		.stabd	78,0,0
+ 965               	.global	get_Magneto_Values_flat
+ 967               	get_Magneto_Values_flat:
+ 968               		.stabd	46,0,0
+ 100:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+ 970               	.LM72:
+ 971               	.LFBB8:
+ 972 0380 CF92      		push r12
+ 973 0382 DF92      		push r13
+ 974 0384 EF92      		push r14
+ 975 0386 FF92      		push r15
+ 976 0388 0F93      		push r16
+ 977 038a 1F93      		push r17
+ 978 038c CF93      		push r28
+ 979 038e DF93      		push r29
+ 980 0390 CDB7      		in r28,__SP_L__
+ 981 0392 DEB7      		in r29,__SP_H__
+ 982 0394 6897      		sbiw r28,24
+ 983 0396 0FB6      		in __tmp_reg__,__SREG__
+ 984 0398 F894      		cli
+ 985 039a DEBF      		out __SP_H__,r29
+ 986 039c 0FBE      		out __SREG__,__tmp_reg__
+ 987 039e CDBF      		out __SP_L__,r28
+ 988               	/* prologue: function */
+ 989               	/* frame size = 24 */
+ 990               	/* stack size = 32 */
+ 991               	.L__stack_usage = 32
+ 992 03a0 8C01      		movw r16,r24
+ 103:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	MagrawReading = read_magneto_raw_axis();
+ 994               	.LM73:
+ 995 03a2 0E94 0000 		call read_magneto_raw_axis
+ 996 03a6 2B8B      		std Y+19,r18
+ 997 03a8 3C8B      		std Y+20,r19
+ 998 03aa 4D8B      		std Y+21,r20
+ 999 03ac 5E8B      		std Y+22,r21
+ 1000 03ae 6F8B      		std Y+23,r22
+ 1001 03b0 788F      		std Y+24,r23
+ 1002 03b2 DE01      		movw r26,r28
+ 1003 03b4 1D96      		adiw r26,13
+ 1004 03b6 FE01      		movw r30,r28
+ 1005 03b8 7396      		adiw r30,19
+ 1006 03ba 86E0      		ldi r24,lo8(6)
+ 1007               	.L48:
+ 1008 03bc 0190      		ld r0,Z+
+ 1009 03be 0D92      		st X+,r0
+ 1010 03c0 8150      		subi r24,lo8(-(-1))
+ 1011 03c2 01F4      		brne .L48
+ 104:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*result = MagrawReading.XAxis;
+ 1013               	.LM74:
+ 1014 03c4 8D85      		ldd r24,Y+13
+ 1015 03c6 9E85      		ldd r25,Y+14
+ 1016 03c8 F801      		movw r30,r16
+ 1017 03ca 9183      		std Z+1,r25
+ 1018 03cc 8083      		st Z,r24
+ 105:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*(result+1) = MagrawReading.YAxis;
+ 1020               	.LM75:
+ 1021 03ce 8F85      		ldd r24,Y+15
+ 1022 03d0 9889      		ldd r25,Y+16
+ 1023 03d2 9383      		std Z+3,r25
+ 1024 03d4 8283      		std Z+2,r24
+ 106:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*(result+2) = MagrawReading.ZAxis;
+ 1026               	.LM76:
+ 1027 03d6 8989      		ldd r24,Y+17
+ 1028 03d8 9A89      		ldd r25,Y+18
+ 1029 03da 9583      		std Z+5,r25
+ 1030 03dc 8483      		std Z+4,r24
+ 108:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*(result+3) = atan2((read_magneto_raw_axis()).YAxis, (read_magneto_raw_axis()).XAxis);
+ 1032               	.LM77:
+ 1033 03de 0E94 0000 		call read_magneto_raw_axis
+ 1034 03e2 2B8B      		std Y+19,r18
+ 1035 03e4 3C8B      		std Y+20,r19
+ 1036 03e6 4D8B      		std Y+21,r20
+ 1037 03e8 5E8B      		std Y+22,r21
+ 1038 03ea 6F8B      		std Y+23,r22
+ 1039 03ec 788F      		std Y+24,r23
+ 1040 03ee DE01      		movw r26,r28
+ 1041 03f0 1796      		adiw r26,7
+ 1042 03f2 FE01      		movw r30,r28
+ 1043 03f4 7396      		adiw r30,19
+ 1044 03f6 86E0      		ldi r24,lo8(6)
+ 1045               	.L49:
+ 1046 03f8 0190      		ld r0,Z+
+ 1047 03fa 0D92      		st X+,r0
+ 1048 03fc 8150      		subi r24,lo8(-(-1))
+ 1049 03fe 01F4      		brne .L49
+ 1050 0400 6985      		ldd r22,Y+9
+ 1051 0402 7A85      		ldd r23,Y+10
+ 1052 0404 8827      		clr r24
+ 1053 0406 77FD      		sbrc r23,7
+ 1054 0408 8095      		com r24
+ 1055 040a 982F      		mov r25,r24
+ 1056 040c 0E94 0000 		call __floatsisf
+ 1057 0410 6B01      		movw r12,r22
+ 1058 0412 7C01      		movw r14,r24
+ 1059 0414 0E94 0000 		call read_magneto_raw_axis
+ 1060 0418 2B8B      		std Y+19,r18
+ 1061 041a 3C8B      		std Y+20,r19
+ 1062 041c 4D8B      		std Y+21,r20
+ 1063 041e 5E8B      		std Y+22,r21
+ 1064 0420 6F8B      		std Y+23,r22
+ 1065 0422 788F      		std Y+24,r23
+ 1066 0424 DE01      		movw r26,r28
+ 1067 0426 1196      		adiw r26,1
+ 1068 0428 FE01      		movw r30,r28
+ 1069 042a 7396      		adiw r30,19
+ 1070 042c 86E0      		ldi r24,lo8(6)
+ 1071               	.L50:
+ 1072 042e 0190      		ld r0,Z+
+ 1073 0430 0D92      		st X+,r0
+ 1074 0432 8150      		subi r24,lo8(-(-1))
+ 1075 0434 01F4      		brne .L50
+ 1076 0436 6981      		ldd r22,Y+1
+ 1077 0438 7A81      		ldd r23,Y+2
+ 1078 043a 8827      		clr r24
+ 1079 043c 77FD      		sbrc r23,7
+ 1080 043e 8095      		com r24
+ 1081 0440 982F      		mov r25,r24
+ 1082 0442 0E94 0000 		call __floatsisf
+ 1083 0446 9B01      		movw r18,r22
+ 1084 0448 AC01      		movw r20,r24
+ 1085 044a C701      		movw r24,r14
+ 1086 044c B601      		movw r22,r12
+ 1087 044e 0E94 0000 		call atan2
+ 1088 0452 0E94 0000 		call __fixsfsi
+ 1089 0456 AB01      		movw r20,r22
+ 1090 0458 BC01      		movw r22,r24
+ 1091 045a F801      		movw r30,r16
+ 1092 045c 5783      		std Z+7,r21
+ 1093 045e 4683      		std Z+6,r20
+ 111:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	if((*(result+3)) < 0) (*(result+3)) += 2*M_PI;
+ 1095               	.LM78:
+ 1096 0460 57FF      		sbrs r21,7
+ 1097 0462 00C0      		rjmp .L51
+ 111:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	if((*(result+3)) < 0) (*(result+3)) += 2*M_PI;
+ 1099               	.LM79:
+ 1100 0464 9A01      		movw r18,r20
+ 1101 0466 B901      		movw r22,r18
+ 1102 0468 8827      		clr r24
+ 1103 046a 77FD      		sbrc r23,7
+ 1104 046c 8095      		com r24
+ 1105 046e 982F      		mov r25,r24
+ 1106 0470 0E94 0000 		call __floatsisf
+ 1107 0474 2BED      		ldi r18,lo8(0x40c90fdb)
+ 1108 0476 3FE0      		ldi r19,hi8(0x40c90fdb)
+ 1109 0478 49EC      		ldi r20,hlo8(0x40c90fdb)
+ 1110 047a 50E4      		ldi r21,hhi8(0x40c90fdb)
+ 1111 047c 0E94 0000 		call __addsf3
+ 1112 0480 0E94 0000 		call __fixsfsi
+ 1113 0484 DC01      		movw r26,r24
+ 1114 0486 CB01      		movw r24,r22
+ 1115 0488 F801      		movw r30,r16
+ 1116 048a 9783      		std Z+7,r25
+ 1117 048c 8683      		std Z+6,r24
+ 1118               	.L51:
+ 114:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*(result+4)= (int)( ((*(result+3)) * 180/M_PI) * INT_SCALER_MAG); 
+ 1120               	.LM80:
+ 1121 048e F801      		movw r30,r16
+ 1122 0490 2681      		ldd r18,Z+6
+ 1123 0492 3781      		ldd r19,Z+7
+ 1124 0494 84EB      		ldi r24,lo8(180)
+ 1125 0496 90E0      		ldi r25,hi8(180)
+ 1126 0498 289F      		mul r18,r24
+ 1127 049a B001      		movw r22,r0
+ 1128 049c 299F      		mul r18,r25
+ 1129 049e 700D      		add r23,r0
+ 1130 04a0 389F      		mul r19,r24
+ 1131 04a2 700D      		add r23,r0
+ 1132 04a4 1124      		clr r1
+ 1133 04a6 8827      		clr r24
+ 1134 04a8 77FD      		sbrc r23,7
+ 1135 04aa 8095      		com r24
+ 1136 04ac 982F      		mov r25,r24
+ 1137 04ae 0E94 0000 		call __floatsisf
+ 1138 04b2 2BED      		ldi r18,lo8(0x40490fdb)
+ 1139 04b4 3FE0      		ldi r19,hi8(0x40490fdb)
+ 1140 04b6 49E4      		ldi r20,hlo8(0x40490fdb)
+ 1141 04b8 50E4      		ldi r21,hhi8(0x40490fdb)
+ 1142 04ba 0E94 0000 		call __divsf3
+ 1143 04be 20E0      		ldi r18,lo8(0x41200000)
+ 1144 04c0 30E0      		ldi r19,hi8(0x41200000)
+ 1145 04c2 40E2      		ldi r20,hlo8(0x41200000)
+ 1146 04c4 51E4      		ldi r21,hhi8(0x41200000)
+ 1147 04c6 0E94 0000 		call __mulsf3
+ 1148 04ca 0E94 0000 		call __fixsfsi
+ 1149 04ce DC01      		movw r26,r24
+ 1150 04d0 CB01      		movw r24,r22
+ 1151 04d2 F801      		movw r30,r16
+ 1152 04d4 9187      		std Z+9,r25
+ 1153 04d6 8087      		std Z+8,r24
+ 1154               	/* epilogue start */
+ 115:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }					
+ 1156               	.LM81:
+ 1157 04d8 6896      		adiw r28,24
+ 1158 04da 0FB6      		in __tmp_reg__,__SREG__
+ 1159 04dc F894      		cli
+ 1160 04de DEBF      		out __SP_H__,r29
+ 1161 04e0 0FBE      		out __SREG__,__tmp_reg__
+ 1162 04e2 CDBF      		out __SP_L__,r28
+ 1163 04e4 DF91      		pop r29
+ 1164 04e6 CF91      		pop r28
+ 1165 04e8 1F91      		pop r17
+ 1166 04ea 0F91      		pop r16
+ 1167 04ec FF90      		pop r15
+ 1168 04ee EF90      		pop r14
+ 1169 04f0 DF90      		pop r13
+ 1170 04f2 CF90      		pop r12
+ 1171 04f4 0895      		ret
+ 1176               	.Lscope8:
+ 1178               		.stabd	78,0,0
+ 1180               	.global	read_magneto_scaled_axis
+ 1182               	read_magneto_scaled_axis:
+ 1183               		.stabd	46,0,0
+  80:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+ 1185               	.LM82:
+ 1186               	.LFBB9:
+ 1187 04f6 AF92      		push r10
+ 1188 04f8 BF92      		push r11
+ 1189 04fa CF92      		push r12
+ 1190 04fc DF92      		push r13
+ 1191 04fe EF92      		push r14
+ 1192 0500 FF92      		push r15
+ 1193 0502 0F93      		push r16
+ 1194 0504 1F93      		push r17
+ 1195 0506 CF93      		push r28
+ 1196 0508 DF93      		push r29
+ 1197 050a CDB7      		in r28,__SP_L__
+ 1198 050c DEB7      		in r29,__SP_H__
+ 1199 050e 6297      		sbiw r28,18
+ 1200 0510 0FB6      		in __tmp_reg__,__SREG__
+ 1201 0512 F894      		cli
+ 1202 0514 DEBF      		out __SP_H__,r29
+ 1203 0516 0FBE      		out __SREG__,__tmp_reg__
+ 1204 0518 CDBF      		out __SP_L__,r28
+ 1205               	/* prologue: function */
+ 1206               	/* frame size = 18 */
+ 1207               	/* stack size = 28 */
+ 1208               	.L__stack_usage = 28
+  81:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   magnetometer_raw raw = read_magneto_raw_axis();
+ 1210               	.LM83:
+ 1211 051a 0E94 0000 		call read_magneto_raw_axis
+ 1212 051e 2D87      		std Y+13,r18
+ 1213 0520 3E87      		std Y+14,r19
+ 1214 0522 4F87      		std Y+15,r20
+ 1215 0524 588B      		std Y+16,r21
+ 1216 0526 698B      		std Y+17,r22
+ 1217 0528 7A8B      		std Y+18,r23
+ 1218 052a DE01      		movw r26,r28
+ 1219 052c 1796      		adiw r26,7
+ 1220 052e FE01      		movw r30,r28
+ 1221 0530 3D96      		adiw r30,13
+ 1222 0532 86E0      		ldi r24,lo8(6)
+ 1223               	.L56:
+ 1224 0534 0190      		ld r0,Z+
+ 1225 0536 0D92      		st X+,r0
+ 1226 0538 8150      		subi r24,lo8(-(-1))
+ 1227 053a 01F4      		brne .L56
+  84:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   scaled.XAxis = (int16_t)((raw.XAxis *  Mag_m_scale) * INT_SCALER_MAG);
+ 1229               	.LM84:
+ 1230 053c C090 0000 		lds r12,Mag_m_scale
+ 1231 0540 D090 0000 		lds r13,Mag_m_scale+1
+ 1232 0544 E090 0000 		lds r14,Mag_m_scale+2
+ 1233 0548 F090 0000 		lds r15,Mag_m_scale+3
+  85:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   scaled.ZAxis = (int16_t)((raw.ZAxis *  Mag_m_scale) * INT_SCALER_MAG);
+ 1235               	.LM85:
+ 1236 054c 6B85      		ldd r22,Y+11
+ 1237 054e 7C85      		ldd r23,Y+12
+ 1238 0550 8827      		clr r24
+ 1239 0552 77FD      		sbrc r23,7
+ 1240 0554 8095      		com r24
+ 1241 0556 982F      		mov r25,r24
+ 1242 0558 0E94 0000 		call __floatsisf
+ 1243 055c A701      		movw r20,r14
+ 1244 055e 9601      		movw r18,r12
+ 1245 0560 0E94 0000 		call __mulsf3
+ 1246 0564 20E0      		ldi r18,lo8(0x41200000)
+ 1247 0566 30E0      		ldi r19,hi8(0x41200000)
+ 1248 0568 40E2      		ldi r20,hlo8(0x41200000)
+ 1249 056a 51E4      		ldi r21,hhi8(0x41200000)
+ 1250 056c 0E94 0000 		call __mulsf3
+ 1251 0570 0E94 0000 		call __fixsfsi
+ 1252 0574 062F      		mov r16,r22
+ 1253 0576 A72E      		mov r10,r23
+  86:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   scaled.YAxis = (int16_t)((raw.YAxis *  Mag_m_scale) * INT_SCALER_MAG);
+ 1255               	.LM86:
+ 1256 0578 6985      		ldd r22,Y+9
+ 1257 057a 7A85      		ldd r23,Y+10
+ 1258 057c 8827      		clr r24
+ 1259 057e 77FD      		sbrc r23,7
+ 1260 0580 8095      		com r24
+ 1261 0582 982F      		mov r25,r24
+ 1262 0584 0E94 0000 		call __floatsisf
+ 1263 0588 A701      		movw r20,r14
+ 1264 058a 9601      		movw r18,r12
+ 1265 058c 0E94 0000 		call __mulsf3
+ 1266 0590 20E0      		ldi r18,lo8(0x41200000)
+ 1267 0592 30E0      		ldi r19,hi8(0x41200000)
+ 1268 0594 40E2      		ldi r20,hlo8(0x41200000)
+ 1269 0596 51E4      		ldi r21,hhi8(0x41200000)
+ 1270 0598 0E94 0000 		call __mulsf3
+ 1271 059c 0E94 0000 		call __fixsfsi
+ 1272 05a0 162F      		mov r17,r22
+ 1273 05a2 B72E      		mov r11,r23
+  84:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   scaled.XAxis = (int16_t)((raw.XAxis *  Mag_m_scale) * INT_SCALER_MAG);
+ 1275               	.LM87:
+ 1276 05a4 6F81      		ldd r22,Y+7
+ 1277 05a6 7885      		ldd r23,Y+8
+ 1278 05a8 8827      		clr r24
+ 1279 05aa 77FD      		sbrc r23,7
+ 1280 05ac 8095      		com r24
+ 1281 05ae 982F      		mov r25,r24
+ 1282 05b0 0E94 0000 		call __floatsisf
+ 1283 05b4 A701      		movw r20,r14
+ 1284 05b6 9601      		movw r18,r12
+ 1285 05b8 0E94 0000 		call __mulsf3
+ 1286 05bc 20E0      		ldi r18,lo8(0x41200000)
+ 1287 05be 30E0      		ldi r19,hi8(0x41200000)
+ 1288 05c0 40E2      		ldi r20,hlo8(0x41200000)
+ 1289 05c2 51E4      		ldi r21,hhi8(0x41200000)
+ 1290 05c4 0E94 0000 		call __mulsf3
+ 1291 05c8 0E94 0000 		call __fixsfsi
+ 1292 05cc 7A83      		std Y+2,r23
+ 1293 05ce 6983      		std Y+1,r22
+  87:../../../../../src/drivers/platform/MARS/source/HMC5883L.c ****   return scaled;
+ 1295               	.LM88:
+ 1296 05d0 812F      		mov r24,r17
+ 1297 05d2 9B2D      		mov r25,r11
+ 1298 05d4 9C83      		std Y+4,r25
+ 1299 05d6 8B83      		std Y+3,r24
+ 1300 05d8 802F      		mov r24,r16
+ 1301 05da 9A2D      		mov r25,r10
+ 1302 05dc 9E83      		std Y+6,r25
+ 1303 05de 8D83      		std Y+5,r24
+ 1304 05e0 262F      		mov r18,r22
+ 1305 05e2 3A81      		ldd r19,Y+2
+ 1306 05e4 412F      		mov r20,r17
+ 1307 05e6 5C81      		ldd r21,Y+4
+ 1308 05e8 602F      		mov r22,r16
+ 1309 05ea 7E81      		ldd r23,Y+6
+  88:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+ 1311               	.LM89:
+ 1312 05ec 80E0      		ldi r24,lo8(0)
+ 1313 05ee 90E0      		ldi r25,lo8(0)
+ 1314               	/* epilogue start */
+ 1315 05f0 6296      		adiw r28,18
+ 1316 05f2 0FB6      		in __tmp_reg__,__SREG__
+ 1317 05f4 F894      		cli
+ 1318 05f6 DEBF      		out __SP_H__,r29
+ 1319 05f8 0FBE      		out __SREG__,__tmp_reg__
+ 1320 05fa CDBF      		out __SP_L__,r28
+ 1321 05fc DF91      		pop r29
+ 1322 05fe CF91      		pop r28
+ 1323 0600 1F91      		pop r17
+ 1324 0602 0F91      		pop r16
+ 1325 0604 FF90      		pop r15
+ 1326 0606 EF90      		pop r14
+ 1327 0608 DF90      		pop r13
+ 1328 060a CF90      		pop r12
+ 1329 060c BF90      		pop r11
+ 1330 060e AF90      		pop r10
+ 1331 0610 0895      		ret
+ 1336               	.Lscope9:
+ 1338               		.stabd	78,0,0
+ 1341               	.global	get_Magneto_Values_scaled
+ 1343               	get_Magneto_Values_scaled:
+ 1344               		.stabd	46,0,0
+  91:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** {
+ 1346               	.LM90:
+ 1347               	.LFBB10:
+ 1348 0612 0F93      		push r16
+ 1349 0614 1F93      		push r17
+ 1350 0616 CF93      		push r28
+ 1351 0618 DF93      		push r29
+ 1352 061a CDB7      		in r28,__SP_L__
+ 1353 061c DEB7      		in r29,__SP_H__
+ 1354 061e 2C97      		sbiw r28,12
+ 1355 0620 0FB6      		in __tmp_reg__,__SREG__
+ 1356 0622 F894      		cli
+ 1357 0624 DEBF      		out __SP_H__,r29
+ 1358 0626 0FBE      		out __SREG__,__tmp_reg__
+ 1359 0628 CDBF      		out __SP_L__,r28
+ 1360               	/* prologue: function */
+ 1361               	/* frame size = 12 */
+ 1362               	/* stack size = 16 */
+ 1363               	.L__stack_usage = 16
+ 1364 062a 8C01      		movw r16,r24
+  93:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	scaled = read_magneto_scaled_axis();
+ 1366               	.LM91:
+ 1367 062c 0E94 0000 		call read_magneto_scaled_axis
+ 1368 0630 2F83      		std Y+7,r18
+ 1369 0632 3887      		std Y+8,r19
+ 1370 0634 4987      		std Y+9,r20
+ 1371 0636 5A87      		std Y+10,r21
+ 1372 0638 6B87      		std Y+11,r22
+ 1373 063a 7C87      		std Y+12,r23
+ 1374 063c DE01      		movw r26,r28
+ 1375 063e 1196      		adiw r26,1
+ 1376 0640 FE01      		movw r30,r28
+ 1377 0642 3796      		adiw r30,7
+ 1378 0644 86E0      		ldi r24,lo8(6)
+ 1379               	.L59:
+ 1380 0646 0190      		ld r0,Z+
+ 1381 0648 0D92      		st X+,r0
+ 1382 064a 8150      		subi r24,lo8(-(-1))
+ 1383 064c 01F4      		brne .L59
+  95:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*result = scaled.XAxis; 
+ 1385               	.LM92:
+ 1386 064e 8981      		ldd r24,Y+1
+ 1387 0650 9A81      		ldd r25,Y+2
+ 1388 0652 F801      		movw r30,r16
+ 1389 0654 9183      		std Z+1,r25
+ 1390 0656 8083      		st Z,r24
+  96:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*(result+1) = scaled.YAxis;
+ 1392               	.LM93:
+ 1393 0658 8B81      		ldd r24,Y+3
+ 1394 065a 9C81      		ldd r25,Y+4
+ 1395 065c 9383      		std Z+3,r25
+ 1396 065e 8283      		std Z+2,r24
+  97:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** 	*(result+2) = scaled.ZAxis; 
+ 1398               	.LM94:
+ 1399 0660 8D81      		ldd r24,Y+5
+ 1400 0662 9E81      		ldd r25,Y+6
+ 1401 0664 9583      		std Z+5,r25
+ 1402 0666 8483      		std Z+4,r24
+ 1403               	/* epilogue start */
+  98:../../../../../src/drivers/platform/MARS/source/HMC5883L.c **** }
+ 1405               	.LM95:
+ 1406 0668 2C96      		adiw r28,12
+ 1407 066a 0FB6      		in __tmp_reg__,__SREG__
+ 1408 066c F894      		cli
+ 1409 066e DEBF      		out __SP_H__,r29
+ 1410 0670 0FBE      		out __SREG__,__tmp_reg__
+ 1411 0672 CDBF      		out __SP_L__,r28
+ 1412 0674 DF91      		pop r29
+ 1413 0676 CF91      		pop r28
+ 1414 0678 1F91      		pop r17
+ 1415 067a 0F91      		pop r16
+ 1416 067c 0895      		ret
+ 1421               	.Lscope10:
+ 1423               		.stabd	78,0,0
+ 1424               		.comm error_num,1,1
+ 1425               		.comm error_task,1,1
+ 1426               		.comm Mag_m_scale,4,1
+ 1427               		.comm nrk_kernel_stk_ptr,2,1
+ 1428               		.comm nrk_idle_task_stk,256,1
+ 1429               		.comm _nrk_signal_list,4,1
+ 1430               		.section	.progmem.data,"a",@progbits
+ 1433               	__c.2925:
+ 1434 0000 484D 4335 		.string	"HMC5883L(Magnetometer)data rate 75Hz. Averaging 8 samples. . .\r\n"
+ 1434      3838 334C 
+ 1434      284D 6167 
+ 1434      6E65 746F 
+ 1434      6D65 7465 
+ 1441               		.text
+ 1443               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 HMC5883L.c
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:2      *ABS*:000000000000003f __SREG__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:3      *ABS*:000000000000003e __SP_H__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:4      *ABS*:000000000000003d __SP_L__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:5      *ABS*:0000000000000000 __tmp_reg__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:6      *ABS*:0000000000000001 __zero_reg__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:299    .text:0000000000000000 mag_write
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:345    .text:000000000000002e set_mag_data_rate_75_Hz_max
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:373    .text:000000000000003c set_mag_measurement_mode
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:401    .text:000000000000004a set_mag_scale
+                            *COM*:0000000000000004 Mag_m_scale
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:669    .text:000000000000020e set_up_HMC5883L
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:1433   .progmem.data:0000000000000000 __c.2925
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:742    .text:0000000000000264 mag_read
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:884    .text:000000000000031a read_magneto_raw_axis
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:967    .text:0000000000000380 get_Magneto_Values_flat
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:1182   .text:00000000000004f6 read_magneto_scaled_axis
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccHvM79B.s:1343   .text:0000000000000612 get_Magneto_Values_scaled
+                            *COM*:0000000000000001 error_num
+                            *COM*:0000000000000001 error_task
+                            *COM*:0000000000000002 nrk_kernel_stk_ptr
+                            *COM*:0000000000000100 nrk_idle_task_stk
+                            *COM*:0000000000000004 _nrk_signal_list
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+beginTransmission_int
+send_int
+endTransmission
+__eqsf2
+nrk_kprintf
+requestFrom_2int
+available
+receive
+__floatsisf
+atan2
+__fixsfsi
+__addsf3
+__divsf3
+__mulsf3

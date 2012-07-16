@@ -1,0 +1,486 @@
+
+Compiling:  foo.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c foo.c -o foo.o
+
+Compiling:  /Users/dbanks/mbed_offline/src/gcc4mbed.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/src/gcc4mbed.c -o /Users/dbanks/mbed_offline/src/gcc4mbed.o
+
+Compiling:  /Users/dbanks/mbed_offline/src/syscalls.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/src/syscalls.c -o /Users/dbanks/mbed_offline/src/syscalls.o
+
+Compiling:  main.cpp
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c main.cpp -o main.o
+arm-none-eabi-g++ -mcpu=cortex-m3 -mthumb -O2 -Wl,-Map=HelloWorld.map,--cref,--gc-sections,--no-wchar-size-warning -T/Users/dbanks/mbed_offline/build/mbed.ld -L /Users/dbanks/mbed_offline/external/gcc/LPC1768 ./foo.o /Users/dbanks/mbed_offline/src/gcc4mbed.o /Users/dbanks/mbed_offline/src/syscalls.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/hal_wait.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_driver.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_reserve.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/LPC1768_hw_specific.o ./main.o  /Users/dbanks/mbed_offline/external/mbed/LPC1768/mbed.ar /Users/dbanks/mbed_offline/external/mbed/LPC1768/capi.ar /Users/dbanks/mbed_offline/external/FATFileSystem/LPC1768/FATFileSystem.ar  -o HelloWorld.elf
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/hal_wait.o: In function `halWait(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/hal_wait.c:40: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.o: In function `nrk_eeprom_read_byte(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:12: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.o: In function `nrk_eeprom_read_byte(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:12: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.o: In function `nrk_eeprom_read_byte(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:12: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o: In function `nrk_int_disable':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o: In function `nrk_int_disable':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o: In function `nrk_int_disable':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `cur_task_stats'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `_nrk_stats_sleep_time'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `_nrk_readyQ'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `_free_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `_head_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_wakeup_signal'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_cur_task_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_cur_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_high_ready_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_high_ready_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `_nrk_resource_cnt'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_sem_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_system_time'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o: In function `dump_stack_info()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:33: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o: In function `dump_stack_info()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:33: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o: In function `dump_stack_info()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:33: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o: In function `dump_stack_info()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:33: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o: In function `dump_stack_info()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:33: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_nrk_cpu_state'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `next_next_wakeup'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_nrk_readyQ'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_free_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_head_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_wakeup_signal'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_cur_task_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_cur_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_high_ready_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_high_ready_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_nrk_resource_cnt'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_sem_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_system_time'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `_nrk_cpu_state'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `next_next_wakeup'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `_nrk_cpu_state'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `next_next_wakeup'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_nrk_readyQ'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_free_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_head_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_wakeup_signal'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_cur_task_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_cur_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_high_ready_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_high_ready_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_nrk_resource_cnt'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_sem_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_system_time'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_nrk_cpu_state'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `next_next_wakeup'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `cur_task_stats'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_nrk_stats_sleep_time'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.o: In function `_nrk_startup_error()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.c:19: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.o: In function `_nrk_startup_error()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.c:19: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.o: In function `_nrk_startup_error()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.c:19: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o: In function `nrk_watchdog_disable()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.c:103: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o: In function `nrk_watchdog_disable()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.c:103: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o: In function `nrk_watchdog_disable()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.c:103: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o: In function `nrk_watchdog_disable()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.c:103: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o: In function `nrk_watchdog_disable()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.c:103: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `_nrk_readyQ'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `_free_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `_head_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_wakeup_signal'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_cur_task_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_cur_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_high_ready_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_high_ready_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `_nrk_resource_cnt'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_sem_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_system_time'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: first defined here
+collect2: ld returned 1 exit status
+make: *** [HelloWorld.elf] Error 1

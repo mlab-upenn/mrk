@@ -1,0 +1,21 @@
+<FireflyConfig>
+
+<PacketSequence>
+
+	<Sleep value="10"></Sleep>
+
+	<FireFlyDSPacket type="ping" debugFlag="enable" rssiThresh="-32" encryptFlag="enable" treeFilterFlag="enable" linkAckFlag="enable" ackRetry="15" seqNum="auto" prio="1" nav="10" maxHopCnt="5" delayPerLevel="1" MACCheckRate="100" >
+	</FireFlyDSPacket>	
+
+	<Sleep value="1"></Sleep>
+
+	<FireFlyDSPacket type="transducerCmd" rssiThresh="-32" encryptFlag="enable" treeFilterFlag="enable" linkAckFlag="enable" ackRetry="15" seqNum="auto" prio="1" nav="10" maxHopCnt="5" delayPerLevel="1" MACCheckRate="100" >
+		<Transducer macAddr="ff" key="TRAN_FF_BASIC_SHORT" />
+		<Transducer macAddr="ff" type="TRAN_LED_BLINK" params="RED|GREEN|BLUE|ORANGE"/>
+	</FireFlyDSPacket>	
+
+	<Sleep value="100"></Sleep>
+
+</PacketSequence>
+
+</FireflyConfig>

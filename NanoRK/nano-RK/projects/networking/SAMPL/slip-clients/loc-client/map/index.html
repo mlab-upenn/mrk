@@ -1,0 +1,155 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+      <!-- <meta http-equiv="refresh" content="30" > -->
+      <title>Location Engine</title>
+    <link rel="stylesheet" href="./theme/default/style.css" type="text/css" />
+    <link rel="stylesheet" href="style.css" type="text/css" />
+    <style type="text/css">
+	#map {
+			height: 100%;
+			border: 1px solid black;
+		}	
+    </style>
+    <script src="OpenLayers.js"></script>
+    <script type="text/javascript">
+        var map, layer, markerLayer, style, popup;
+
+        function init(){
+            map = new OpenLayers.Map('map', 
+ {controls: [new OpenLayers.Control.Navigation(), 
+   new OpenLayers.Control.PanZoomBar()] 
+                  }
+		);
+
+            var options = {numZoomLevels: 10,
+		 maxExtent: new OpenLayers.Bounds(-1000, -1000, 1000, 1000),
+    		maxResolution: 7,
+    		units: 'm',
+		};
+
+            var graphic = new OpenLayers.Layer.Image(
+                                'Location Engine',
+                                'map.png',
+                                new OpenLayers.Bounds(-1000, -1000, 1000, 1000),
+                                new OpenLayers.Size(1000, 1000),
+                                options);
+
+	style = new OpenLayers.Style({externalGraphic: "${thumbnail}"});
+            
+            // If the above rule does not apply, use a smaller pointRadius.
+            var elseRule = new OpenLayers.Rule({
+                elseFilter: true,
+                symbolizer: {pointRadius: 20}
+            });
+            
+            style.addRules([elseRule]);
+
+
+// Create a GML layer with GeoRSS format and a style map.
+            markerLayer = new OpenLayers.Layer.GML("Image xml layer",
+                                                               "map.xml", {
+                format: OpenLayers.Format.GeoRSS,
+                formatOptions: {
+                    // adds the thumbnail attribute to the feature
+                    createFeatureFromItem: function(item) {
+                        var feature = OpenLayers.Format.GeoRSS.prototype
+                                .createFeatureFromItem.apply(this, arguments);
+                        feature.attributes.thumbnail =
+                                this.getElementsByTagNameNS(
+                                item, "*", "thumbnail")[0].getAttribute("url");
+                        return feature;
+                    }
+                },
+                                // Giving the style map keys for "default" and "select"
+                                // rendering intent, to make the image larger when selected
+                styleMap: new OpenLayers.StyleMap({
+                    "default": style,
+                    "select": new OpenLayers.Style({pointRadius: 35})
+                })
+            });
+
+ // control that will show a popup when clicking on a thumbnail
+            var popupControl = new OpenLayers.Control.SelectFeature(markerLayer, {
+	      toggle: function(feature) {
+                   if(popup) 
+			{
+			  map.removePopup(popup);
+			}
+              },
+              onSelect: function(feature) {
+                  var pos = feature.geometry;
+                  if (popup) {
+                      map.removePopup(popup);
+                  }
+                  popup = new OpenLayers.Popup("popup",
+                      new OpenLayers.LonLat(pos.x, pos.y),
+                      new OpenLayers.Size(200,200),
+                      "<h3>" + feature.attributes.title + "</h3>" +
+                      feature.attributes.description,
+                      feature.attributes.description);
+		 popup.backgroundColor="#edffce";
+                 map.addPopup(popup);
+              }
+
+            }); 
+            map.addControl(popupControl);
+            
+            popupControl.activate();
+
+ 
+
+            map.addLayers([graphic, markerLayer]);
+            map.addControl(new OpenLayers.Control.PanZoomBar());
+	    map.addControl(new OpenLayers.Control.LayerSwitcher());
+            map.zoomToMaxExtent();
+            map.addControl(new OpenLayers.Control.MousePosition());
+	    map.setCenter(new OpenLayers.LonLat(0, 0), 1);
+	    resize();
+        }
+
+
+	 function getWindowHeight() {
+        if (self.innerHeight) return self.innerHeight;
+        if (document.documentElement && document.documentElement.clientHeight)
+            return document.documentElement.clientHeight;
+        if (document.body) return document.body.clientHeight;
+                return 0;
+    }
+
+    function getWindowWidth() {
+            if (self.innerWidth) return self.innerWidth;
+            if (document.documentElement && document.documentElement.clientWidth)
+                return document.documentElement.clientWidth;
+            if (document.body) return document.body.clientWidth;
+                return 0;
+    }
+    
+    function resize() {  
+            var map = document.getElementById("map");  
+            var header = document.getElementById("header");  
+            var subheader = document.getElementById("subheader");  
+            map.style.height = (getWindowHeight()-80) + "px";
+            map.style.width = (getWindowWidth()-20) + "px";
+            header.style.width = (getWindowWidth()-20) + "px";
+            subheader.style.width = (getWindowWidth()-20) + "px";
+    } 
+
+    onresize=function(){ resize(); };
+
+
+
+    </script>
+  </head>
+  <body onload="init()">
+
+
+    <div id="map" ></div>
+
+<p align="right">
+<INPUT type=button value=" Back " onClick="document.location = '/portal/map-viewer/cmu-campus/cmu.html'">
+<INPUT type=button value=" Update " onClick="javascript:location.reload(true)">
+</p>
+
+
+  </body>
+</html>

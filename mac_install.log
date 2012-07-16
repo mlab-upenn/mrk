@@ -1,0 +1,250 @@
+Thu Jul 5 12:30:34 EDT 2012 Starting ./mac_install
+Thu Jul 5 12:30:34 EDT 2012 Executing curl -L0 https://sourcery.mentor.com/sgpp/lite/arm/portal/package8734/public/arm-none-eabi/arm-2011.03-42-arm-none-eabi-i686-pc-linux-gnu.tar.bz2
+Thu Jul 5 12:30:41 EDT 2012 Validating md5 signature of Code Sourcery G++ Lite
+Thu Jul 5 12:30:41 EDT 2012 Executing curl -L0 https://github.com/adamgreen/csgcc4mac/tarball/master
+Thu Jul 5 12:30:55 EDT 2012 Validating md5 signature of csgcc4mac project
+Thu Jul 5 12:30:55 EDT 2012 Executing tar xf /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03-42-arm-none-eabi-i686-pc-linux-gnu.tar.bz2
+Thu Jul 5 12:31:07 EDT 2012 Executing tar -x -s /adamgreen-csgcc4mac-[a-f0-9]*/csgcc4mac/ -f /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac.tar.gz
+Thu Jul 5 12:31:11 EDT 2012 Executing rm -f /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-addr2line /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-ar /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-as /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-c++ /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-c++filt /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-cpp /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-elfedit /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-g++ /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-gcc /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-gcc-4.5.2 /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-gcov /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-gdb /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-gdbtui /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-gprof /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-ld /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-nm /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-objcopy /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-objdump /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-ranlib /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-readelf /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-run /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-size /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-sprite /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-strings /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-strip
+Thu Jul 5 12:31:11 EDT 2012 Executing cp /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-addr2line /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-ar /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-as /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-c++ /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-c++filt /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-cpp /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-elfedit /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-g++ /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-gcc /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-gcc-4.5.2 /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-gccbug /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-gcov /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-gdb /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-gdbtui /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-gprof /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-ld /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-nm /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-objcopy /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-objdump /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-ranlib /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-readelf /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-run /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-size /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-strings /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/arm-none-eabi-strip /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/
+Thu Jul 5 12:31:12 EDT 2012 Executing rm -f /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/as
+Thu Jul 5 12:31:12 EDT 2012 Executing cp /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-as /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/as
+Thu Jul 5 12:31:12 EDT 2012 Executing rm -f /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/g++
+Thu Jul 5 12:31:12 EDT 2012 Executing cp /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-g++ /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/g++
+Thu Jul 5 12:31:12 EDT 2012 Executing rm -f /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/ld
+Thu Jul 5 12:31:12 EDT 2012 Executing cp /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-ld /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/ld
+Thu Jul 5 12:31:12 EDT 2012 Executing rm -f /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/objcopy
+Thu Jul 5 12:31:12 EDT 2012 Executing cp /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-objcopy /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/objcopy
+Thu Jul 5 12:31:12 EDT 2012 Executing rm -f /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/ranlib
+Thu Jul 5 12:31:12 EDT 2012 Executing cp /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-ranlib /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/ranlib
+Thu Jul 5 12:31:12 EDT 2012 Executing rm -f /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/ar
+Thu Jul 5 12:31:12 EDT 2012 Executing cp /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-ar /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/ar
+Thu Jul 5 12:31:12 EDT 2012 Executing rm -f /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/c++
+Thu Jul 5 12:31:12 EDT 2012 Executing cp /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-c++ /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/c++
+Thu Jul 5 12:31:12 EDT 2012 Executing rm -f /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/gcc
+Thu Jul 5 12:31:12 EDT 2012 Executing cp /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-gcc /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/gcc
+Thu Jul 5 12:31:12 EDT 2012 Executing rm -f /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/nm
+Thu Jul 5 12:31:12 EDT 2012 Executing cp /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-nm /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/nm
+Thu Jul 5 12:31:12 EDT 2012 Executing rm -f /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/objdump
+Thu Jul 5 12:31:12 EDT 2012 Executing cp /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-objdump /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/objdump
+Thu Jul 5 12:31:12 EDT 2012 Executing rm -f /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/strip
+Thu Jul 5 12:31:12 EDT 2012 Executing cp /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/bin/arm-none-eabi-strip /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/arm-none-eabi/bin/strip
+Thu Jul 5 12:31:12 EDT 2012 Executing rm -rf /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/libexec/gcc/arm-none-eabi/4.5.2/
+Thu Jul 5 12:31:12 EDT 2012 Executing mkdir /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/libexec/gcc/arm-none-eabi/4.5.2/
+Thu Jul 5 12:31:12 EDT 2012 Executing cp -R /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/csgcc4mac/osx64/libexec/ /Users/dbanks/adamgreen-gcc4mbed-f5adc35/adamgreen-gcc4mbed-f5adc35/arm-2011.03/libexec/gcc/arm-none-eabi/4.5.2/
+Thu Jul 5 12:31:14 EDT 2012 Executing make install_mbed
+make -C external
+rm -f -r mbed > /dev/null 2>&1 ; exit 0
+svn checkout --revision 28  http://mbed.org/projects/libraries/svn/mbed/trunk mbed
+A    mbed/SPI.h
+A    mbed/PwmOut.h
+A    mbed/Stream.h
+A    mbed/DigitalInOut.h
+A    mbed/SerialHalfDuplex.h
+A    mbed/cmsis_nvic.h
+A    mbed/wait_api.h
+A    mbed/CAN.h
+A    mbed/DigitalIn.h
+A    mbed/DigitalOut.h
+A    mbed/SPIHalfDuplex.h
+A    mbed/PortNames.h
+A    mbed/I2CSlave.h
+A    mbed/PortIn.h
+A    mbed/I2C.h
+A    mbed/Ethernet.h
+A    mbed/LPC1768
+A    mbed/LPC1768/core_cm3.h
+A    mbed/LPC1768/stackheap.o
+A    mbed/LPC1768/system_LPC17xx.h
+A    mbed/LPC1768/startup_LPC17xx.o
+A    mbed/LPC1768/core_cm3.o
+A    mbed/LPC1768/system_LPC17xx.o
+A    mbed/LPC1768/mbed.ar
+A    mbed/LPC1768/cmsis_nvic.o
+A    mbed/LPC1768/LPC1768.sct
+A    mbed/LPC1768/LPC17xx.h
+A    mbed/LPC1768/capi.ar
+A    mbed/PeripheralNames.h
+A    mbed/Timer.h
+A    mbed/InterruptIn.h
+A    mbed/rpc.h
+A    mbed/platform.h
+A    mbed/Timeout.h
+A    mbed/FunctionPointer.h
+A    mbed/AnalogIn.h
+A    mbed/error.h
+A    mbed/FileSystemLike.h
+A    mbed/AnalogOut.h
+A    mbed/DirHandle.h
+A    mbed/FileHandle.h
+A    mbed/LocalFileSystem.h
+A    mbed/can_helper.h
+A    mbed/PortInOut.h
+A    mbed/rtc_time.h
+A    mbed/mbed.h
+A    mbed/BusInOut.h
+A    mbed/PinNames.h
+A    mbed/Base.h
+A    mbed/LPC2368
+A    mbed/LPC2368/stackheap.o
+A    mbed/LPC2368/core_arm7.h
+A    mbed/LPC2368/system_LPC23xx.o
+A    mbed/LPC2368/vector_table.o
+A    mbed/LPC2368/vector_defns.h
+A    mbed/LPC2368/vector_functions.o
+A    mbed/LPC2368/mbed.ar
+A    mbed/LPC2368/LPC2368.sct
+A    mbed/LPC2368/LPC23xx.h
+A    mbed/LPC2368/cmsis_nvic.o
+A    mbed/LPC2368/vector_realmonitor.o
+A    mbed/LPC2368/core_arm7.o
+A    mbed/LPC2368/capi.ar
+A    mbed/LPC2368/system_LPC23xx.h
+A    mbed/PortOut.h
+A    mbed/cmsis.h
+A    mbed/Serial.h
+A    mbed/BusIn.h
+A    mbed/BusOut.h
+A    mbed/Ticker.h
+A    mbed/TimerEvent.h
+A    mbed/FileLike.h
+A    mbed/SPISlave.h
+Checked out revision 28.
+rm -f -r FATFileSystem > /dev/null 2>&1 ; exit 0
+svn checkout --revision 28  http://mbed.org/projects/libraries/svn/FATFileSystem/trunk FATFileSystem
+A    FATFileSystem/LPC2368
+A    FATFileSystem/LPC2368/FATFileSystem.ar
+A    FATFileSystem/ff.h
+A    FATFileSystem/integer.h
+A    FATFileSystem/LPC1768
+A    FATFileSystem/LPC1768/FATFileSystem.ar
+A    FATFileSystem/FATFileSystem.h
+A    FATFileSystem/diskio.h
+A    FATFileSystem/FATDirHandle.h
+A    FATFileSystem/FATFileHandle.h
+Checked out revision 28.
+mv mbed/LPC1768/LPC1768.sct  mbed/LPC1768/LPC1768.scatter
+mv mbed/LPC2368/LPC2368.sct  mbed/LPC2368/LPC2368.scatter
+patch -p1 <mbed.patch
+patching file mbed/DirHandle.h
+patching file mbed/FileLike.h
+patching file mbed/FileSystemLike.h
+patching file mbed/PeripheralNames.h
+patching file mbed/PinNames.h
+patching file mbed/PortNames.h
+patching file mbed/can_helper.h
+patch -p1 <FATFileSystem.patch
+patching file FATFileSystem/FATFileSystem.h
+arm-none-eabi-objcopy -g mbed/LPC1768/mbed.ar
+arm-none-eabi-objcopy -g mbed/LPC1768/capi.ar
+arm-none-eabi-objcopy -g FATFileSystem/LPC1768/FATFileSystem.ar
+Thu Jul 5 12:31:32 EDT 2012 Executing make clean
+make clean -C samples
+make clean -C agutil
+rm -f debug.o  
+rm -f agutil.ar
+make clean -C HelloWorld
+rm -f ../../src/gcc4mbed.o ../../src/syscalls.o  ./main.o
+rm -f HelloWorld.hex
+rm -f HelloWorld.elf
+rm -f HelloWorld.map
+rm -f HelloWorld.bin
+rm -f HelloWorld.disasm
+make clean -C StdIO
+rm -f ../../src/gcc4mbed.o ../../src/syscalls.o  ./main.o
+rm -f StdIO.hex
+rm -f StdIO.elf
+rm -f StdIO.map
+rm -f StdIO.bin
+rm -f StdIO.disasm
+make clean -C Ticker
+rm -f ../../src/gcc4mbed.o ../../src/syscalls.o  ./main.o
+rm -f Ticker.hex
+rm -f Ticker.elf
+rm -f Ticker.map
+rm -f Ticker.bin
+rm -f Ticker.disasm
+make clean -C LocalFileSystem
+rm -f ../../src/gcc4mbed.o ../../src/syscalls.o  ./main.o
+rm -f LocalFileSystem.hex
+rm -f LocalFileSystem.elf
+rm -f LocalFileSystem.map
+rm -f LocalFileSystem.bin
+rm -f LocalFileSystem.disasm
+make clean -C SDFileSystem
+rm -f ../../src/gcc4mbed.o ../../src/syscalls.o  ./main.o ./SDFileSystem/SDFileSystem.o
+rm -f SDFileSystem.hex
+rm -f SDFileSystem.elf
+rm -f SDFileSystem.map
+rm -f SDFileSystem.bin
+rm -f SDFileSystem.disasm
+make clean -C CTest
+rm -f ./main.o ../../src/gcc4mbed.o ../../src/syscalls.o  
+rm -f CTest.hex
+rm -f CTest.elf
+rm -f CTest.map
+rm -f CTest.bin
+rm -f CTest.disasm
+Thu Jul 5 12:31:32 EDT 2012 Executing make
+make  -C samples
+make  -C agutil
+arm-none-eabi-gcc -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -Wnested-externs --std=gnu99  -I../../external/mbed -I../../external/mbed/LPC1768 -I../../external/FATFileSystem -I. -DTARGET_LPC1768  -c debug.c -o debug.o
+arm-none-eabi-ar -rc agutil.ar debug.o  
+make  -C HelloWorld
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I../../external/mbed -I../../external/mbed/LPC1768 -I../../external/FATFileSystem -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -c ../../src/gcc4mbed.c -o ../../src/gcc4mbed.o
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I../../external/mbed -I../../external/mbed/LPC1768 -I../../external/FATFileSystem -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -c ../../src/syscalls.c -o ../../src/syscalls.o
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I../../external/mbed -I../../external/mbed/LPC1768 -I../../external/FATFileSystem -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -c main.cpp -o main.o
+arm-none-eabi-g++ -mcpu=cortex-m3 -mthumb -O2 -Wl,-Map=HelloWorld.map,--cref,--gc-sections,--no-wchar-size-warning -T../../build/mbed.ld -L ../../external/gcc/LPC1768 ../../src/gcc4mbed.o ../../src/syscalls.o  ./main.o  ../../external/mbed/LPC1768/mbed.ar ../../external/mbed/LPC1768/capi.ar ../../external/FATFileSystem/LPC1768/FATFileSystem.ar  -o HelloWorld.elf
+arm-none-eabi-size HelloWorld.elf
+   text	   data	    bss	    dec	    hex	filename
+  23072	   1376	    104	  24552	   5fe8	HelloWorld.elf
+arm-none-eabi-objcopy -R .stack -O ihex HelloWorld.elf HelloWorld.hex
+arm-none-eabi-objcopy -O binary HelloWorld.elf HelloWorld.bin
+arm-none-eabi-objdump -d HelloWorld.elf >HelloWorld.disasm
+make  -C StdIO
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I../../external/mbed -I../../external/mbed/LPC1768 -I../../external/FATFileSystem -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=0 -c main.cpp -o main.o
+arm-none-eabi-g++ -mcpu=cortex-m3 -mthumb -O2 -Wl,-Map=StdIO.map,--cref,--gc-sections,--no-wchar-size-warning -T../../build/mbed.ld -L ../../external/gcc/LPC1768 ../../src/gcc4mbed.o ../../src/syscalls.o  ./main.o  ../../external/mbed/LPC1768/mbed.ar ../../external/mbed/LPC1768/capi.ar ../../external/FATFileSystem/LPC1768/FATFileSystem.ar  -o StdIO.elf
+arm-none-eabi-size StdIO.elf
+   text	   data	    bss	    dec	    hex	filename
+  53511	   1456	    404	  55371	   d84b	StdIO.elf
+arm-none-eabi-objcopy -R .stack -O ihex StdIO.elf StdIO.hex
+arm-none-eabi-objcopy -O binary StdIO.elf StdIO.bin
+arm-none-eabi-objdump -d StdIO.elf >StdIO.disasm
+make  -C Ticker
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I../../external/mbed -I../../external/mbed/LPC1768 -I../../external/FATFileSystem -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=0 -c main.cpp -o main.o
+arm-none-eabi-g++ -mcpu=cortex-m3 -mthumb -O2 -Wl,-Map=Ticker.map,--cref,--gc-sections,--no-wchar-size-warning -T../../build/mbed.ld -L ../../external/gcc/LPC1768 ../../src/gcc4mbed.o ../../src/syscalls.o  ./main.o  ../../external/mbed/LPC1768/mbed.ar ../../external/mbed/LPC1768/capi.ar ../../external/FATFileSystem/LPC1768/FATFileSystem.ar  -o Ticker.elf
+arm-none-eabi-size Ticker.elf
+   text	   data	    bss	    dec	    hex	filename
+  64618	   1664	    520	  66802	  104f2	Ticker.elf
+arm-none-eabi-objcopy -R .stack -O ihex Ticker.elf Ticker.hex
+arm-none-eabi-objcopy -O binary Ticker.elf Ticker.bin
+arm-none-eabi-objdump -d Ticker.elf >Ticker.disasm
+make  -C LocalFileSystem
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I../../external/mbed -I../../external/mbed/LPC1768 -I../../external/FATFileSystem -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=0 -c main.cpp -o main.o
+arm-none-eabi-g++ -mcpu=cortex-m3 -mthumb -O2 -Wl,-Map=LocalFileSystem.map,--cref,--gc-sections,--no-wchar-size-warning -T../../build/mbed.ld -L ../../external/gcc/LPC1768 ../../src/gcc4mbed.o ../../src/syscalls.o  ./main.o  ../../external/mbed/LPC1768/mbed.ar ../../external/mbed/LPC1768/capi.ar ../../external/FATFileSystem/LPC1768/FATFileSystem.ar  -o LocalFileSystem.elf
+arm-none-eabi-size LocalFileSystem.elf
+   text	   data	    bss	    dec	    hex	filename
+  57141	   1460	    424	  59025	   e691	LocalFileSystem.elf
+arm-none-eabi-objcopy -R .stack -O ihex LocalFileSystem.elf LocalFileSystem.hex
+arm-none-eabi-objcopy -O binary LocalFileSystem.elf LocalFileSystem.bin
+arm-none-eabi-objdump -d LocalFileSystem.elf >LocalFileSystem.disasm
+make  -C SDFileSystem
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I./SDFileSystem/ -I../../external/mbed -I../../external/mbed/LPC1768 -I../../external/FATFileSystem -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=0 -c main.cpp -o main.o
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I./SDFileSystem/ -I../../external/mbed -I../../external/mbed/LPC1768 -I../../external/FATFileSystem -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=0 -c SDFileSystem/SDFileSystem.cpp -o SDFileSystem/SDFileSystem.o
+arm-none-eabi-g++ -mcpu=cortex-m3 -mthumb -O2 -Wl,-Map=SDFileSystem.map,--cref,--gc-sections,--no-wchar-size-warning -T../../build/mbed.ld -L ../../external/gcc/LPC1768 ../../src/gcc4mbed.o ../../src/syscalls.o  ./main.o ./SDFileSystem/SDFileSystem.o  ../../external/mbed/LPC1768/mbed.ar ../../external/mbed/LPC1768/capi.ar ../../external/FATFileSystem/LPC1768/FATFileSystem.ar  -o SDFileSystem.elf
+arm-none-eabi-size SDFileSystem.elf
+   text	   data	    bss	    dec	    hex	filename
+  83788	   1484	   1096	  86368	  15160	SDFileSystem.elf
+arm-none-eabi-objcopy -R .stack -O ihex SDFileSystem.elf SDFileSystem.hex
+arm-none-eabi-objcopy -O binary SDFileSystem.elf SDFileSystem.bin
+arm-none-eabi-objdump -d SDFileSystem.elf >SDFileSystem.disasm
+make  -C CTest
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I../../external/mbed -I../../external/mbed/LPC1768 -I../../external/FATFileSystem -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -c main.c -o main.o
+arm-none-eabi-g++ -mcpu=cortex-m3 -mthumb -O2 -Wl,-Map=CTest.map,--cref,--gc-sections,--no-wchar-size-warning -T../../build/mbed.ld -L ../../external/gcc/LPC1768 ./main.o ../../src/gcc4mbed.o ../../src/syscalls.o    ../../external/mbed/LPC1768/mbed.ar ../../external/mbed/LPC1768/capi.ar ../../external/FATFileSystem/LPC1768/FATFileSystem.ar  -o CTest.elf
+arm-none-eabi-size CTest.elf
+   text	   data	    bss	    dec	    hex	filename
+  23072	   1376	    104	  24552	   5fe8	CTest.elf
+arm-none-eabi-objcopy -R .stack -O ihex CTest.elf CTest.hex
+arm-none-eabi-objcopy -O binary CTest.elf CTest.bin
+arm-none-eabi-objdump -d CTest.elf >CTest.disasm
+Thu Jul 5 12:31:34 EDT 2012 Finished successfully

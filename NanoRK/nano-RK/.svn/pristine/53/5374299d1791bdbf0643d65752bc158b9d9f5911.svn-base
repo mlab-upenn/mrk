@@ -1,0 +1,2778 @@
+   1               		.file	"ITG3200.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.global __do_copy_data
+   8               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+ 291               	readmem.constprop.0:
+ 292               		.stabd	46,0,0
+   1:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** /****************************************************************************
+   2:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * ITG3200.h - ITG-3200/I2C library v0.5 for Arduino                         *
+   3:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * Copyright 2010-2011 Filipe Vieira & various contributors                  *
+   4:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * http://code.google.com/p/itg-3200driver                                   *
+   5:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * This file is part of ITG-3200 Arduino library.                            *
+   6:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  *                                                                           *
+   7:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * This library is free software: you can redistribute it and/or modify      *
+   8:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * it under the terms of the GNU Lesser General Public License as published  *
+   9:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * by the Free Software Foundation, either version 3 of the License, or      *
+  10:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * (at your option) any later version.                                       *
+  11:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  *                                                                           *
+  12:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * This program is distributed in the hope that it will be useful,           *
+  13:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * but WITHOUT ANY WARRANTY; without even the implied warranty of            *
+  14:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the             *
+  15:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * GNU Lesser General Public License for more details.                       *
+  16:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  *                                                                           *
+  17:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * You should have received a copy of the GNU Lesser General Public License  *
+  18:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * along with this program.  If not, see <http://www.gnu.org/licenses/>.     *
+  19:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  ****************************************************************************/
+  20:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** /****************************************************************************
+  21:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * Tested on Arduino Mega with ITG-3200 Breakout                             *
+  22:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * SCL     -> pin 21     (no pull up resistors)                              *
+  23:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * SDA     -> pin 20     (no pull up resistors)                              *
+  24:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * CLK & GND -> pin GND                                                      *
+  25:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * INT       -> not connected  (but can be used)                             *
+  26:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  * VIO & VDD -> pin 3.3V                                                     *
+  27:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****  *****************************************************************************/
+  28:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** #include <nrk_driver_list.h>
+  29:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** #include <ITG3200.h>
+  30:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** #include <include.h>
+  31:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** #include <stdio.h>
+  32:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** #include <ulib.h>
+  33:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** #include <nrk_error.h>
+  34:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** #include <nrk.h>
+  35:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** //#include <stdint.h>
+  36:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** #include <basic_rf.h>
+  37:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** #include <Wire.h>
+  38:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** #include <math.h>
+  39:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+  40:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void set_up_ITG3200() {
+  41:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	setOffsets(0,0,0);
+  42:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	setScaleFactor(1.0, 1.0, 1.0, false);  // true to change readGyro output to radians
+  43:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	init_gyro_uint_address(ITG3200_ADDR_AD0_LOW);
+  44:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	nrk_kprintf( PSTR("ITG3200(Gyro) Boot Success. Zero Calibrating. . .\r\n") );
+  45:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	gyro_zero_calibrate(1000, 2);
+  46:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	nrk_kprintf( PSTR(" Gyro calibrated\r\n"));
+  47:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+  48:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+  49:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+  50:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void init_gyro_uint_address(uint16_t  address) {
+  51:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	//ITG3200();
+  52:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	// Uncomment or change your default ITG3200 initialization
+  53:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	// fast sample rate - divisor = 0 filter = 0 clocksrc = 0, 1, 2, or 3  (raw values) 
+  54:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	init_gyro_all(address, NOSRDIVIDER, RANGE2000, BW256_SR8, PLL_XGYRO_REF, true, true);//BW256_SR8
+  55:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	
+  56:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	// slow sample rate - divisor = 0  filter = 1,2,3,4,5, or 6  clocksrc = 0, 1, 2, or 3  (raw values
+  57:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	//init(NOSRDIVIDER, RANGE2000, BW010_SR1, INTERNALOSC, true, true);
+  58:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	
+  59:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	// fast sample rate 32Khz external clock - divisor = 0  filter = 0  clocksrc = 4  (raw values)
+  60:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	//init(NOSRDIVIDER, RANGE2000, BW256_SR8, PLL_EXTERNAL32, true, true);
+  61:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	
+  62:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	// slow sample rate 32Khz external clock - divisor = 0  filter = 1,2,3,4,5, or 6  clocksrc = 4  (r
+  63:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	//init(NOSRDIVIDER, RANGE2000, BW010_SR1, PLL_EXTERNAL32, true, true);
+  64:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+  65:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+  66:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void init_gyro_all(uint16_t address, byte _SRateDiv, byte _Range, byte _filterBW, byte _ClockSrc, b
+  67:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	_dev_address = address;
+  68:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	set_gyro_sample_rate_div(_SRateDiv);
+  69:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	set_gyro_FS_range(_Range);
+  70:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	set_gyro_filter_BW(_filterBW);
+  71:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	setClockSource(_ClockSrc);
+  72:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	setITGReady(_ITGReady);
+  73:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	setRawDataReady(_INTRawDataReady);  
+  74:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	
+  75:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	//setup gyro startup delay	
+  76:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	gyro_start_wait_time.secs = 0;
+  77:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	gyro_start_wait_time.nano_secs = GYROSTART_UP_DELAY_MS*NANOS_PER_MS;
+  78:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	nrk_wait(gyro_start_wait_time);  // startup 
+  79:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+  80:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+  81:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** byte get_gyro_addr() {
+  82:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	/*readmem(WHO_AM_I, 1, &_buff[0]); 
+  83:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	 return _buff[0];  */
+  84:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return _dev_address;
+  85:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+  86:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+  87:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void set_gyro_addr(uint16_t  _addr) {
+  88:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(WHO_AM_I, _addr); 
+  89:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	_dev_address = _addr;
+  90:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+  91:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+  92:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** byte get_gyro_sample_rate_div() {
+  93:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(SMPLRT_DIV, 1, &_buff[0]);
+  94:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return _buff[0];
+  95:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+  96:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+  97:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void set_gyro_sample_rate_div(byte _SampleRate) {//****
+  98:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(SMPLRT_DIV, _SampleRate);
+  99:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 100:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 101:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** byte get_gyro_FS_range() { //***
+ 102:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(DLPF_FS, 1, &_buff[0]);
+ 103:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return ((_buff[0] & DLPFFS_FS_SEL) >> 3);
+ 104:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 105:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 106:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void set_gyro_FS_range(byte _Range) {
+ 107:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(DLPF_FS, 1, &_buff[0]);   
+ 108:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(DLPF_FS, ((_buff[0] & ~DLPFFS_FS_SEL) | (_Range << 3)) ); 
+ 109:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 110:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 111:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** byte get_gyro_filter_BW() {  
+ 112:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(DLPF_FS, 1, &_buff[0]);
+ 113:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & DLPFFS_DLPF_CFG); 
+ 114:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 115:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 116:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void set_gyro_filter_BW(byte _BW) {   
+ 117:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(DLPF_FS, 1, &_buff[0]);
+ 118:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(DLPF_FS, ((_buff[0] & ~DLPFFS_DLPF_CFG) | _BW)); 
+ 119:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 120:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 121:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool is_gyro_INT_active_On_Low() {  
+ 122:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 123:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return ((_buff[0] & INTCFG_ACTL) >> 7);
+ 124:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 125:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 126:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void set_gyro_INT_Logic_lvl(bool _State) { //****
+ 127:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 128:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(INT_CFG, ((_buff[0] & ~INTCFG_ACTL) | (_State << 7))); 
+ 129:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 130:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 131:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool is_gyro_INT_open_drain() {  
+ 132:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 133:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return ((_buff[0] & INTCFG_OPEN) >> 6);
+ 134:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 135:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 136:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setINTDriveType(bool _State) {
+ 137:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 138:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(INT_CFG, ((_buff[0] & ~INTCFG_OPEN) | _State << 6)); 
+ 139:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 140:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 141:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isLatchUntilCleared() {    
+ 142:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 143:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return ((_buff[0] & INTCFG_LATCH_INT_EN) >> 5);
+ 144:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 145:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 146:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setLatchMode(bool _State) {
+ 147:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 148:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(INT_CFG, ((_buff[0] & ~INTCFG_LATCH_INT_EN) | _State << 5)); 
+ 149:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 150:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 151:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isAnyRegClrMode() {    
+ 152:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 153:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return ((_buff[0] & INTCFG_INT_ANYRD_2CLEAR) >> 4);
+ 154:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 155:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 156:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setLatchClearMode(bool _State) {
+ 157:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 158:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(INT_CFG, ((_buff[0] & ~INTCFG_INT_ANYRD_2CLEAR) | _State << 4)); 
+ 159:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 160:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 161:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isITGReadyOn() {   
+ 162:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 163:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return ((_buff[0] & INTCFG_ITG_RDY_EN) >> 2);
+ 164:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 165:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 166:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setITGReady(bool _State) {
+ 167:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 168:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(INT_CFG, ((_buff[0] & ~INTCFG_ITG_RDY_EN) | _State << 2)); 
+ 169:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 170:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 171:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isRawDataReadyOn() {
+ 172:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 173:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & INTCFG_RAW_RDY_EN);
+ 174:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 175:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 176:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setRawDataReady(bool _State) {
+ 177:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 178:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(INT_CFG, ((_buff[0] & ~INTCFG_RAW_RDY_EN) | _State)); 
+ 179:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 180:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 181:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isITGReady() {
+ 182:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_STATUS, 1, &_buff[0]);
+ 183:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return ((_buff[0] & INTSTATUS_ITG_RDY) >> 2);
+ 184:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 185:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 186:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isRawDataReady() {
+ 187:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_STATUS, 1, &_buff[0]);
+ 188:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & INTSTATUS_RAW_DATA_RDY);
+ 189:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 190:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 191:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void readTemp(float *_Temp) {
+ 192:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(TEMP_OUT,2,_buff);
+ 193:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_Temp = 35 + ((_buff[0] << 8 | _buff[1]) + 13200) / 280.0;    // F=C*9/5+32
+ 194:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 195:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 196:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void read_gyro_raw_xyz_three_ptr( int *_GyroX, int *_GyroY, int *_GyroZ){
+ 197:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(GYRO_XOUT, 6, _buff);
+ 198:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroX = _buff[0] << 8 | _buff[1];
+ 199:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroY = _buff[2] << 8 | _buff[3]; 
+ 200:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroZ = _buff[4] << 8 | _buff[5];
+ 201:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 202:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 203:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void read_gyro_raw_xyz_one_ptr( int *_GyroXYZ){
+ 204:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	read_gyro_raw_xyz_three_ptr(_GyroXYZ, _GyroXYZ+1, _GyroXYZ+2);
+ 205:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 206:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 207:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setScaleFactor(float _Xcoeff, float _Ycoeff, float _Zcoeff, bool _Radians) { 
+ 208:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	scalefactor[0] = 14.375 * _Xcoeff;   
+ 209:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	scalefactor[1] = 14.375 * _Ycoeff;
+ 210:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	scalefactor[2] = 14.375 * _Zcoeff;    
+ 211:../../../../../src/drivers/platform/MARS/source/ITG3200.c ****     
+ 212:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	if (_Radians){
+ 213:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		scalefactor[0] /= 0.0174532925;//0.0174532925 = PI/180
+ 214:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		scalefactor[1] /= 0.0174532925;
+ 215:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		scalefactor[2] /= 0.0174532925;
+ 216:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	}
+ 217:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 218:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 219:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setOffsets(int _Xoffset, int _Yoffset, int _Zoffset) {
+ 220:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	offsets[0] = _Xoffset;
+ 221:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	offsets[1] = _Yoffset;
+ 222:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	offsets[2] = _Zoffset;
+ 223:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 224:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 225:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void gyro_zero_calibrate(uint16_t totSamples, uint16_t sampleDelayMS) {
+ 226:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	float tmpOffsets[] = {0,0,0};
+ 227:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	int xyz[3];
+ 228:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	nrk_time_t gyro_sample_delay_nanos;
+ 229:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	
+ 230:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	gyro_sample_delay_nanos.secs = 0;
+ 231:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	gyro_sample_delay_nanos.nano_secs = sampleDelayMS*NANOS_PER_MS;
+ 232:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	
+ 233:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	//uint16_t delay_micros = sampleDelayMS*1000;
+ 234:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	
+ 235:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	for (int i = 0;i < totSamples;i++){
+ 236:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		nrk_wait(gyro_sample_delay_nanos);
+ 237:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		if(!(i%100))printf(". ");
+ 238:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		read_gyro_raw_xyz_one_ptr(xyz);
+ 239:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		tmpOffsets[0] += xyz[0];
+ 240:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		tmpOffsets[1] += xyz[1];
+ 241:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		tmpOffsets[2] += xyz[2];
+ 242:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	}
+ 243:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	setOffsets(-tmpOffsets[0] / totSamples + 0.5, -tmpOffsets[1] / totSamples + 0.5, -tmpOffsets[2] / 
+ 244:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 245:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 246:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void read_gyro_raw_cal_xyz_three_ptr(int *_GyroX, int *_GyroY, int *_GyroZ) { 
+ 247:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	read_gyro_raw_xyz_three_ptr(_GyroX, _GyroY, _GyroZ); 
+ 248:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroX += offsets[0]; 
+ 249:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroY += offsets[1]; 
+ 250:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroZ += offsets[2]; 
+ 251:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** } 
+ 252:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 253:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void read_gyro_raw_cal_xyz_one_ptr(int *_GyroXYZ) { 
+ 254:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	read_gyro_raw_cal_xyz_three_ptr(_GyroXYZ, _GyroXYZ+1, _GyroXYZ+2); 
+ 255:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** } 
+ 256:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 257:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void read_gyro_xyz_three_ptr(int16_t *_GyroX, int16_t *_GyroY, int16_t *_GyroZ){
+ 258:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	int x, y, z; 
+ 259:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	read_gyro_raw_cal_xyz_three_ptr(&x, &y, &z); // x,y,z will contain calibrated integer values from 
+ 260:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroX = (int16_t)( (x / scalefactor[0]) * INT_SCALER_GYRO ); 
+ 261:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroY = (int16_t)( (y / scalefactor[1]) * INT_SCALER_GYRO ); 
+ 262:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroZ = (int16_t)( (z / scalefactor[2]) * INT_SCALER_GYRO );  
+ 263:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** } 
+ 264:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 265:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void read_gyro_xyz_one_ptr(int16_t *_GyroXYZ){
+ 266:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	read_gyro_xyz_three_ptr(_GyroXYZ, _GyroXYZ+1, _GyroXYZ+2);
+ 267:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 268:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 269:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void reset() {     
+ 270:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(PWR_MGM, PWRMGM_HRESET); 
+ 271:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	gyro_start_wait_time.secs = 0;
+ 272:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	gyro_start_wait_time.nano_secs = GYROSTART_UP_DELAY_MS*NANOS_PER_MS;
+ 273:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	nrk_wait(gyro_start_wait_time);  // startup delay	
+ 274:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 275:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 276:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isLowPower() {   
+ 277:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 278:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & PWRMGM_SLEEP) >> 6;
+ 279:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 280:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 281:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setPowerMode(bool _State) {
+ 282:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 283:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(PWR_MGM, ((_buff[0] & ~PWRMGM_SLEEP) | _State << 6));  
+ 284:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 285:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 286:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isXgyroStandby() {
+ 287:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 288:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & PWRMGM_STBY_XG) >> 5;
+ 289:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 290:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 291:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isYgyroStandby() {
+ 292:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 293:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & PWRMGM_STBY_YG) >> 4;
+ 294:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 295:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 296:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isZgyroStandby() {
+ 297:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 298:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & PWRMGM_STBY_ZG) >> 3;
+ 299:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 300:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 301:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setXgyroStandby(bool _Status) {
+ 302:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 303:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(PWR_MGM, ((_buff[0] & PWRMGM_STBY_XG) | _Status << 5));
+ 304:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 305:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 306:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setYgyroStandby(bool _Status) {
+ 307:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 308:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(PWR_MGM, ((_buff[0] & PWRMGM_STBY_YG) | _Status << 4));
+ 309:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 310:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 311:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setZgyroStandby(bool _Status) {
+ 312:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 313:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(PWR_MGM, ((_buff[0] & PWRMGM_STBY_ZG) | _Status << 3));
+ 314:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 315:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 316:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** byte getClockSource() {  
+ 317:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 318:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & PWRMGM_CLK_SEL);
+ 319:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 320:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 321:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setClockSource(byte _CLKsource) {   
+ 322:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 323:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(PWR_MGM, ((_buff[0] & ~PWRMGM_CLK_SEL) | _CLKsource)); 
+ 324:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 325:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 326:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void writemem(uint8_t _addr, uint8_t _val) {
+ 327:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	beginTransmission_uint8(_dev_address);   // start transmission to device 
+ 328:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	send_uint8(_addr); // send register address
+ 329:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	send_uint8(_val); // send value to write
+ 330:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	endTransmission(); // end transmission
+ 331:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 332:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 
+ 333:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void readmem(uint8_t _addr, uint8_t _nbytes, uint8_t __buff[]) {
+ 294               	.LM0:
+ 295               	.LFBB1:
+ 296 0000 1F93      		push r17
+ 297 0002 CF93      		push r28
+ 298 0004 DF93      		push r29
+ 299 0006 0F92      		push __tmp_reg__
+ 300 0008 CDB7      		in r28,__SP_L__
+ 301 000a DEB7      		in r29,__SP_H__
+ 302               	/* prologue: function */
+ 303               	/* frame size = 1 */
+ 304               	/* stack size = 4 */
+ 305               	.L__stack_usage = 4
+ 306 000c 182F      		mov r17,r24
+ 334:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	beginTransmission_uint8(_dev_address); // start transmission to device 
+ 308               	.LM1:
+ 309 000e 8091 0000 		lds r24,_dev_address
+ 310 0012 6983      		std Y+1,r22
+ 311 0014 0E94 0000 		call beginTransmission_uint8
+ 335:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	send_uint8(_addr); // sends register address to read from
+ 313               	.LM2:
+ 314 0018 812F      		mov r24,r17
+ 315 001a 0E94 0000 		call send_uint8
+ 336:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	endTransmission(); // end transmission
+ 317               	.LM3:
+ 318 001e 0E94 0000 		call endTransmission
+ 337:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	
+ 338:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	beginTransmission_uint8(_dev_address); // start transmission to device 
+ 320               	.LM4:
+ 321 0022 8091 0000 		lds r24,_dev_address
+ 322 0026 0E94 0000 		call beginTransmission_uint8
+ 339:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	requestFrom_2uint8(_dev_address, _nbytes);// send data n-bytes read
+ 324               	.LM5:
+ 325 002a 8091 0000 		lds r24,_dev_address
+ 326 002e 6981      		ldd r22,Y+1
+ 327 0030 0E94 0000 		call requestFrom_2uint8
+ 340:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	uint8_t i = 0; 
+ 329               	.LM6:
+ 330 0034 10E0      		ldi r17,lo8(0)
+ 331 0036 00C0      		rjmp .L2
+ 332               	.L3:
+ 341:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	while (available()) {
+ 342:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		__buff[i] = receive(); // receive DATA
+ 334               	.LM7:
+ 335 0038 0E94 0000 		call receive
+ 336 003c E12F      		mov r30,r17
+ 337 003e F0E0      		ldi r31,lo8(0)
+ 338 0040 E050      		subi r30,lo8(-(_buff))
+ 339 0042 F040      		sbci r31,hi8(-(_buff))
+ 340 0044 8083      		st Z,r24
+ 343:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		i++;
+ 342               	.LM8:
+ 343 0046 1F5F      		subi r17,lo8(-(1))
+ 344               	.L2:
+ 341:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	while (available()) {
+ 346               	.LM9:
+ 347 0048 0E94 0000 		call available
+ 348 004c 8823      		tst r24
+ 349 004e 01F4      		brne .L3
+ 344:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	}
+ 345:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	endTransmission(); // end transmission
+ 351               	.LM10:
+ 352 0050 0E94 0000 		call endTransmission
+ 353               	/* epilogue start */
+ 346:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 355               	.LM11:
+ 356 0054 0F90      		pop __tmp_reg__
+ 357 0056 DF91      		pop r29
+ 358 0058 CF91      		pop r28
+ 359 005a 1F91      		pop r17
+ 360 005c 0895      		ret
+ 365               	.Lscope1:
+ 367               		.stabd	78,0,0
+ 369               	.global	get_gyro_addr
+ 371               	get_gyro_addr:
+ 372               		.stabd	46,0,0
+  81:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** byte get_gyro_addr() {
+ 374               	.LM12:
+ 375               	.LFBB2:
+ 376               	/* prologue: function */
+ 377               	/* frame size = 0 */
+ 378               	/* stack size = 0 */
+ 379               	.L__stack_usage = 0
+  85:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 381               	.LM13:
+ 382 005e 8091 0000 		lds r24,_dev_address
+ 383               	/* epilogue start */
+ 384 0062 0895      		ret
+ 386               	.Lscope2:
+ 388               		.stabd	78,0,0
+ 390               	.global	get_gyro_sample_rate_div
+ 392               	get_gyro_sample_rate_div:
+ 393               		.stabd	46,0,0
+  92:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** byte get_gyro_sample_rate_div() {
+ 395               	.LM14:
+ 396               	.LFBB3:
+ 397               	/* prologue: function */
+ 398               	/* frame size = 0 */
+ 399               	/* stack size = 0 */
+ 400               	.L__stack_usage = 0
+  93:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(SMPLRT_DIV, 1, &_buff[0]);
+ 402               	.LM15:
+ 403 0064 85E1      		ldi r24,lo8(21)
+ 404 0066 61E0      		ldi r22,lo8(1)
+ 405 0068 0E94 0000 		call readmem.constprop.0
+  95:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 407               	.LM16:
+ 408 006c 8091 0000 		lds r24,_buff
+ 409               	/* epilogue start */
+ 410 0070 0895      		ret
+ 412               	.Lscope3:
+ 414               		.stabd	78,0,0
+ 416               	.global	get_gyro_FS_range
+ 418               	get_gyro_FS_range:
+ 419               		.stabd	46,0,0
+ 101:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** byte get_gyro_FS_range() { //***
+ 421               	.LM17:
+ 422               	.LFBB4:
+ 423               	/* prologue: function */
+ 424               	/* frame size = 0 */
+ 425               	/* stack size = 0 */
+ 426               	.L__stack_usage = 0
+ 102:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(DLPF_FS, 1, &_buff[0]);
+ 428               	.LM18:
+ 429 0072 86E1      		ldi r24,lo8(22)
+ 430 0074 61E0      		ldi r22,lo8(1)
+ 431 0076 0E94 0000 		call readmem.constprop.0
+ 103:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return ((_buff[0] & DLPFFS_FS_SEL) >> 3);
+ 433               	.LM19:
+ 434 007a 8091 0000 		lds r24,_buff
+ 435 007e 90E0      		ldi r25,lo8(0)
+ 436 0080 8871      		andi r24,lo8(24)
+ 437 0082 9070      		andi r25,hi8(24)
+ 438 0084 23E0      		ldi r18,3
+ 439 0086 9595      	1:	asr r25
+ 440 0088 8795      		ror r24
+ 441 008a 2A95      		dec r18
+ 442 008c 01F4      		brne 1b
+ 443               	/* epilogue start */
+ 104:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 445               	.LM20:
+ 446 008e 0895      		ret
+ 448               	.Lscope4:
+ 450               		.stabd	78,0,0
+ 452               	.global	get_gyro_filter_BW
+ 454               	get_gyro_filter_BW:
+ 455               		.stabd	46,0,0
+ 111:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** byte get_gyro_filter_BW() {  
+ 457               	.LM21:
+ 458               	.LFBB5:
+ 459               	/* prologue: function */
+ 460               	/* frame size = 0 */
+ 461               	/* stack size = 0 */
+ 462               	.L__stack_usage = 0
+ 112:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(DLPF_FS, 1, &_buff[0]);
+ 464               	.LM22:
+ 465 0090 86E1      		ldi r24,lo8(22)
+ 466 0092 61E0      		ldi r22,lo8(1)
+ 467 0094 0E94 0000 		call readmem.constprop.0
+ 113:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & DLPFFS_DLPF_CFG); 
+ 469               	.LM23:
+ 470 0098 8091 0000 		lds r24,_buff
+ 114:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 472               	.LM24:
+ 473 009c 8770      		andi r24,lo8(7)
+ 474               	/* epilogue start */
+ 475 009e 0895      		ret
+ 477               	.Lscope5:
+ 479               		.stabd	78,0,0
+ 481               	.global	is_gyro_INT_active_On_Low
+ 483               	is_gyro_INT_active_On_Low:
+ 484               		.stabd	46,0,0
+ 121:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool is_gyro_INT_active_On_Low() {  
+ 486               	.LM25:
+ 487               	.LFBB6:
+ 488               	/* prologue: function */
+ 489               	/* frame size = 0 */
+ 490               	/* stack size = 0 */
+ 491               	.L__stack_usage = 0
+ 122:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 493               	.LM26:
+ 494 00a0 87E1      		ldi r24,lo8(23)
+ 495 00a2 61E0      		ldi r22,lo8(1)
+ 496 00a4 0E94 0000 		call readmem.constprop.0
+ 123:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return ((_buff[0] & INTCFG_ACTL) >> 7);
+ 498               	.LM27:
+ 499 00a8 9091 0000 		lds r25,_buff
+ 500 00ac 892F      		mov r24,r25
+ 501 00ae 881F      		rol r24
+ 502 00b0 8827      		clr r24
+ 503 00b2 881F      		rol r24
+ 504               	/* epilogue start */
+ 124:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 506               	.LM28:
+ 507 00b4 0895      		ret
+ 509               	.Lscope6:
+ 511               		.stabd	78,0,0
+ 513               	.global	is_gyro_INT_open_drain
+ 515               	is_gyro_INT_open_drain:
+ 516               		.stabd	46,0,0
+ 131:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool is_gyro_INT_open_drain() {  
+ 518               	.LM29:
+ 519               	.LFBB7:
+ 520               	/* prologue: function */
+ 521               	/* frame size = 0 */
+ 522               	/* stack size = 0 */
+ 523               	.L__stack_usage = 0
+ 132:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 525               	.LM30:
+ 526 00b6 87E1      		ldi r24,lo8(23)
+ 527 00b8 61E0      		ldi r22,lo8(1)
+ 528 00ba 0E94 0000 		call readmem.constprop.0
+ 133:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return ((_buff[0] & INTCFG_OPEN) >> 6);
+ 530               	.LM31:
+ 531 00be 8091 0000 		lds r24,_buff
+ 532 00c2 90E0      		ldi r25,lo8(0)
+ 533 00c4 8074      		andi r24,lo8(64)
+ 534 00c6 9070      		andi r25,hi8(64)
+ 535 00c8 36E0      		ldi r19,6
+ 536 00ca 9595      	1:	asr r25
+ 537 00cc 8795      		ror r24
+ 538 00ce 3A95      		dec r19
+ 539 00d0 01F4      		brne 1b
+ 540               	/* epilogue start */
+ 134:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 542               	.LM32:
+ 543 00d2 0895      		ret
+ 545               	.Lscope7:
+ 547               		.stabd	78,0,0
+ 549               	.global	isLatchUntilCleared
+ 551               	isLatchUntilCleared:
+ 552               		.stabd	46,0,0
+ 141:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isLatchUntilCleared() {    
+ 554               	.LM33:
+ 555               	.LFBB8:
+ 556               	/* prologue: function */
+ 557               	/* frame size = 0 */
+ 558               	/* stack size = 0 */
+ 559               	.L__stack_usage = 0
+ 142:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 561               	.LM34:
+ 562 00d4 87E1      		ldi r24,lo8(23)
+ 563 00d6 61E0      		ldi r22,lo8(1)
+ 564 00d8 0E94 0000 		call readmem.constprop.0
+ 143:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return ((_buff[0] & INTCFG_LATCH_INT_EN) >> 5);
+ 566               	.LM35:
+ 567 00dc 8091 0000 		lds r24,_buff
+ 568 00e0 90E0      		ldi r25,lo8(0)
+ 569 00e2 8072      		andi r24,lo8(32)
+ 570 00e4 9070      		andi r25,hi8(32)
+ 571 00e6 45E0      		ldi r20,5
+ 572 00e8 9595      	1:	asr r25
+ 573 00ea 8795      		ror r24
+ 574 00ec 4A95      		dec r20
+ 575 00ee 01F4      		brne 1b
+ 576               	/* epilogue start */
+ 144:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 578               	.LM36:
+ 579 00f0 0895      		ret
+ 581               	.Lscope8:
+ 583               		.stabd	78,0,0
+ 585               	.global	isAnyRegClrMode
+ 587               	isAnyRegClrMode:
+ 588               		.stabd	46,0,0
+ 151:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isAnyRegClrMode() {    
+ 590               	.LM37:
+ 591               	.LFBB9:
+ 592               	/* prologue: function */
+ 593               	/* frame size = 0 */
+ 594               	/* stack size = 0 */
+ 595               	.L__stack_usage = 0
+ 152:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 597               	.LM38:
+ 598 00f2 87E1      		ldi r24,lo8(23)
+ 599 00f4 61E0      		ldi r22,lo8(1)
+ 600 00f6 0E94 0000 		call readmem.constprop.0
+ 153:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return ((_buff[0] & INTCFG_INT_ANYRD_2CLEAR) >> 4);
+ 602               	.LM39:
+ 603 00fa 8091 0000 		lds r24,_buff
+ 604 00fe 90E0      		ldi r25,lo8(0)
+ 605 0100 8071      		andi r24,lo8(16)
+ 606 0102 9070      		andi r25,hi8(16)
+ 607 0104 54E0      		ldi r21,4
+ 608 0106 9595      	1:	asr r25
+ 609 0108 8795      		ror r24
+ 610 010a 5A95      		dec r21
+ 611 010c 01F4      		brne 1b
+ 612               	/* epilogue start */
+ 154:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 614               	.LM40:
+ 615 010e 0895      		ret
+ 617               	.Lscope9:
+ 619               		.stabd	78,0,0
+ 621               	.global	isITGReadyOn
+ 623               	isITGReadyOn:
+ 624               		.stabd	46,0,0
+ 161:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isITGReadyOn() {   
+ 626               	.LM41:
+ 627               	.LFBB10:
+ 628               	/* prologue: function */
+ 629               	/* frame size = 0 */
+ 630               	/* stack size = 0 */
+ 631               	.L__stack_usage = 0
+ 162:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 633               	.LM42:
+ 634 0110 87E1      		ldi r24,lo8(23)
+ 635 0112 61E0      		ldi r22,lo8(1)
+ 636 0114 0E94 0000 		call readmem.constprop.0
+ 163:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return ((_buff[0] & INTCFG_ITG_RDY_EN) >> 2);
+ 638               	.LM43:
+ 639 0118 8091 0000 		lds r24,_buff
+ 640 011c 90E0      		ldi r25,lo8(0)
+ 641 011e 8470      		andi r24,lo8(4)
+ 642 0120 9070      		andi r25,hi8(4)
+ 643 0122 9595      		asr r25
+ 644 0124 8795      		ror r24
+ 645 0126 9595      		asr r25
+ 646 0128 8795      		ror r24
+ 647               	/* epilogue start */
+ 164:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 649               	.LM44:
+ 650 012a 0895      		ret
+ 652               	.Lscope10:
+ 654               		.stabd	78,0,0
+ 656               	.global	isRawDataReadyOn
+ 658               	isRawDataReadyOn:
+ 659               		.stabd	46,0,0
+ 171:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isRawDataReadyOn() {
+ 661               	.LM45:
+ 662               	.LFBB11:
+ 663               	/* prologue: function */
+ 664               	/* frame size = 0 */
+ 665               	/* stack size = 0 */
+ 666               	.L__stack_usage = 0
+ 172:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 668               	.LM46:
+ 669 012c 87E1      		ldi r24,lo8(23)
+ 670 012e 61E0      		ldi r22,lo8(1)
+ 671 0130 0E94 0000 		call readmem.constprop.0
+ 173:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & INTCFG_RAW_RDY_EN);
+ 673               	.LM47:
+ 674 0134 8091 0000 		lds r24,_buff
+ 174:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 676               	.LM48:
+ 677 0138 8170      		andi r24,lo8(1)
+ 678               	/* epilogue start */
+ 679 013a 0895      		ret
+ 681               	.Lscope11:
+ 683               		.stabd	78,0,0
+ 685               	.global	isITGReady
+ 687               	isITGReady:
+ 688               		.stabd	46,0,0
+ 181:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isITGReady() {
+ 690               	.LM49:
+ 691               	.LFBB12:
+ 692               	/* prologue: function */
+ 693               	/* frame size = 0 */
+ 694               	/* stack size = 0 */
+ 695               	.L__stack_usage = 0
+ 182:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_STATUS, 1, &_buff[0]);
+ 697               	.LM50:
+ 698 013c 8AE1      		ldi r24,lo8(26)
+ 699 013e 61E0      		ldi r22,lo8(1)
+ 700 0140 0E94 0000 		call readmem.constprop.0
+ 183:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return ((_buff[0] & INTSTATUS_ITG_RDY) >> 2);
+ 702               	.LM51:
+ 703 0144 8091 0000 		lds r24,_buff
+ 704 0148 90E0      		ldi r25,lo8(0)
+ 705 014a 8470      		andi r24,lo8(4)
+ 706 014c 9070      		andi r25,hi8(4)
+ 707 014e 9595      		asr r25
+ 708 0150 8795      		ror r24
+ 709 0152 9595      		asr r25
+ 710 0154 8795      		ror r24
+ 711               	/* epilogue start */
+ 184:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 713               	.LM52:
+ 714 0156 0895      		ret
+ 716               	.Lscope12:
+ 718               		.stabd	78,0,0
+ 720               	.global	isRawDataReady
+ 722               	isRawDataReady:
+ 723               		.stabd	46,0,0
+ 186:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isRawDataReady() {
+ 725               	.LM53:
+ 726               	.LFBB13:
+ 727               	/* prologue: function */
+ 728               	/* frame size = 0 */
+ 729               	/* stack size = 0 */
+ 730               	.L__stack_usage = 0
+ 187:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_STATUS, 1, &_buff[0]);
+ 732               	.LM54:
+ 733 0158 8AE1      		ldi r24,lo8(26)
+ 734 015a 61E0      		ldi r22,lo8(1)
+ 735 015c 0E94 0000 		call readmem.constprop.0
+ 188:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & INTSTATUS_RAW_DATA_RDY);
+ 737               	.LM55:
+ 738 0160 8091 0000 		lds r24,_buff
+ 189:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 740               	.LM56:
+ 741 0164 8170      		andi r24,lo8(1)
+ 742               	/* epilogue start */
+ 743 0166 0895      		ret
+ 745               	.Lscope13:
+ 747               		.stabd	78,0,0
+ 750               	.global	readTemp
+ 752               	readTemp:
+ 753               		.stabd	46,0,0
+ 191:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void readTemp(float *_Temp) {
+ 755               	.LM57:
+ 756               	.LFBB14:
+ 757 0168 CF93      		push r28
+ 758 016a DF93      		push r29
+ 759               	/* prologue: function */
+ 760               	/* frame size = 0 */
+ 761               	/* stack size = 2 */
+ 762               	.L__stack_usage = 2
+ 763 016c EC01      		movw r28,r24
+ 192:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(TEMP_OUT,2,_buff);
+ 765               	.LM58:
+ 766 016e 8BE1      		ldi r24,lo8(27)
+ 767 0170 62E0      		ldi r22,lo8(2)
+ 768 0172 0E94 0000 		call readmem.constprop.0
+ 193:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_Temp = 35 + ((_buff[0] << 8 | _buff[1]) + 13200) / 280.0;    // F=C*9/5+32
+ 770               	.LM59:
+ 771 0176 9091 0000 		lds r25,_buff
+ 772 017a 80E0      		ldi r24,lo8(0)
+ 773 017c 6091 0000 		lds r22,_buff+1
+ 774 0180 70E0      		ldi r23,lo8(0)
+ 775 0182 682B      		or r22,r24
+ 776 0184 792B      		or r23,r25
+ 777 0186 6057      		subi r22,lo8(-(13200))
+ 778 0188 7C4C      		sbci r23,hi8(-(13200))
+ 779 018a 8827      		clr r24
+ 780 018c 77FD      		sbrc r23,7
+ 781 018e 8095      		com r24
+ 782 0190 982F      		mov r25,r24
+ 783 0192 0E94 0000 		call __floatsisf
+ 784 0196 20E0      		ldi r18,lo8(0x438c0000)
+ 785 0198 30E0      		ldi r19,hi8(0x438c0000)
+ 786 019a 4CE8      		ldi r20,hlo8(0x438c0000)
+ 787 019c 53E4      		ldi r21,hhi8(0x438c0000)
+ 788 019e 0E94 0000 		call __divsf3
+ 789 01a2 20E0      		ldi r18,lo8(0x420c0000)
+ 790 01a4 30E0      		ldi r19,hi8(0x420c0000)
+ 791 01a6 4CE0      		ldi r20,hlo8(0x420c0000)
+ 792 01a8 52E4      		ldi r21,hhi8(0x420c0000)
+ 793 01aa 0E94 0000 		call __addsf3
+ 794 01ae DC01      		movw r26,r24
+ 795 01b0 CB01      		movw r24,r22
+ 796 01b2 8883      		st Y,r24
+ 797 01b4 9983      		std Y+1,r25
+ 798 01b6 AA83      		std Y+2,r26
+ 799 01b8 BB83      		std Y+3,r27
+ 800               	/* epilogue start */
+ 194:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 802               	.LM60:
+ 803 01ba DF91      		pop r29
+ 804 01bc CF91      		pop r28
+ 805 01be 0895      		ret
+ 807               	.Lscope14:
+ 809               		.stabd	78,0,0
+ 814               	.global	read_gyro_raw_xyz_three_ptr
+ 816               	read_gyro_raw_xyz_three_ptr:
+ 817               		.stabd	46,0,0
+ 196:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void read_gyro_raw_xyz_three_ptr( int *_GyroX, int *_GyroY, int *_GyroZ){
+ 819               	.LM61:
+ 820               	.LFBB15:
+ 821 01c0 EF92      		push r14
+ 822 01c2 FF92      		push r15
+ 823 01c4 0F93      		push r16
+ 824 01c6 1F93      		push r17
+ 825 01c8 CF93      		push r28
+ 826 01ca DF93      		push r29
+ 827               	/* prologue: function */
+ 828               	/* frame size = 0 */
+ 829               	/* stack size = 6 */
+ 830               	.L__stack_usage = 6
+ 831 01cc EC01      		movw r28,r24
+ 832 01ce 8B01      		movw r16,r22
+ 833 01d0 7A01      		movw r14,r20
+ 197:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(GYRO_XOUT, 6, _buff);
+ 835               	.LM62:
+ 836 01d2 8DE1      		ldi r24,lo8(29)
+ 837 01d4 66E0      		ldi r22,lo8(6)
+ 838 01d6 0E94 0000 		call readmem.constprop.0
+ 198:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroX = _buff[0] << 8 | _buff[1];
+ 840               	.LM63:
+ 841 01da 3091 0000 		lds r19,_buff
+ 842 01de 20E0      		ldi r18,lo8(0)
+ 843 01e0 8091 0000 		lds r24,_buff+1
+ 844 01e4 90E0      		ldi r25,lo8(0)
+ 845 01e6 822B      		or r24,r18
+ 846 01e8 932B      		or r25,r19
+ 847 01ea 9983      		std Y+1,r25
+ 848 01ec 8883      		st Y,r24
+ 199:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroY = _buff[2] << 8 | _buff[3]; 
+ 850               	.LM64:
+ 851 01ee 3091 0000 		lds r19,_buff+2
+ 852 01f2 20E0      		ldi r18,lo8(0)
+ 853 01f4 8091 0000 		lds r24,_buff+3
+ 854 01f8 90E0      		ldi r25,lo8(0)
+ 855 01fa 822B      		or r24,r18
+ 856 01fc 932B      		or r25,r19
+ 857 01fe F801      		movw r30,r16
+ 858 0200 9183      		std Z+1,r25
+ 859 0202 8083      		st Z,r24
+ 200:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroZ = _buff[4] << 8 | _buff[5];
+ 861               	.LM65:
+ 862 0204 3091 0000 		lds r19,_buff+4
+ 863 0208 20E0      		ldi r18,lo8(0)
+ 864 020a 8091 0000 		lds r24,_buff+5
+ 865 020e 90E0      		ldi r25,lo8(0)
+ 866 0210 822B      		or r24,r18
+ 867 0212 932B      		or r25,r19
+ 868 0214 F701      		movw r30,r14
+ 869 0216 9183      		std Z+1,r25
+ 870 0218 8083      		st Z,r24
+ 871               	/* epilogue start */
+ 201:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 873               	.LM66:
+ 874 021a DF91      		pop r29
+ 875 021c CF91      		pop r28
+ 876 021e 1F91      		pop r17
+ 877 0220 0F91      		pop r16
+ 878 0222 FF90      		pop r15
+ 879 0224 EF90      		pop r14
+ 880 0226 0895      		ret
+ 882               	.Lscope15:
+ 884               		.stabd	78,0,0
+ 887               	.global	read_gyro_raw_xyz_one_ptr
+ 889               	read_gyro_raw_xyz_one_ptr:
+ 890               		.stabd	46,0,0
+ 203:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void read_gyro_raw_xyz_one_ptr( int *_GyroXYZ){
+ 892               	.LM67:
+ 893               	.LFBB16:
+ 894               	/* prologue: function */
+ 895               	/* frame size = 0 */
+ 896               	/* stack size = 0 */
+ 897               	.L__stack_usage = 0
+ 204:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	read_gyro_raw_xyz_three_ptr(_GyroXYZ, _GyroXYZ+1, _GyroXYZ+2);
+ 899               	.LM68:
+ 900 0228 BC01      		movw r22,r24
+ 901 022a 6E5F      		subi r22,lo8(-(2))
+ 902 022c 7F4F      		sbci r23,hi8(-(2))
+ 903 022e AC01      		movw r20,r24
+ 904 0230 4C5F      		subi r20,lo8(-(4))
+ 905 0232 5F4F      		sbci r21,hi8(-(4))
+ 906 0234 0E94 0000 		call read_gyro_raw_xyz_three_ptr
+ 907               	/* epilogue start */
+ 205:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 909               	.LM69:
+ 910 0238 0895      		ret
+ 912               	.Lscope16:
+ 914               		.stabd	78,0,0
+ 920               	.global	setScaleFactor
+ 922               	setScaleFactor:
+ 923               		.stabd	46,0,0
+ 207:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setScaleFactor(float _Xcoeff, float _Ycoeff, float _Zcoeff, bool _Radians) { 
+ 925               	.LM70:
+ 926               	.LFBB17:
+ 927 023a 4F92      		push r4
+ 928 023c 5F92      		push r5
+ 929 023e 6F92      		push r6
+ 930 0240 7F92      		push r7
+ 931 0242 8F92      		push r8
+ 932 0244 9F92      		push r9
+ 933 0246 AF92      		push r10
+ 934 0248 BF92      		push r11
+ 935 024a CF92      		push r12
+ 936 024c DF92      		push r13
+ 937 024e EF92      		push r14
+ 938 0250 FF92      		push r15
+ 939 0252 0F93      		push r16
+ 940 0254 1F93      		push r17
+ 941 0256 CF93      		push r28
+ 942 0258 DF93      		push r29
+ 943               	/* prologue: function */
+ 944               	/* frame size = 0 */
+ 945               	/* stack size = 16 */
+ 946               	.L__stack_usage = 16
+ 947 025a 2901      		movw r4,r18
+ 948 025c 3A01      		movw r6,r20
+ 949 025e 4701      		movw r8,r14
+ 950 0260 5801      		movw r10,r16
+ 208:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	scalefactor[0] = 14.375 * _Xcoeff;   
+ 952               	.LM71:
+ 953 0262 20E0      		ldi r18,lo8(0x41660000)
+ 954 0264 30E0      		ldi r19,hi8(0x41660000)
+ 955 0266 46E6      		ldi r20,hlo8(0x41660000)
+ 956 0268 51E4      		ldi r21,hhi8(0x41660000)
+ 957 026a 0E94 0000 		call __mulsf3
+ 958 026e F62E      		mov r15,r22
+ 959 0270 072F      		mov r16,r23
+ 960 0272 182F      		mov r17,r24
+ 961 0274 D92F      		mov r29,r25
+ 962 0276 862F      		mov r24,r22
+ 963 0278 902F      		mov r25,r16
+ 964 027a A12F      		mov r26,r17
+ 965 027c BD2F      		mov r27,r29
+ 966 027e 8093 0000 		sts scalefactor,r24
+ 967 0282 9093 0000 		sts scalefactor+1,r25
+ 968 0286 A093 0000 		sts scalefactor+2,r26
+ 969 028a B093 0000 		sts scalefactor+3,r27
+ 209:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	scalefactor[1] = 14.375 * _Ycoeff;
+ 971               	.LM72:
+ 972 028e C301      		movw r24,r6
+ 973 0290 B201      		movw r22,r4
+ 974 0292 20E0      		ldi r18,lo8(0x41660000)
+ 975 0294 30E0      		ldi r19,hi8(0x41660000)
+ 976 0296 46E6      		ldi r20,hlo8(0x41660000)
+ 977 0298 51E4      		ldi r21,hhi8(0x41660000)
+ 978 029a 0E94 0000 		call __mulsf3
+ 979 029e C62F      		mov r28,r22
+ 980 02a0 E72E      		mov r14,r23
+ 981 02a2 D82E      		mov r13,r24
+ 982 02a4 792E      		mov r7,r25
+ 983 02a6 862F      		mov r24,r22
+ 984 02a8 9E2D      		mov r25,r14
+ 985 02aa AD2D      		mov r26,r13
+ 986 02ac B72D      		mov r27,r7
+ 987 02ae 8093 0000 		sts scalefactor+4,r24
+ 988 02b2 9093 0000 		sts scalefactor+4+1,r25
+ 989 02b6 A093 0000 		sts scalefactor+4+2,r26
+ 990 02ba B093 0000 		sts scalefactor+4+3,r27
+ 210:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	scalefactor[2] = 14.375 * _Zcoeff;    
+ 992               	.LM73:
+ 993 02be C501      		movw r24,r10
+ 994 02c0 B401      		movw r22,r8
+ 995 02c2 20E0      		ldi r18,lo8(0x41660000)
+ 996 02c4 30E0      		ldi r19,hi8(0x41660000)
+ 997 02c6 46E6      		ldi r20,hlo8(0x41660000)
+ 998 02c8 51E4      		ldi r21,hhi8(0x41660000)
+ 999 02ca 0E94 0000 		call __mulsf3
+ 1000 02ce B62E      		mov r11,r22
+ 1001 02d0 A72E      		mov r10,r23
+ 1002 02d2 982E      		mov r9,r24
+ 1003 02d4 892E      		mov r8,r25
+ 1004 02d6 A501      		movw r20,r10
+ 1005 02d8 9401      		movw r18,r8
+ 1006 02da 852F      		mov r24,r21
+ 1007 02dc 942F      		mov r25,r20
+ 1008 02de A32F      		mov r26,r19
+ 1009 02e0 B22F      		mov r27,r18
+ 1010 02e2 8093 0000 		sts scalefactor+8,r24
+ 1011 02e6 9093 0000 		sts scalefactor+8+1,r25
+ 1012 02ea A093 0000 		sts scalefactor+8+2,r26
+ 1013 02ee B093 0000 		sts scalefactor+8+3,r27
+ 212:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	if (_Radians){
+ 1015               	.LM74:
+ 1016 02f2 CC20      		tst r12
+ 1017 02f4 01F4      		brne .+2
+ 1018 02f6 00C0      		rjmp .L20
+ 213:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		scalefactor[0] /= 0.0174532925;//0.0174532925 = PI/180
+ 1020               	.LM75:
+ 1021 02f8 8F2D      		mov r24,r15
+ 1022 02fa 902F      		mov r25,r16
+ 1023 02fc A12F      		mov r26,r17
+ 1024 02fe BD2F      		mov r27,r29
+ 1025 0300 BC01      		movw r22,r24
+ 1026 0302 CD01      		movw r24,r26
+ 1027 0304 25E3      		ldi r18,lo8(0x3c8efa35)
+ 1028 0306 3AEF      		ldi r19,hi8(0x3c8efa35)
+ 1029 0308 4EE8      		ldi r20,hlo8(0x3c8efa35)
+ 1030 030a 5CE3      		ldi r21,hhi8(0x3c8efa35)
+ 1031 030c 0E94 0000 		call __divsf3
+ 1032 0310 DC01      		movw r26,r24
+ 1033 0312 CB01      		movw r24,r22
+ 1034 0314 8093 0000 		sts scalefactor,r24
+ 1035 0318 9093 0000 		sts scalefactor+1,r25
+ 1036 031c A093 0000 		sts scalefactor+2,r26
+ 1037 0320 B093 0000 		sts scalefactor+3,r27
+ 214:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		scalefactor[1] /= 0.0174532925;
+ 1039               	.LM76:
+ 1040 0324 8C2F      		mov r24,r28
+ 1041 0326 9E2D      		mov r25,r14
+ 1042 0328 AD2D      		mov r26,r13
+ 1043 032a B72D      		mov r27,r7
+ 1044 032c BC01      		movw r22,r24
+ 1045 032e CD01      		movw r24,r26
+ 1046 0330 25E3      		ldi r18,lo8(0x3c8efa35)
+ 1047 0332 3AEF      		ldi r19,hi8(0x3c8efa35)
+ 1048 0334 4EE8      		ldi r20,hlo8(0x3c8efa35)
+ 1049 0336 5CE3      		ldi r21,hhi8(0x3c8efa35)
+ 1050 0338 0E94 0000 		call __divsf3
+ 1051 033c DC01      		movw r26,r24
+ 1052 033e CB01      		movw r24,r22
+ 1053 0340 8093 0000 		sts scalefactor+4,r24
+ 1054 0344 9093 0000 		sts scalefactor+4+1,r25
+ 1055 0348 A093 0000 		sts scalefactor+4+2,r26
+ 1056 034c B093 0000 		sts scalefactor+4+3,r27
+ 215:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		scalefactor[2] /= 0.0174532925;
+ 1058               	.LM77:
+ 1059 0350 A501      		movw r20,r10
+ 1060 0352 9401      		movw r18,r8
+ 1061 0354 852F      		mov r24,r21
+ 1062 0356 942F      		mov r25,r20
+ 1063 0358 A32F      		mov r26,r19
+ 1064 035a B22F      		mov r27,r18
+ 1065 035c BC01      		movw r22,r24
+ 1066 035e CD01      		movw r24,r26
+ 1067 0360 25E3      		ldi r18,lo8(0x3c8efa35)
+ 1068 0362 3AEF      		ldi r19,hi8(0x3c8efa35)
+ 1069 0364 4EE8      		ldi r20,hlo8(0x3c8efa35)
+ 1070 0366 5CE3      		ldi r21,hhi8(0x3c8efa35)
+ 1071 0368 0E94 0000 		call __divsf3
+ 1072 036c DC01      		movw r26,r24
+ 1073 036e CB01      		movw r24,r22
+ 1074 0370 8093 0000 		sts scalefactor+8,r24
+ 1075 0374 9093 0000 		sts scalefactor+8+1,r25
+ 1076 0378 A093 0000 		sts scalefactor+8+2,r26
+ 1077 037c B093 0000 		sts scalefactor+8+3,r27
+ 1078               	.L20:
+ 1079               	/* epilogue start */
+ 217:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 1081               	.LM78:
+ 1082 0380 DF91      		pop r29
+ 1083 0382 CF91      		pop r28
+ 1084 0384 1F91      		pop r17
+ 1085 0386 0F91      		pop r16
+ 1086 0388 FF90      		pop r15
+ 1087 038a EF90      		pop r14
+ 1088 038c DF90      		pop r13
+ 1089 038e CF90      		pop r12
+ 1090 0390 BF90      		pop r11
+ 1091 0392 AF90      		pop r10
+ 1092 0394 9F90      		pop r9
+ 1093 0396 8F90      		pop r8
+ 1094 0398 7F90      		pop r7
+ 1095 039a 6F90      		pop r6
+ 1096 039c 5F90      		pop r5
+ 1097 039e 4F90      		pop r4
+ 1098 03a0 0895      		ret
+ 1100               	.Lscope17:
+ 1102               		.stabd	78,0,0
+ 1107               	.global	setOffsets
+ 1109               	setOffsets:
+ 1110               		.stabd	46,0,0
+ 219:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setOffsets(int _Xoffset, int _Yoffset, int _Zoffset) {
+ 1112               	.LM79:
+ 1113               	.LFBB18:
+ 1114               	/* prologue: function */
+ 1115               	/* frame size = 0 */
+ 1116               	/* stack size = 0 */
+ 1117               	.L__stack_usage = 0
+ 220:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	offsets[0] = _Xoffset;
+ 1119               	.LM80:
+ 1120 03a2 9093 0000 		sts offsets+1,r25
+ 1121 03a6 8093 0000 		sts offsets,r24
+ 221:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	offsets[1] = _Yoffset;
+ 1123               	.LM81:
+ 1124 03aa 7093 0000 		sts offsets+2+1,r23
+ 1125 03ae 6093 0000 		sts offsets+2,r22
+ 222:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	offsets[2] = _Zoffset;
+ 1127               	.LM82:
+ 1128 03b2 5093 0000 		sts offsets+4+1,r21
+ 1129 03b6 4093 0000 		sts offsets+4,r20
+ 1130               	/* epilogue start */
+ 223:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 1132               	.LM83:
+ 1133 03ba 0895      		ret
+ 1135               	.Lscope18:
+ 1137               		.stabd	78,0,0
+ 1138               		.data
+ 1139               	.LC0:
+ 1140 0000 2E20 00   		.string	". "
+ 1141               		.text
+ 1145               	.global	gyro_zero_calibrate
+ 1147               	gyro_zero_calibrate:
+ 1148               		.stabd	46,0,0
+ 225:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void gyro_zero_calibrate(uint16_t totSamples, uint16_t sampleDelayMS) {
+ 1150               	.LM84:
+ 1151               	.LFBB19:
+ 1152 03bc 2F92      		push r2
+ 1153 03be 3F92      		push r3
+ 1154 03c0 4F92      		push r4
+ 1155 03c2 5F92      		push r5
+ 1156 03c4 6F92      		push r6
+ 1157 03c6 7F92      		push r7
+ 1158 03c8 8F92      		push r8
+ 1159 03ca 9F92      		push r9
+ 1160 03cc AF92      		push r10
+ 1161 03ce BF92      		push r11
+ 1162 03d0 CF92      		push r12
+ 1163 03d2 DF92      		push r13
+ 1164 03d4 EF92      		push r14
+ 1165 03d6 FF92      		push r15
+ 1166 03d8 0F93      		push r16
+ 1167 03da 1F93      		push r17
+ 1168 03dc CF93      		push r28
+ 1169 03de DF93      		push r29
+ 1170 03e0 CDB7      		in r28,__SP_L__
+ 1171 03e2 DEB7      		in r29,__SP_H__
+ 1172 03e4 6297      		sbiw r28,18
+ 1173 03e6 0FB6      		in __tmp_reg__,__SREG__
+ 1174 03e8 F894      		cli
+ 1175 03ea DEBF      		out __SP_H__,r29
+ 1176 03ec 0FBE      		out __SREG__,__tmp_reg__
+ 1177 03ee CDBF      		out __SP_L__,r28
+ 1178               	/* prologue: function */
+ 1179               	/* frame size = 18 */
+ 1180               	/* stack size = 36 */
+ 1181               	.L__stack_usage = 36
+ 1182 03f0 8C01      		movw r16,r24
+ 230:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	gyro_sample_delay_nanos.secs = 0;
+ 1184               	.LM85:
+ 1185 03f2 1F82      		std Y+7,__zero_reg__
+ 1186 03f4 1886      		std Y+8,__zero_reg__
+ 1187 03f6 1986      		std Y+9,__zero_reg__
+ 1188 03f8 1A86      		std Y+10,__zero_reg__
+ 231:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	gyro_sample_delay_nanos.nano_secs = sampleDelayMS*NANOS_PER_MS;
+ 1190               	.LM86:
+ 1191 03fa 80E0      		ldi r24,lo8(0)
+ 1192 03fc 90E0      		ldi r25,hi8(0)
+ 1193 03fe 20E4      		ldi r18,lo8(1000000)
+ 1194 0400 32E4      		ldi r19,hi8(1000000)
+ 1195 0402 4FE0      		ldi r20,hlo8(1000000)
+ 1196 0404 50E0      		ldi r21,hhi8(1000000)
+ 1197 0406 0E94 0000 		call __mulsi3
+ 1198 040a DC01      		movw r26,r24
+ 1199 040c CB01      		movw r24,r22
+ 1200 040e 8B87      		std Y+11,r24
+ 1201 0410 9C87      		std Y+12,r25
+ 1202 0412 AD87      		std Y+13,r26
+ 1203 0414 BE87      		std Y+14,r27
+ 1204               	.LBB9:
+ 226:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	float tmpOffsets[] = {0,0,0};
+ 1206               	.LM87:
+ 1207 0416 80E0      		ldi r24,lo8(0x0)
+ 1208 0418 90E0      		ldi r25,hi8(0x0)
+ 1209 041a A0E0      		ldi r26,hlo8(0x0)
+ 1210 041c B0E0      		ldi r27,hhi8(0x0)
+ 1211 041e 8F87      		std Y+15,r24
+ 1212 0420 988B      		std Y+16,r25
+ 1213 0422 A98B      		std Y+17,r26
+ 1214 0424 BA8B      		std Y+18,r27
+ 1215 0426 2C01      		movw r4,r24
+ 1216 0428 3D01      		movw r6,r26
+ 1217 042a 4C01      		movw r8,r24
+ 1218 042c 5D01      		movw r10,r26
+ 235:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	for (int i = 0;i < totSamples;i++){
+ 1220               	.LM88:
+ 1221 042e CC24      		clr r12
+ 1222 0430 DD24      		clr r13
+ 237:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		if(!(i%100))printf(". ");
+ 1224               	.LM89:
+ 1225 0432 E4E6      		ldi r30,lo8(100)
+ 1226 0434 EE2E      		mov r14,r30
+ 1227 0436 F12C      		mov r15,__zero_reg__
+ 1228 0438 F0E0      		ldi r31,lo8(.LC0)
+ 1229 043a 2F2E      		mov r2,r31
+ 1230 043c F0E0      		ldi r31,hi8(.LC0)
+ 1231 043e 3F2E      		mov r3,r31
+ 235:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	for (int i = 0;i < totSamples;i++){
+ 1233               	.LM90:
+ 1234 0440 00C0      		rjmp .L24
+ 1235               	.L26:
+ 236:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		nrk_wait(gyro_sample_delay_nanos);
+ 1237               	.LM91:
+ 1238 0442 2F81      		ldd r18,Y+7
+ 1239 0444 3885      		ldd r19,Y+8
+ 1240 0446 4985      		ldd r20,Y+9
+ 1241 0448 5A85      		ldd r21,Y+10
+ 1242 044a 6B85      		ldd r22,Y+11
+ 1243 044c 7C85      		ldd r23,Y+12
+ 1244 044e 8D85      		ldd r24,Y+13
+ 1245 0450 9E85      		ldd r25,Y+14
+ 1246 0452 0E94 0000 		call nrk_wait
+ 237:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		if(!(i%100))printf(". ");
+ 1248               	.LM92:
+ 1249 0456 C601      		movw r24,r12
+ 1250 0458 B701      		movw r22,r14
+ 1251 045a 0E94 0000 		call __divmodhi4
+ 1252 045e 0097      		sbiw r24,0
+ 1253 0460 01F4      		brne .L25
+ 237:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		if(!(i%100))printf(". ");
+ 1255               	.LM93:
+ 1256 0462 00D0      		rcall .
+ 1257 0464 ADB7      		in r26,__SP_L__
+ 1258 0466 BEB7      		in r27,__SP_H__
+ 1259 0468 1296      		adiw r26,1+1
+ 1260 046a 3C92      		st X,r3
+ 1261 046c 2E92      		st -X,r2
+ 1262 046e 1197      		sbiw r26,1
+ 1263 0470 0E94 0000 		call printf
+ 1264 0474 0F90      		pop __tmp_reg__
+ 1265 0476 0F90      		pop __tmp_reg__
+ 1266               	.L25:
+ 238:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		read_gyro_raw_xyz_one_ptr(xyz);
+ 1268               	.LM94:
+ 1269 0478 CE01      		movw r24,r28
+ 1270 047a 0196      		adiw r24,1
+ 1271 047c 0E94 0000 		call read_gyro_raw_xyz_one_ptr
+ 239:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		tmpOffsets[0] += xyz[0];
+ 1273               	.LM95:
+ 1274 0480 6981      		ldd r22,Y+1
+ 1275 0482 7A81      		ldd r23,Y+2
+ 1276 0484 8827      		clr r24
+ 1277 0486 77FD      		sbrc r23,7
+ 1278 0488 8095      		com r24
+ 1279 048a 982F      		mov r25,r24
+ 1280 048c 0E94 0000 		call __floatsisf
+ 1281 0490 9B01      		movw r18,r22
+ 1282 0492 AC01      		movw r20,r24
+ 1283 0494 C501      		movw r24,r10
+ 1284 0496 B401      		movw r22,r8
+ 1285 0498 0E94 0000 		call __addsf3
+ 1286 049c 862E      		mov r8,r22
+ 1287 049e 972E      		mov r9,r23
+ 1288 04a0 A82E      		mov r10,r24
+ 1289 04a2 B92E      		mov r11,r25
+ 240:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		tmpOffsets[1] += xyz[1];
+ 1291               	.LM96:
+ 1292 04a4 6B81      		ldd r22,Y+3
+ 1293 04a6 7C81      		ldd r23,Y+4
+ 1294 04a8 8827      		clr r24
+ 1295 04aa 77FD      		sbrc r23,7
+ 1296 04ac 8095      		com r24
+ 1297 04ae 982F      		mov r25,r24
+ 1298 04b0 0E94 0000 		call __floatsisf
+ 1299 04b4 9B01      		movw r18,r22
+ 1300 04b6 AC01      		movw r20,r24
+ 1301 04b8 C301      		movw r24,r6
+ 1302 04ba B201      		movw r22,r4
+ 1303 04bc 0E94 0000 		call __addsf3
+ 1304 04c0 462F      		mov r20,r22
+ 1305 04c2 572F      		mov r21,r23
+ 1306 04c4 682F      		mov r22,r24
+ 1307 04c6 792F      		mov r23,r25
+ 1308 04c8 2A01      		movw r4,r20
+ 1309 04ca 3B01      		movw r6,r22
+ 241:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		tmpOffsets[2] += xyz[2];
+ 1311               	.LM97:
+ 1312 04cc 6D81      		ldd r22,Y+5
+ 1313 04ce 7E81      		ldd r23,Y+6
+ 1314 04d0 8827      		clr r24
+ 1315 04d2 77FD      		sbrc r23,7
+ 1316 04d4 8095      		com r24
+ 1317 04d6 982F      		mov r25,r24
+ 1318 04d8 0E94 0000 		call __floatsisf
+ 1319 04dc 9B01      		movw r18,r22
+ 1320 04de AC01      		movw r20,r24
+ 1321 04e0 6F85      		ldd r22,Y+15
+ 1322 04e2 7889      		ldd r23,Y+16
+ 1323 04e4 8989      		ldd r24,Y+17
+ 1324 04e6 9A89      		ldd r25,Y+18
+ 1325 04e8 0E94 0000 		call __addsf3
+ 1326 04ec 462F      		mov r20,r22
+ 1327 04ee 572F      		mov r21,r23
+ 1328 04f0 682F      		mov r22,r24
+ 1329 04f2 792F      		mov r23,r25
+ 1330 04f4 4F87      		std Y+15,r20
+ 1331 04f6 588B      		std Y+16,r21
+ 1332 04f8 698B      		std Y+17,r22
+ 1333 04fa 7A8B      		std Y+18,r23
+ 235:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	for (int i = 0;i < totSamples;i++){
+ 1335               	.LM98:
+ 1336 04fc 0894      		sec
+ 1337 04fe C11C      		adc r12,__zero_reg__
+ 1338 0500 D11C      		adc r13,__zero_reg__
+ 1339               	.L24:
+ 235:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	for (int i = 0;i < totSamples;i++){
+ 1341               	.LM99:
+ 1342 0502 C016      		cp r12,r16
+ 1343 0504 D106      		cpc r13,r17
+ 1344 0506 01F0      		breq .+2
+ 1345 0508 00C0      		rjmp .L26
+ 1346               	.LBE9:
+ 243:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	setOffsets(-tmpOffsets[0] / totSamples + 0.5, -tmpOffsets[1] / totSamples + 0.5, -tmpOffsets[2] / 
+ 1348               	.LM100:
+ 1349 050a B601      		movw r22,r12
+ 1350 050c 80E0      		ldi r24,lo8(0)
+ 1351 050e 90E0      		ldi r25,hi8(0)
+ 1352 0510 0E94 0000 		call __floatunsisf
+ 1353 0514 6B01      		movw r12,r22
+ 1354 0516 7C01      		movw r14,r24
+ 1355 0518 C501      		movw r24,r10
+ 1356 051a B401      		movw r22,r8
+ 1357 051c 9058      		subi r25,0x80
+ 1358 051e A701      		movw r20,r14
+ 1359 0520 9601      		movw r18,r12
+ 1360 0522 0E94 0000 		call __divsf3
+ 1361 0526 20E0      		ldi r18,lo8(0x3f000000)
+ 1362 0528 30E0      		ldi r19,hi8(0x3f000000)
+ 1363 052a 40E0      		ldi r20,hlo8(0x3f000000)
+ 1364 052c 5FE3      		ldi r21,hhi8(0x3f000000)
+ 1365 052e 0E94 0000 		call __addsf3
+ 1366 0532 0E94 0000 		call __fixsfsi
+ 1367 0536 DC01      		movw r26,r24
+ 1368 0538 CB01      		movw r24,r22
+ 1369 053a 9093 0000 		sts offsets+1,r25
+ 1370 053e 8093 0000 		sts offsets,r24
+ 1371 0542 C301      		movw r24,r6
+ 1372 0544 B201      		movw r22,r4
+ 1373 0546 9058      		subi r25,0x80
+ 1374 0548 A701      		movw r20,r14
+ 1375 054a 9601      		movw r18,r12
+ 1376 054c 0E94 0000 		call __divsf3
+ 1377 0550 20E0      		ldi r18,lo8(0x3f000000)
+ 1378 0552 30E0      		ldi r19,hi8(0x3f000000)
+ 1379 0554 40E0      		ldi r20,hlo8(0x3f000000)
+ 1380 0556 5FE3      		ldi r21,hhi8(0x3f000000)
+ 1381 0558 0E94 0000 		call __addsf3
+ 1382 055c 0E94 0000 		call __fixsfsi
+ 1383 0560 DC01      		movw r26,r24
+ 1384 0562 CB01      		movw r24,r22
+ 1385 0564 9093 0000 		sts offsets+2+1,r25
+ 1386 0568 8093 0000 		sts offsets+2,r24
+ 1387 056c 6F85      		ldd r22,Y+15
+ 1388 056e 7889      		ldd r23,Y+16
+ 1389 0570 8989      		ldd r24,Y+17
+ 1390 0572 9A89      		ldd r25,Y+18
+ 1391 0574 9058      		subi r25,0x80
+ 1392 0576 A701      		movw r20,r14
+ 1393 0578 9601      		movw r18,r12
+ 1394 057a 0E94 0000 		call __divsf3
+ 1395 057e 20E0      		ldi r18,lo8(0x3f000000)
+ 1396 0580 30E0      		ldi r19,hi8(0x3f000000)
+ 1397 0582 40E0      		ldi r20,hlo8(0x3f000000)
+ 1398 0584 5FE3      		ldi r21,hhi8(0x3f000000)
+ 1399 0586 0E94 0000 		call __addsf3
+ 1400 058a 0E94 0000 		call __fixsfsi
+ 1401 058e DC01      		movw r26,r24
+ 1402 0590 CB01      		movw r24,r22
+ 1403 0592 9093 0000 		sts offsets+4+1,r25
+ 1404 0596 8093 0000 		sts offsets+4,r24
+ 1405               	/* epilogue start */
+ 244:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 1407               	.LM101:
+ 1408 059a 6296      		adiw r28,18
+ 1409 059c 0FB6      		in __tmp_reg__,__SREG__
+ 1410 059e F894      		cli
+ 1411 05a0 DEBF      		out __SP_H__,r29
+ 1412 05a2 0FBE      		out __SREG__,__tmp_reg__
+ 1413 05a4 CDBF      		out __SP_L__,r28
+ 1414 05a6 DF91      		pop r29
+ 1415 05a8 CF91      		pop r28
+ 1416 05aa 1F91      		pop r17
+ 1417 05ac 0F91      		pop r16
+ 1418 05ae FF90      		pop r15
+ 1419 05b0 EF90      		pop r14
+ 1420 05b2 DF90      		pop r13
+ 1421 05b4 CF90      		pop r12
+ 1422 05b6 BF90      		pop r11
+ 1423 05b8 AF90      		pop r10
+ 1424 05ba 9F90      		pop r9
+ 1425 05bc 8F90      		pop r8
+ 1426 05be 7F90      		pop r7
+ 1427 05c0 6F90      		pop r6
+ 1428 05c2 5F90      		pop r5
+ 1429 05c4 4F90      		pop r4
+ 1430 05c6 3F90      		pop r3
+ 1431 05c8 2F90      		pop r2
+ 1432 05ca 0895      		ret
+ 1441               	.Lscope19:
+ 1443               		.stabd	78,0,0
+ 1448               	.global	read_gyro_raw_cal_xyz_three_ptr
+ 1450               	read_gyro_raw_cal_xyz_three_ptr:
+ 1451               		.stabd	46,0,0
+ 246:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void read_gyro_raw_cal_xyz_three_ptr(int *_GyroX, int *_GyroY, int *_GyroZ) { 
+ 1453               	.LM102:
+ 1454               	.LFBB20:
+ 1455 05cc EF92      		push r14
+ 1456 05ce FF92      		push r15
+ 1457 05d0 0F93      		push r16
+ 1458 05d2 1F93      		push r17
+ 1459 05d4 CF93      		push r28
+ 1460 05d6 DF93      		push r29
+ 1461               	/* prologue: function */
+ 1462               	/* frame size = 0 */
+ 1463               	/* stack size = 6 */
+ 1464               	.L__stack_usage = 6
+ 1465 05d8 EC01      		movw r28,r24
+ 1466 05da 8B01      		movw r16,r22
+ 1467 05dc 7A01      		movw r14,r20
+ 247:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	read_gyro_raw_xyz_three_ptr(_GyroX, _GyroY, _GyroZ); 
+ 1469               	.LM103:
+ 1470 05de 0E94 0000 		call read_gyro_raw_xyz_three_ptr
+ 248:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroX += offsets[0]; 
+ 1472               	.LM104:
+ 1473 05e2 8881      		ld r24,Y
+ 1474 05e4 9981      		ldd r25,Y+1
+ 1475 05e6 2091 0000 		lds r18,offsets
+ 1476 05ea 3091 0000 		lds r19,offsets+1
+ 1477 05ee 820F      		add r24,r18
+ 1478 05f0 931F      		adc r25,r19
+ 1479 05f2 9983      		std Y+1,r25
+ 1480 05f4 8883      		st Y,r24
+ 249:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroY += offsets[1]; 
+ 1482               	.LM105:
+ 1483 05f6 F801      		movw r30,r16
+ 1484 05f8 8081      		ld r24,Z
+ 1485 05fa 9181      		ldd r25,Z+1
+ 1486 05fc 2091 0000 		lds r18,offsets+2
+ 1487 0600 3091 0000 		lds r19,offsets+2+1
+ 1488 0604 820F      		add r24,r18
+ 1489 0606 931F      		adc r25,r19
+ 1490 0608 9183      		std Z+1,r25
+ 1491 060a 8083      		st Z,r24
+ 250:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroZ += offsets[2]; 
+ 1493               	.LM106:
+ 1494 060c F701      		movw r30,r14
+ 1495 060e 8081      		ld r24,Z
+ 1496 0610 9181      		ldd r25,Z+1
+ 1497 0612 2091 0000 		lds r18,offsets+4
+ 1498 0616 3091 0000 		lds r19,offsets+4+1
+ 1499 061a 820F      		add r24,r18
+ 1500 061c 931F      		adc r25,r19
+ 1501 061e 9183      		std Z+1,r25
+ 1502 0620 8083      		st Z,r24
+ 1503               	/* epilogue start */
+ 251:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** } 
+ 1505               	.LM107:
+ 1506 0622 DF91      		pop r29
+ 1507 0624 CF91      		pop r28
+ 1508 0626 1F91      		pop r17
+ 1509 0628 0F91      		pop r16
+ 1510 062a FF90      		pop r15
+ 1511 062c EF90      		pop r14
+ 1512 062e 0895      		ret
+ 1514               	.Lscope20:
+ 1516               		.stabd	78,0,0
+ 1519               	.global	read_gyro_raw_cal_xyz_one_ptr
+ 1521               	read_gyro_raw_cal_xyz_one_ptr:
+ 1522               		.stabd	46,0,0
+ 253:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void read_gyro_raw_cal_xyz_one_ptr(int *_GyroXYZ) { 
+ 1524               	.LM108:
+ 1525               	.LFBB21:
+ 1526               	/* prologue: function */
+ 1527               	/* frame size = 0 */
+ 1528               	/* stack size = 0 */
+ 1529               	.L__stack_usage = 0
+ 254:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	read_gyro_raw_cal_xyz_three_ptr(_GyroXYZ, _GyroXYZ+1, _GyroXYZ+2); 
+ 1531               	.LM109:
+ 1532 0630 BC01      		movw r22,r24
+ 1533 0632 6E5F      		subi r22,lo8(-(2))
+ 1534 0634 7F4F      		sbci r23,hi8(-(2))
+ 1535 0636 AC01      		movw r20,r24
+ 1536 0638 4C5F      		subi r20,lo8(-(4))
+ 1537 063a 5F4F      		sbci r21,hi8(-(4))
+ 1538 063c 0E94 0000 		call read_gyro_raw_cal_xyz_three_ptr
+ 1539               	/* epilogue start */
+ 255:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** } 
+ 1541               	.LM110:
+ 1542 0640 0895      		ret
+ 1544               	.Lscope21:
+ 1546               		.stabd	78,0,0
+ 1551               	.global	read_gyro_xyz_three_ptr
+ 1553               	read_gyro_xyz_three_ptr:
+ 1554               		.stabd	46,0,0
+ 257:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void read_gyro_xyz_three_ptr(int16_t *_GyroX, int16_t *_GyroY, int16_t *_GyroZ){
+ 1556               	.LM111:
+ 1557               	.LFBB22:
+ 1558 0642 CF92      		push r12
+ 1559 0644 DF92      		push r13
+ 1560 0646 EF92      		push r14
+ 1561 0648 FF92      		push r15
+ 1562 064a 0F93      		push r16
+ 1563 064c 1F93      		push r17
+ 1564 064e CF93      		push r28
+ 1565 0650 DF93      		push r29
+ 1566 0652 00D0      		rcall .
+ 1567 0654 00D0      		rcall .
+ 1568 0656 00D0      		rcall .
+ 1569 0658 CDB7      		in r28,__SP_L__
+ 1570 065a DEB7      		in r29,__SP_H__
+ 1571               	/* prologue: function */
+ 1572               	/* frame size = 6 */
+ 1573               	/* stack size = 14 */
+ 1574               	.L__stack_usage = 14
+ 1575 065c 8C01      		movw r16,r24
+ 1576 065e 7B01      		movw r14,r22
+ 1577 0660 6A01      		movw r12,r20
+ 259:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	read_gyro_raw_cal_xyz_three_ptr(&x, &y, &z); // x,y,z will contain calibrated integer values from 
+ 1579               	.LM112:
+ 1580 0662 CE01      		movw r24,r28
+ 1581 0664 0596      		adiw r24,5
+ 1582 0666 BE01      		movw r22,r28
+ 1583 0668 6D5F      		subi r22,lo8(-(3))
+ 1584 066a 7F4F      		sbci r23,hi8(-(3))
+ 1585 066c AE01      		movw r20,r28
+ 1586 066e 4F5F      		subi r20,lo8(-(1))
+ 1587 0670 5F4F      		sbci r21,hi8(-(1))
+ 1588 0672 0E94 0000 		call read_gyro_raw_cal_xyz_three_ptr
+ 260:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroX = (int16_t)( (x / scalefactor[0]) * INT_SCALER_GYRO ); 
+ 1590               	.LM113:
+ 1591 0676 6D81      		ldd r22,Y+5
+ 1592 0678 7E81      		ldd r23,Y+6
+ 1593 067a 8827      		clr r24
+ 1594 067c 77FD      		sbrc r23,7
+ 1595 067e 8095      		com r24
+ 1596 0680 982F      		mov r25,r24
+ 1597 0682 0E94 0000 		call __floatsisf
+ 1598 0686 2091 0000 		lds r18,scalefactor
+ 1599 068a 3091 0000 		lds r19,scalefactor+1
+ 1600 068e 4091 0000 		lds r20,scalefactor+2
+ 1601 0692 5091 0000 		lds r21,scalefactor+3
+ 1602 0696 0E94 0000 		call __divsf3
+ 1603 069a 20E0      		ldi r18,lo8(0x42c80000)
+ 1604 069c 30E0      		ldi r19,hi8(0x42c80000)
+ 1605 069e 48EC      		ldi r20,hlo8(0x42c80000)
+ 1606 06a0 52E4      		ldi r21,hhi8(0x42c80000)
+ 1607 06a2 0E94 0000 		call __mulsf3
+ 1608 06a6 0E94 0000 		call __fixsfsi
+ 1609 06aa DC01      		movw r26,r24
+ 1610 06ac CB01      		movw r24,r22
+ 1611 06ae F801      		movw r30,r16
+ 1612 06b0 9183      		std Z+1,r25
+ 1613 06b2 8083      		st Z,r24
+ 261:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroY = (int16_t)( (y / scalefactor[1]) * INT_SCALER_GYRO ); 
+ 1615               	.LM114:
+ 1616 06b4 6B81      		ldd r22,Y+3
+ 1617 06b6 7C81      		ldd r23,Y+4
+ 1618 06b8 8827      		clr r24
+ 1619 06ba 77FD      		sbrc r23,7
+ 1620 06bc 8095      		com r24
+ 1621 06be 982F      		mov r25,r24
+ 1622 06c0 0E94 0000 		call __floatsisf
+ 1623 06c4 2091 0000 		lds r18,scalefactor+4
+ 1624 06c8 3091 0000 		lds r19,scalefactor+4+1
+ 1625 06cc 4091 0000 		lds r20,scalefactor+4+2
+ 1626 06d0 5091 0000 		lds r21,scalefactor+4+3
+ 1627 06d4 0E94 0000 		call __divsf3
+ 1628 06d8 20E0      		ldi r18,lo8(0x42c80000)
+ 1629 06da 30E0      		ldi r19,hi8(0x42c80000)
+ 1630 06dc 48EC      		ldi r20,hlo8(0x42c80000)
+ 1631 06de 52E4      		ldi r21,hhi8(0x42c80000)
+ 1632 06e0 0E94 0000 		call __mulsf3
+ 1633 06e4 0E94 0000 		call __fixsfsi
+ 1634 06e8 DC01      		movw r26,r24
+ 1635 06ea CB01      		movw r24,r22
+ 1636 06ec F701      		movw r30,r14
+ 1637 06ee 9183      		std Z+1,r25
+ 1638 06f0 8083      		st Z,r24
+ 262:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	*_GyroZ = (int16_t)( (z / scalefactor[2]) * INT_SCALER_GYRO );  
+ 1640               	.LM115:
+ 1641 06f2 6981      		ldd r22,Y+1
+ 1642 06f4 7A81      		ldd r23,Y+2
+ 1643 06f6 8827      		clr r24
+ 1644 06f8 77FD      		sbrc r23,7
+ 1645 06fa 8095      		com r24
+ 1646 06fc 982F      		mov r25,r24
+ 1647 06fe 0E94 0000 		call __floatsisf
+ 1648 0702 2091 0000 		lds r18,scalefactor+8
+ 1649 0706 3091 0000 		lds r19,scalefactor+8+1
+ 1650 070a 4091 0000 		lds r20,scalefactor+8+2
+ 1651 070e 5091 0000 		lds r21,scalefactor+8+3
+ 1652 0712 0E94 0000 		call __divsf3
+ 1653 0716 20E0      		ldi r18,lo8(0x42c80000)
+ 1654 0718 30E0      		ldi r19,hi8(0x42c80000)
+ 1655 071a 48EC      		ldi r20,hlo8(0x42c80000)
+ 1656 071c 52E4      		ldi r21,hhi8(0x42c80000)
+ 1657 071e 0E94 0000 		call __mulsf3
+ 1658 0722 0E94 0000 		call __fixsfsi
+ 1659 0726 DC01      		movw r26,r24
+ 1660 0728 CB01      		movw r24,r22
+ 1661 072a F601      		movw r30,r12
+ 1662 072c 9183      		std Z+1,r25
+ 1663 072e 8083      		st Z,r24
+ 1664               	/* epilogue start */
+ 263:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** } 
+ 1666               	.LM116:
+ 1667 0730 2696      		adiw r28,6
+ 1668 0732 0FB6      		in __tmp_reg__,__SREG__
+ 1669 0734 F894      		cli
+ 1670 0736 DEBF      		out __SP_H__,r29
+ 1671 0738 0FBE      		out __SREG__,__tmp_reg__
+ 1672 073a CDBF      		out __SP_L__,r28
+ 1673 073c DF91      		pop r29
+ 1674 073e CF91      		pop r28
+ 1675 0740 1F91      		pop r17
+ 1676 0742 0F91      		pop r16
+ 1677 0744 FF90      		pop r15
+ 1678 0746 EF90      		pop r14
+ 1679 0748 DF90      		pop r13
+ 1680 074a CF90      		pop r12
+ 1681 074c 0895      		ret
+ 1688               	.Lscope22:
+ 1690               		.stabd	78,0,0
+ 1693               	.global	read_gyro_xyz_one_ptr
+ 1695               	read_gyro_xyz_one_ptr:
+ 1696               		.stabd	46,0,0
+ 265:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void read_gyro_xyz_one_ptr(int16_t *_GyroXYZ){
+ 1698               	.LM117:
+ 1699               	.LFBB23:
+ 1700               	/* prologue: function */
+ 1701               	/* frame size = 0 */
+ 1702               	/* stack size = 0 */
+ 1703               	.L__stack_usage = 0
+ 266:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	read_gyro_xyz_three_ptr(_GyroXYZ, _GyroXYZ+1, _GyroXYZ+2);
+ 1705               	.LM118:
+ 1706 074e BC01      		movw r22,r24
+ 1707 0750 6E5F      		subi r22,lo8(-(2))
+ 1708 0752 7F4F      		sbci r23,hi8(-(2))
+ 1709 0754 AC01      		movw r20,r24
+ 1710 0756 4C5F      		subi r20,lo8(-(4))
+ 1711 0758 5F4F      		sbci r21,hi8(-(4))
+ 1712 075a 0E94 0000 		call read_gyro_xyz_three_ptr
+ 1713               	/* epilogue start */
+ 267:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 1715               	.LM119:
+ 1716 075e 0895      		ret
+ 1718               	.Lscope23:
+ 1720               		.stabd	78,0,0
+ 1722               	.global	isLowPower
+ 1724               	isLowPower:
+ 1725               		.stabd	46,0,0
+ 276:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isLowPower() {   
+ 1727               	.LM120:
+ 1728               	.LFBB24:
+ 1729               	/* prologue: function */
+ 1730               	/* frame size = 0 */
+ 1731               	/* stack size = 0 */
+ 1732               	.L__stack_usage = 0
+ 277:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 1734               	.LM121:
+ 1735 0760 8EE3      		ldi r24,lo8(62)
+ 1736 0762 61E0      		ldi r22,lo8(1)
+ 1737 0764 0E94 0000 		call readmem.constprop.0
+ 278:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & PWRMGM_SLEEP) >> 6;
+ 1739               	.LM122:
+ 1740 0768 8091 0000 		lds r24,_buff
+ 1741 076c 90E0      		ldi r25,lo8(0)
+ 1742 076e 8074      		andi r24,lo8(64)
+ 1743 0770 9070      		andi r25,hi8(64)
+ 1744 0772 A6E0      		ldi r26,6
+ 1745 0774 9595      	1:	asr r25
+ 1746 0776 8795      		ror r24
+ 1747 0778 AA95      		dec r26
+ 1748 077a 01F4      		brne 1b
+ 1749               	/* epilogue start */
+ 279:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 1751               	.LM123:
+ 1752 077c 0895      		ret
+ 1754               	.Lscope24:
+ 1756               		.stabd	78,0,0
+ 1758               	.global	isXgyroStandby
+ 1760               	isXgyroStandby:
+ 1761               		.stabd	46,0,0
+ 286:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isXgyroStandby() {
+ 1763               	.LM124:
+ 1764               	.LFBB25:
+ 1765               	/* prologue: function */
+ 1766               	/* frame size = 0 */
+ 1767               	/* stack size = 0 */
+ 1768               	.L__stack_usage = 0
+ 287:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 1770               	.LM125:
+ 1771 077e 8EE3      		ldi r24,lo8(62)
+ 1772 0780 61E0      		ldi r22,lo8(1)
+ 1773 0782 0E94 0000 		call readmem.constprop.0
+ 288:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & PWRMGM_STBY_XG) >> 5;
+ 1775               	.LM126:
+ 1776 0786 8091 0000 		lds r24,_buff
+ 1777 078a 90E0      		ldi r25,lo8(0)
+ 1778 078c 8072      		andi r24,lo8(32)
+ 1779 078e 9070      		andi r25,hi8(32)
+ 1780 0790 B5E0      		ldi r27,5
+ 1781 0792 9595      	1:	asr r25
+ 1782 0794 8795      		ror r24
+ 1783 0796 BA95      		dec r27
+ 1784 0798 01F4      		brne 1b
+ 1785               	/* epilogue start */
+ 289:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 1787               	.LM127:
+ 1788 079a 0895      		ret
+ 1790               	.Lscope25:
+ 1792               		.stabd	78,0,0
+ 1794               	.global	isYgyroStandby
+ 1796               	isYgyroStandby:
+ 1797               		.stabd	46,0,0
+ 291:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isYgyroStandby() {
+ 1799               	.LM128:
+ 1800               	.LFBB26:
+ 1801               	/* prologue: function */
+ 1802               	/* frame size = 0 */
+ 1803               	/* stack size = 0 */
+ 1804               	.L__stack_usage = 0
+ 292:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 1806               	.LM129:
+ 1807 079c 8EE3      		ldi r24,lo8(62)
+ 1808 079e 61E0      		ldi r22,lo8(1)
+ 1809 07a0 0E94 0000 		call readmem.constprop.0
+ 293:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & PWRMGM_STBY_YG) >> 4;
+ 1811               	.LM130:
+ 1812 07a4 8091 0000 		lds r24,_buff
+ 1813 07a8 90E0      		ldi r25,lo8(0)
+ 1814 07aa 8071      		andi r24,lo8(16)
+ 1815 07ac 9070      		andi r25,hi8(16)
+ 1816 07ae 24E0      		ldi r18,4
+ 1817 07b0 9595      	1:	asr r25
+ 1818 07b2 8795      		ror r24
+ 1819 07b4 2A95      		dec r18
+ 1820 07b6 01F4      		brne 1b
+ 1821               	/* epilogue start */
+ 294:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 1823               	.LM131:
+ 1824 07b8 0895      		ret
+ 1826               	.Lscope26:
+ 1828               		.stabd	78,0,0
+ 1830               	.global	isZgyroStandby
+ 1832               	isZgyroStandby:
+ 1833               		.stabd	46,0,0
+ 296:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** bool isZgyroStandby() {
+ 1835               	.LM132:
+ 1836               	.LFBB27:
+ 1837               	/* prologue: function */
+ 1838               	/* frame size = 0 */
+ 1839               	/* stack size = 0 */
+ 1840               	.L__stack_usage = 0
+ 297:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 1842               	.LM133:
+ 1843 07ba 8EE3      		ldi r24,lo8(62)
+ 1844 07bc 61E0      		ldi r22,lo8(1)
+ 1845 07be 0E94 0000 		call readmem.constprop.0
+ 298:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & PWRMGM_STBY_ZG) >> 3;
+ 1847               	.LM134:
+ 1848 07c2 8091 0000 		lds r24,_buff
+ 1849 07c6 90E0      		ldi r25,lo8(0)
+ 1850 07c8 8870      		andi r24,lo8(8)
+ 1851 07ca 9070      		andi r25,hi8(8)
+ 1852 07cc 33E0      		ldi r19,3
+ 1853 07ce 9595      	1:	asr r25
+ 1854 07d0 8795      		ror r24
+ 1855 07d2 3A95      		dec r19
+ 1856 07d4 01F4      		brne 1b
+ 1857               	/* epilogue start */
+ 299:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 1859               	.LM135:
+ 1860 07d6 0895      		ret
+ 1862               	.Lscope27:
+ 1864               		.stabd	78,0,0
+ 1866               	.global	getClockSource
+ 1868               	getClockSource:
+ 1869               		.stabd	46,0,0
+ 316:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** byte getClockSource() {  
+ 1871               	.LM136:
+ 1872               	.LFBB28:
+ 1873               	/* prologue: function */
+ 1874               	/* frame size = 0 */
+ 1875               	/* stack size = 0 */
+ 1876               	.L__stack_usage = 0
+ 317:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 1878               	.LM137:
+ 1879 07d8 8EE3      		ldi r24,lo8(62)
+ 1880 07da 61E0      		ldi r22,lo8(1)
+ 1881 07dc 0E94 0000 		call readmem.constprop.0
+ 318:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	return (_buff[0] & PWRMGM_CLK_SEL);
+ 1883               	.LM138:
+ 1884 07e0 8091 0000 		lds r24,_buff
+ 319:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 1886               	.LM139:
+ 1887 07e4 8770      		andi r24,lo8(7)
+ 1888               	/* epilogue start */
+ 1889 07e6 0895      		ret
+ 1891               	.Lscope28:
+ 1893               		.stabd	78,0,0
+ 1897               	.global	writemem
+ 1899               	writemem:
+ 1900               		.stabd	46,0,0
+ 326:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void writemem(uint8_t _addr, uint8_t _val) {
+ 1902               	.LM140:
+ 1903               	.LFBB29:
+ 1904 07e8 1F93      		push r17
+ 1905 07ea CF93      		push r28
+ 1906 07ec DF93      		push r29
+ 1907 07ee 0F92      		push __tmp_reg__
+ 1908 07f0 CDB7      		in r28,__SP_L__
+ 1909 07f2 DEB7      		in r29,__SP_H__
+ 1910               	/* prologue: function */
+ 1911               	/* frame size = 1 */
+ 1912               	/* stack size = 4 */
+ 1913               	.L__stack_usage = 4
+ 1914 07f4 182F      		mov r17,r24
+ 327:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	beginTransmission_uint8(_dev_address);   // start transmission to device 
+ 1916               	.LM141:
+ 1917 07f6 8091 0000 		lds r24,_dev_address
+ 1918 07fa 6983      		std Y+1,r22
+ 1919 07fc 0E94 0000 		call beginTransmission_uint8
+ 328:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	send_uint8(_addr); // send register address
+ 1921               	.LM142:
+ 1922 0800 812F      		mov r24,r17
+ 1923 0802 0E94 0000 		call send_uint8
+ 329:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	send_uint8(_val); // send value to write
+ 1925               	.LM143:
+ 1926 0806 6981      		ldd r22,Y+1
+ 1927 0808 862F      		mov r24,r22
+ 1928 080a 0E94 0000 		call send_uint8
+ 330:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	endTransmission(); // end transmission
+ 1930               	.LM144:
+ 1931 080e 0E94 0000 		call endTransmission
+ 1932               	/* epilogue start */
+ 331:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 1934               	.LM145:
+ 1935 0812 0F90      		pop __tmp_reg__
+ 1936 0814 DF91      		pop r29
+ 1937 0816 CF91      		pop r28
+ 1938 0818 1F91      		pop r17
+ 1939 081a 0895      		ret
+ 1941               	.Lscope29:
+ 1943               		.stabd	78,0,0
+ 1945               	.global	reset
+ 1947               	reset:
+ 1948               		.stabd	46,0,0
+ 269:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void reset() {     
+ 1950               	.LM146:
+ 1951               	.LFBB30:
+ 1952               	/* prologue: function */
+ 1953               	/* frame size = 0 */
+ 1954               	/* stack size = 0 */
+ 1955               	.L__stack_usage = 0
+ 270:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(PWR_MGM, PWRMGM_HRESET); 
+ 1957               	.LM147:
+ 1958 081c 8EE3      		ldi r24,lo8(62)
+ 1959 081e 60E8      		ldi r22,lo8(-128)
+ 1960 0820 0E94 0000 		call writemem
+ 271:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	gyro_start_wait_time.secs = 0;
+ 1962               	.LM148:
+ 1963 0824 1092 0000 		sts gyro_start_wait_time,__zero_reg__
+ 1964 0828 1092 0000 		sts gyro_start_wait_time+1,__zero_reg__
+ 1965 082c 1092 0000 		sts gyro_start_wait_time+2,__zero_reg__
+ 1966 0830 1092 0000 		sts gyro_start_wait_time+3,__zero_reg__
+ 272:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	gyro_start_wait_time.nano_secs = GYROSTART_UP_DELAY_MS*NANOS_PER_MS;
+ 1968               	.LM149:
+ 1969 0834 80E8      		ldi r24,lo8(70000000)
+ 1970 0836 9DE1      		ldi r25,hi8(70000000)
+ 1971 0838 ACE2      		ldi r26,hlo8(70000000)
+ 1972 083a B4E0      		ldi r27,hhi8(70000000)
+ 1973 083c 682F      		mov r22,r24
+ 1974 083e 8093 0000 		sts gyro_start_wait_time+4,r24
+ 1975 0842 9093 0000 		sts gyro_start_wait_time+4+1,r25
+ 1976 0846 A093 0000 		sts gyro_start_wait_time+4+2,r26
+ 1977 084a B093 0000 		sts gyro_start_wait_time+4+3,r27
+ 273:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	nrk_wait(gyro_start_wait_time);  // startup delay	
+ 1979               	.LM150:
+ 1980 084e 20E0      		ldi r18,lo8(0)
+ 1981 0850 3091 0000 		lds r19,gyro_start_wait_time+1
+ 1982 0854 4091 0000 		lds r20,gyro_start_wait_time+2
+ 1983 0858 5091 0000 		lds r21,gyro_start_wait_time+3
+ 1984 085c 7091 0000 		lds r23,gyro_start_wait_time+5
+ 1985 0860 8091 0000 		lds r24,gyro_start_wait_time+6
+ 1986 0864 9091 0000 		lds r25,gyro_start_wait_time+7
+ 1987 0868 0E94 0000 		call nrk_wait
+ 1988               	/* epilogue start */
+ 274:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 1990               	.LM151:
+ 1991 086c 0895      		ret
+ 1993               	.Lscope30:
+ 1995               		.stabd	78,0,0
+ 1998               	.global	set_gyro_sample_rate_div
+ 2000               	set_gyro_sample_rate_div:
+ 2001               		.stabd	46,0,0
+  97:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void set_gyro_sample_rate_div(byte _SampleRate) {//****
+ 2003               	.LM152:
+ 2004               	.LFBB31:
+ 2005               	/* prologue: function */
+ 2006               	/* frame size = 0 */
+ 2007               	/* stack size = 0 */
+ 2008               	.L__stack_usage = 0
+ 2009 086e 682F      		mov r22,r24
+  98:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(SMPLRT_DIV, _SampleRate);
+ 2011               	.LM153:
+ 2012 0870 85E1      		ldi r24,lo8(21)
+ 2013 0872 0E94 0000 		call writemem
+ 2014               	/* epilogue start */
+  99:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2016               	.LM154:
+ 2017 0876 0895      		ret
+ 2019               	.Lscope31:
+ 2021               		.stabd	78,0,0
+ 2023               	.global	set_gyro_addr
+ 2025               	set_gyro_addr:
+ 2026               		.stabd	46,0,0
+  87:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void set_gyro_addr(uint16_t  _addr) {
+ 2028               	.LM155:
+ 2029               	.LFBB32:
+ 2030 0878 CF93      		push r28
+ 2031               	/* prologue: function */
+ 2032               	/* frame size = 0 */
+ 2033               	/* stack size = 1 */
+ 2034               	.L__stack_usage = 1
+ 2035 087a C82F      		mov r28,r24
+  88:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(WHO_AM_I, _addr); 
+ 2037               	.LM156:
+ 2038 087c 80E0      		ldi r24,lo8(0)
+ 2039 087e 6C2F      		mov r22,r28
+ 2040 0880 0E94 0000 		call writemem
+  89:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	_dev_address = _addr;
+ 2042               	.LM157:
+ 2043 0884 C093 0000 		sts _dev_address,r28
+ 2044               	/* epilogue start */
+  90:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2046               	.LM158:
+ 2047 0888 CF91      		pop r28
+ 2048 088a 0895      		ret
+ 2050               	.Lscope32:
+ 2052               		.stabd	78,0,0
+ 2055               	.global	setClockSource
+ 2057               	setClockSource:
+ 2058               		.stabd	46,0,0
+ 321:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setClockSource(byte _CLKsource) {   
+ 2060               	.LM159:
+ 2061               	.LFBB33:
+ 2062 088c CF93      		push r28
+ 2063               	/* prologue: function */
+ 2064               	/* frame size = 0 */
+ 2065               	/* stack size = 1 */
+ 2066               	.L__stack_usage = 1
+ 2067 088e C82F      		mov r28,r24
+ 322:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 2069               	.LM160:
+ 2070 0890 8EE3      		ldi r24,lo8(62)
+ 2071 0892 61E0      		ldi r22,lo8(1)
+ 2072 0894 0E94 0000 		call readmem.constprop.0
+ 323:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(PWR_MGM, ((_buff[0] & ~PWRMGM_CLK_SEL) | _CLKsource)); 
+ 2074               	.LM161:
+ 2075 0898 6091 0000 		lds r22,_buff
+ 2076 089c 687F      		andi r22,lo8(-8)
+ 2077 089e 6C2B      		or r22,r28
+ 2078 08a0 8EE3      		ldi r24,lo8(62)
+ 2079 08a2 0E94 0000 		call writemem
+ 2080               	/* epilogue start */
+ 324:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2082               	.LM162:
+ 2083 08a6 CF91      		pop r28
+ 2084 08a8 0895      		ret
+ 2086               	.Lscope33:
+ 2088               		.stabd	78,0,0
+ 2091               	.global	setZgyroStandby
+ 2093               	setZgyroStandby:
+ 2094               		.stabd	46,0,0
+ 311:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setZgyroStandby(bool _Status) {
+ 2096               	.LM163:
+ 2097               	.LFBB34:
+ 2098 08aa CF93      		push r28
+ 2099               	/* prologue: function */
+ 2100               	/* frame size = 0 */
+ 2101               	/* stack size = 1 */
+ 2102               	.L__stack_usage = 1
+ 2103 08ac C82F      		mov r28,r24
+ 312:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 2105               	.LM164:
+ 2106 08ae 8EE3      		ldi r24,lo8(62)
+ 2107 08b0 61E0      		ldi r22,lo8(1)
+ 2108 08b2 0E94 0000 		call readmem.constprop.0
+ 313:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(PWR_MGM, ((_buff[0] & PWRMGM_STBY_ZG) | _Status << 3));
+ 2110               	.LM165:
+ 2111 08b6 6C2F      		mov r22,r28
+ 2112 08b8 660F      		lsl r22
+ 2113 08ba 660F      		lsl r22
+ 2114 08bc 660F      		lsl r22
+ 2115 08be 8091 0000 		lds r24,_buff
+ 2116 08c2 8870      		andi r24,lo8(8)
+ 2117 08c4 682B      		or r22,r24
+ 2118 08c6 8EE3      		ldi r24,lo8(62)
+ 2119 08c8 0E94 0000 		call writemem
+ 2120               	/* epilogue start */
+ 314:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2122               	.LM166:
+ 2123 08cc CF91      		pop r28
+ 2124 08ce 0895      		ret
+ 2126               	.Lscope34:
+ 2128               		.stabd	78,0,0
+ 2131               	.global	setYgyroStandby
+ 2133               	setYgyroStandby:
+ 2134               		.stabd	46,0,0
+ 306:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setYgyroStandby(bool _Status) {
+ 2136               	.LM167:
+ 2137               	.LFBB35:
+ 2138 08d0 CF93      		push r28
+ 2139               	/* prologue: function */
+ 2140               	/* frame size = 0 */
+ 2141               	/* stack size = 1 */
+ 2142               	.L__stack_usage = 1
+ 2143 08d2 C82F      		mov r28,r24
+ 307:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 2145               	.LM168:
+ 2146 08d4 8EE3      		ldi r24,lo8(62)
+ 2147 08d6 61E0      		ldi r22,lo8(1)
+ 2148 08d8 0E94 0000 		call readmem.constprop.0
+ 308:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(PWR_MGM, ((_buff[0] & PWRMGM_STBY_YG) | _Status << 4));
+ 2150               	.LM169:
+ 2151 08dc 6C2F      		mov r22,r28
+ 2152 08de 6295      		swap r22
+ 2153 08e0 607F      		andi r22,lo8(-16)
+ 2154 08e2 8091 0000 		lds r24,_buff
+ 2155 08e6 8071      		andi r24,lo8(16)
+ 2156 08e8 682B      		or r22,r24
+ 2157 08ea 8EE3      		ldi r24,lo8(62)
+ 2158 08ec 0E94 0000 		call writemem
+ 2159               	/* epilogue start */
+ 309:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2161               	.LM170:
+ 2162 08f0 CF91      		pop r28
+ 2163 08f2 0895      		ret
+ 2165               	.Lscope35:
+ 2167               		.stabd	78,0,0
+ 2170               	.global	setXgyroStandby
+ 2172               	setXgyroStandby:
+ 2173               		.stabd	46,0,0
+ 301:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setXgyroStandby(bool _Status) {
+ 2175               	.LM171:
+ 2176               	.LFBB36:
+ 2177 08f4 CF93      		push r28
+ 2178               	/* prologue: function */
+ 2179               	/* frame size = 0 */
+ 2180               	/* stack size = 1 */
+ 2181               	.L__stack_usage = 1
+ 2182 08f6 C82F      		mov r28,r24
+ 302:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 2184               	.LM172:
+ 2185 08f8 8EE3      		ldi r24,lo8(62)
+ 2186 08fa 61E0      		ldi r22,lo8(1)
+ 2187 08fc 0E94 0000 		call readmem.constprop.0
+ 303:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(PWR_MGM, ((_buff[0] & PWRMGM_STBY_XG) | _Status << 5));
+ 2189               	.LM173:
+ 2190 0900 6C2F      		mov r22,r28
+ 2191 0902 6295      		swap r22
+ 2192 0904 660F      		lsl r22
+ 2193 0906 607E      		andi r22,lo8(-32)
+ 2194 0908 8091 0000 		lds r24,_buff
+ 2195 090c 8072      		andi r24,lo8(32)
+ 2196 090e 682B      		or r22,r24
+ 2197 0910 8EE3      		ldi r24,lo8(62)
+ 2198 0912 0E94 0000 		call writemem
+ 2199               	/* epilogue start */
+ 304:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2201               	.LM174:
+ 2202 0916 CF91      		pop r28
+ 2203 0918 0895      		ret
+ 2205               	.Lscope36:
+ 2207               		.stabd	78,0,0
+ 2210               	.global	setPowerMode
+ 2212               	setPowerMode:
+ 2213               		.stabd	46,0,0
+ 281:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setPowerMode(bool _State) {
+ 2215               	.LM175:
+ 2216               	.LFBB37:
+ 2217 091a CF93      		push r28
+ 2218               	/* prologue: function */
+ 2219               	/* frame size = 0 */
+ 2220               	/* stack size = 1 */
+ 2221               	.L__stack_usage = 1
+ 2222 091c C82F      		mov r28,r24
+ 282:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(PWR_MGM, 1, &_buff[0]);
+ 2224               	.LM176:
+ 2225 091e 8EE3      		ldi r24,lo8(62)
+ 2226 0920 61E0      		ldi r22,lo8(1)
+ 2227 0922 0E94 0000 		call readmem.constprop.0
+ 283:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(PWR_MGM, ((_buff[0] & ~PWRMGM_SLEEP) | _State << 6));  
+ 2229               	.LM177:
+ 2230 0926 6C2F      		mov r22,r28
+ 2231 0928 6295      		swap r22
+ 2232 092a 660F      		lsl r22
+ 2233 092c 660F      		lsl r22
+ 2234 092e 607C      		andi r22,lo8(-64)
+ 2235 0930 8091 0000 		lds r24,_buff
+ 2236 0934 8F7B      		andi r24,lo8(-65)
+ 2237 0936 682B      		or r22,r24
+ 2238 0938 8EE3      		ldi r24,lo8(62)
+ 2239 093a 0E94 0000 		call writemem
+ 2240               	/* epilogue start */
+ 284:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2242               	.LM178:
+ 2243 093e CF91      		pop r28
+ 2244 0940 0895      		ret
+ 2246               	.Lscope37:
+ 2248               		.stabd	78,0,0
+ 2251               	.global	setRawDataReady
+ 2253               	setRawDataReady:
+ 2254               		.stabd	46,0,0
+ 176:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setRawDataReady(bool _State) {
+ 2256               	.LM179:
+ 2257               	.LFBB38:
+ 2258 0942 CF93      		push r28
+ 2259               	/* prologue: function */
+ 2260               	/* frame size = 0 */
+ 2261               	/* stack size = 1 */
+ 2262               	.L__stack_usage = 1
+ 2263 0944 C82F      		mov r28,r24
+ 177:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 2265               	.LM180:
+ 2266 0946 87E1      		ldi r24,lo8(23)
+ 2267 0948 61E0      		ldi r22,lo8(1)
+ 2268 094a 0E94 0000 		call readmem.constprop.0
+ 178:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(INT_CFG, ((_buff[0] & ~INTCFG_RAW_RDY_EN) | _State)); 
+ 2270               	.LM181:
+ 2271 094e 6091 0000 		lds r22,_buff
+ 2272 0952 6E7F      		andi r22,lo8(-2)
+ 2273 0954 6C2B      		or r22,r28
+ 2274 0956 87E1      		ldi r24,lo8(23)
+ 2275 0958 0E94 0000 		call writemem
+ 2276               	/* epilogue start */
+ 179:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2278               	.LM182:
+ 2279 095c CF91      		pop r28
+ 2280 095e 0895      		ret
+ 2282               	.Lscope38:
+ 2284               		.stabd	78,0,0
+ 2287               	.global	setITGReady
+ 2289               	setITGReady:
+ 2290               		.stabd	46,0,0
+ 166:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setITGReady(bool _State) {
+ 2292               	.LM183:
+ 2293               	.LFBB39:
+ 2294 0960 CF93      		push r28
+ 2295               	/* prologue: function */
+ 2296               	/* frame size = 0 */
+ 2297               	/* stack size = 1 */
+ 2298               	.L__stack_usage = 1
+ 2299 0962 C82F      		mov r28,r24
+ 167:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 2301               	.LM184:
+ 2302 0964 87E1      		ldi r24,lo8(23)
+ 2303 0966 61E0      		ldi r22,lo8(1)
+ 2304 0968 0E94 0000 		call readmem.constprop.0
+ 168:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(INT_CFG, ((_buff[0] & ~INTCFG_ITG_RDY_EN) | _State << 2)); 
+ 2306               	.LM185:
+ 2307 096c 6C2F      		mov r22,r28
+ 2308 096e 660F      		lsl r22
+ 2309 0970 660F      		lsl r22
+ 2310 0972 8091 0000 		lds r24,_buff
+ 2311 0976 8B7F      		andi r24,lo8(-5)
+ 2312 0978 682B      		or r22,r24
+ 2313 097a 87E1      		ldi r24,lo8(23)
+ 2314 097c 0E94 0000 		call writemem
+ 2315               	/* epilogue start */
+ 169:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2317               	.LM186:
+ 2318 0980 CF91      		pop r28
+ 2319 0982 0895      		ret
+ 2321               	.Lscope39:
+ 2323               		.stabd	78,0,0
+ 2326               	.global	setLatchClearMode
+ 2328               	setLatchClearMode:
+ 2329               		.stabd	46,0,0
+ 156:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setLatchClearMode(bool _State) {
+ 2331               	.LM187:
+ 2332               	.LFBB40:
+ 2333 0984 CF93      		push r28
+ 2334               	/* prologue: function */
+ 2335               	/* frame size = 0 */
+ 2336               	/* stack size = 1 */
+ 2337               	.L__stack_usage = 1
+ 2338 0986 C82F      		mov r28,r24
+ 157:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 2340               	.LM188:
+ 2341 0988 87E1      		ldi r24,lo8(23)
+ 2342 098a 61E0      		ldi r22,lo8(1)
+ 2343 098c 0E94 0000 		call readmem.constprop.0
+ 158:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(INT_CFG, ((_buff[0] & ~INTCFG_INT_ANYRD_2CLEAR) | _State << 4)); 
+ 2345               	.LM189:
+ 2346 0990 6C2F      		mov r22,r28
+ 2347 0992 6295      		swap r22
+ 2348 0994 607F      		andi r22,lo8(-16)
+ 2349 0996 8091 0000 		lds r24,_buff
+ 2350 099a 8F7E      		andi r24,lo8(-17)
+ 2351 099c 682B      		or r22,r24
+ 2352 099e 87E1      		ldi r24,lo8(23)
+ 2353 09a0 0E94 0000 		call writemem
+ 2354               	/* epilogue start */
+ 159:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2356               	.LM190:
+ 2357 09a4 CF91      		pop r28
+ 2358 09a6 0895      		ret
+ 2360               	.Lscope40:
+ 2362               		.stabd	78,0,0
+ 2365               	.global	setLatchMode
+ 2367               	setLatchMode:
+ 2368               		.stabd	46,0,0
+ 146:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setLatchMode(bool _State) {
+ 2370               	.LM191:
+ 2371               	.LFBB41:
+ 2372 09a8 CF93      		push r28
+ 2373               	/* prologue: function */
+ 2374               	/* frame size = 0 */
+ 2375               	/* stack size = 1 */
+ 2376               	.L__stack_usage = 1
+ 2377 09aa C82F      		mov r28,r24
+ 147:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 2379               	.LM192:
+ 2380 09ac 87E1      		ldi r24,lo8(23)
+ 2381 09ae 61E0      		ldi r22,lo8(1)
+ 2382 09b0 0E94 0000 		call readmem.constprop.0
+ 148:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(INT_CFG, ((_buff[0] & ~INTCFG_LATCH_INT_EN) | _State << 5)); 
+ 2384               	.LM193:
+ 2385 09b4 6C2F      		mov r22,r28
+ 2386 09b6 6295      		swap r22
+ 2387 09b8 660F      		lsl r22
+ 2388 09ba 607E      		andi r22,lo8(-32)
+ 2389 09bc 8091 0000 		lds r24,_buff
+ 2390 09c0 8F7D      		andi r24,lo8(-33)
+ 2391 09c2 682B      		or r22,r24
+ 2392 09c4 87E1      		ldi r24,lo8(23)
+ 2393 09c6 0E94 0000 		call writemem
+ 2394               	/* epilogue start */
+ 149:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2396               	.LM194:
+ 2397 09ca CF91      		pop r28
+ 2398 09cc 0895      		ret
+ 2400               	.Lscope41:
+ 2402               		.stabd	78,0,0
+ 2405               	.global	setINTDriveType
+ 2407               	setINTDriveType:
+ 2408               		.stabd	46,0,0
+ 136:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void setINTDriveType(bool _State) {
+ 2410               	.LM195:
+ 2411               	.LFBB42:
+ 2412 09ce CF93      		push r28
+ 2413               	/* prologue: function */
+ 2414               	/* frame size = 0 */
+ 2415               	/* stack size = 1 */
+ 2416               	.L__stack_usage = 1
+ 2417 09d0 C82F      		mov r28,r24
+ 137:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 2419               	.LM196:
+ 2420 09d2 87E1      		ldi r24,lo8(23)
+ 2421 09d4 61E0      		ldi r22,lo8(1)
+ 2422 09d6 0E94 0000 		call readmem.constprop.0
+ 138:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(INT_CFG, ((_buff[0] & ~INTCFG_OPEN) | _State << 6)); 
+ 2424               	.LM197:
+ 2425 09da 6C2F      		mov r22,r28
+ 2426 09dc 6295      		swap r22
+ 2427 09de 660F      		lsl r22
+ 2428 09e0 660F      		lsl r22
+ 2429 09e2 607C      		andi r22,lo8(-64)
+ 2430 09e4 8091 0000 		lds r24,_buff
+ 2431 09e8 8F7B      		andi r24,lo8(-65)
+ 2432 09ea 682B      		or r22,r24
+ 2433 09ec 87E1      		ldi r24,lo8(23)
+ 2434 09ee 0E94 0000 		call writemem
+ 2435               	/* epilogue start */
+ 139:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2437               	.LM198:
+ 2438 09f2 CF91      		pop r28
+ 2439 09f4 0895      		ret
+ 2441               	.Lscope42:
+ 2443               		.stabd	78,0,0
+ 2446               	.global	set_gyro_INT_Logic_lvl
+ 2448               	set_gyro_INT_Logic_lvl:
+ 2449               		.stabd	46,0,0
+ 126:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void set_gyro_INT_Logic_lvl(bool _State) { //****
+ 2451               	.LM199:
+ 2452               	.LFBB43:
+ 2453 09f6 CF93      		push r28
+ 2454               	/* prologue: function */
+ 2455               	/* frame size = 0 */
+ 2456               	/* stack size = 1 */
+ 2457               	.L__stack_usage = 1
+ 2458 09f8 C82F      		mov r28,r24
+ 127:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(INT_CFG, 1, &_buff[0]);
+ 2460               	.LM200:
+ 2461 09fa 87E1      		ldi r24,lo8(23)
+ 2462 09fc 61E0      		ldi r22,lo8(1)
+ 2463 09fe 0E94 0000 		call readmem.constprop.0
+ 128:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(INT_CFG, ((_buff[0] & ~INTCFG_ACTL) | (_State << 7))); 
+ 2465               	.LM201:
+ 2466 0a02 6C2F      		mov r22,r28
+ 2467 0a04 6795      		ror r22
+ 2468 0a06 6627      		clr r22
+ 2469 0a08 6795      		ror r22
+ 2470 0a0a 8091 0000 		lds r24,_buff
+ 2471 0a0e 8F77      		andi r24,lo8(127)
+ 2472 0a10 682B      		or r22,r24
+ 2473 0a12 87E1      		ldi r24,lo8(23)
+ 2474 0a14 0E94 0000 		call writemem
+ 2475               	/* epilogue start */
+ 129:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2477               	.LM202:
+ 2478 0a18 CF91      		pop r28
+ 2479 0a1a 0895      		ret
+ 2481               	.Lscope43:
+ 2483               		.stabd	78,0,0
+ 2486               	.global	set_gyro_filter_BW
+ 2488               	set_gyro_filter_BW:
+ 2489               		.stabd	46,0,0
+ 116:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void set_gyro_filter_BW(byte _BW) {   
+ 2491               	.LM203:
+ 2492               	.LFBB44:
+ 2493 0a1c CF93      		push r28
+ 2494               	/* prologue: function */
+ 2495               	/* frame size = 0 */
+ 2496               	/* stack size = 1 */
+ 2497               	.L__stack_usage = 1
+ 2498 0a1e C82F      		mov r28,r24
+ 117:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(DLPF_FS, 1, &_buff[0]);
+ 2500               	.LM204:
+ 2501 0a20 86E1      		ldi r24,lo8(22)
+ 2502 0a22 61E0      		ldi r22,lo8(1)
+ 2503 0a24 0E94 0000 		call readmem.constprop.0
+ 118:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(DLPF_FS, ((_buff[0] & ~DLPFFS_DLPF_CFG) | _BW)); 
+ 2505               	.LM205:
+ 2506 0a28 6091 0000 		lds r22,_buff
+ 2507 0a2c 687F      		andi r22,lo8(-8)
+ 2508 0a2e 6C2B      		or r22,r28
+ 2509 0a30 86E1      		ldi r24,lo8(22)
+ 2510 0a32 0E94 0000 		call writemem
+ 2511               	/* epilogue start */
+ 119:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2513               	.LM206:
+ 2514 0a36 CF91      		pop r28
+ 2515 0a38 0895      		ret
+ 2517               	.Lscope44:
+ 2519               		.stabd	78,0,0
+ 2522               	.global	set_gyro_FS_range
+ 2524               	set_gyro_FS_range:
+ 2525               		.stabd	46,0,0
+ 106:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void set_gyro_FS_range(byte _Range) {
+ 2527               	.LM207:
+ 2528               	.LFBB45:
+ 2529 0a3a CF93      		push r28
+ 2530               	/* prologue: function */
+ 2531               	/* frame size = 0 */
+ 2532               	/* stack size = 1 */
+ 2533               	.L__stack_usage = 1
+ 2534 0a3c C82F      		mov r28,r24
+ 107:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	readmem(DLPF_FS, 1, &_buff[0]);   
+ 2536               	.LM208:
+ 2537 0a3e 86E1      		ldi r24,lo8(22)
+ 2538 0a40 61E0      		ldi r22,lo8(1)
+ 2539 0a42 0E94 0000 		call readmem.constprop.0
+ 108:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	writemem(DLPF_FS, ((_buff[0] & ~DLPFFS_FS_SEL) | (_Range << 3)) ); 
+ 2541               	.LM209:
+ 2542 0a46 6C2F      		mov r22,r28
+ 2543 0a48 660F      		lsl r22
+ 2544 0a4a 660F      		lsl r22
+ 2545 0a4c 660F      		lsl r22
+ 2546 0a4e 8091 0000 		lds r24,_buff
+ 2547 0a52 877E      		andi r24,lo8(-25)
+ 2548 0a54 682B      		or r22,r24
+ 2549 0a56 86E1      		ldi r24,lo8(22)
+ 2550 0a58 0E94 0000 		call writemem
+ 2551               	/* epilogue start */
+ 109:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2553               	.LM210:
+ 2554 0a5c CF91      		pop r28
+ 2555 0a5e 0895      		ret
+ 2557               	.Lscope45:
+ 2559               		.stabd	78,0,0
+ 2567               	.global	init_gyro_all
+ 2569               	init_gyro_all:
+ 2570               		.stabd	46,0,0
+  66:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void init_gyro_all(uint16_t address, byte _SRateDiv, byte _Range, byte _filterBW, byte _ClockSrc, b
+ 2572               	.LM211:
+ 2573               	.LFBB46:
+ 2574 0a60 CF92      		push r12
+ 2575 0a62 EF92      		push r14
+ 2576 0a64 0F93      		push r16
+ 2577 0a66 CF93      		push r28
+ 2578 0a68 DF93      		push r29
+ 2579 0a6a 00D0      		rcall .
+ 2580 0a6c CDB7      		in r28,__SP_L__
+ 2581 0a6e DEB7      		in r29,__SP_H__
+ 2582               	/* prologue: function */
+ 2583               	/* frame size = 2 */
+ 2584               	/* stack size = 7 */
+ 2585               	.L__stack_usage = 7
+  67:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	_dev_address = address;
+ 2587               	.LM212:
+ 2588 0a70 8093 0000 		sts _dev_address,r24
+  68:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	set_gyro_sample_rate_div(_SRateDiv);
+ 2590               	.LM213:
+ 2591 0a74 862F      		mov r24,r22
+ 2592 0a76 2A83      		std Y+2,r18
+ 2593 0a78 4983      		std Y+1,r20
+ 2594 0a7a 0E94 0000 		call set_gyro_sample_rate_div
+  69:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	set_gyro_FS_range(_Range);
+ 2596               	.LM214:
+ 2597 0a7e 4981      		ldd r20,Y+1
+ 2598 0a80 842F      		mov r24,r20
+ 2599 0a82 0E94 0000 		call set_gyro_FS_range
+  70:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	set_gyro_filter_BW(_filterBW);
+ 2601               	.LM215:
+ 2602 0a86 2A81      		ldd r18,Y+2
+ 2603 0a88 822F      		mov r24,r18
+ 2604 0a8a 0E94 0000 		call set_gyro_filter_BW
+  71:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	setClockSource(_ClockSrc);
+ 2606               	.LM216:
+ 2607 0a8e 802F      		mov r24,r16
+ 2608 0a90 0E94 0000 		call setClockSource
+  72:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	setITGReady(_ITGReady);
+ 2610               	.LM217:
+ 2611 0a94 8E2D      		mov r24,r14
+ 2612 0a96 0E94 0000 		call setITGReady
+  73:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	setRawDataReady(_INTRawDataReady);  
+ 2614               	.LM218:
+ 2615 0a9a 8C2D      		mov r24,r12
+ 2616 0a9c 0E94 0000 		call setRawDataReady
+  76:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	gyro_start_wait_time.secs = 0;
+ 2618               	.LM219:
+ 2619 0aa0 1092 0000 		sts gyro_start_wait_time,__zero_reg__
+ 2620 0aa4 1092 0000 		sts gyro_start_wait_time+1,__zero_reg__
+ 2621 0aa8 1092 0000 		sts gyro_start_wait_time+2,__zero_reg__
+ 2622 0aac 1092 0000 		sts gyro_start_wait_time+3,__zero_reg__
+  77:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	gyro_start_wait_time.nano_secs = GYROSTART_UP_DELAY_MS*NANOS_PER_MS;
+ 2624               	.LM220:
+ 2625 0ab0 80E8      		ldi r24,lo8(70000000)
+ 2626 0ab2 9DE1      		ldi r25,hi8(70000000)
+ 2627 0ab4 ACE2      		ldi r26,hlo8(70000000)
+ 2628 0ab6 B4E0      		ldi r27,hhi8(70000000)
+ 2629 0ab8 682F      		mov r22,r24
+ 2630 0aba 8093 0000 		sts gyro_start_wait_time+4,r24
+ 2631 0abe 9093 0000 		sts gyro_start_wait_time+4+1,r25
+ 2632 0ac2 A093 0000 		sts gyro_start_wait_time+4+2,r26
+ 2633 0ac6 B093 0000 		sts gyro_start_wait_time+4+3,r27
+  78:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	nrk_wait(gyro_start_wait_time);  // startup 
+ 2635               	.LM221:
+ 2636 0aca 20E0      		ldi r18,lo8(0)
+ 2637 0acc 3091 0000 		lds r19,gyro_start_wait_time+1
+ 2638 0ad0 4091 0000 		lds r20,gyro_start_wait_time+2
+ 2639 0ad4 5091 0000 		lds r21,gyro_start_wait_time+3
+ 2640 0ad8 7091 0000 		lds r23,gyro_start_wait_time+5
+ 2641 0adc 8091 0000 		lds r24,gyro_start_wait_time+6
+ 2642 0ae0 9091 0000 		lds r25,gyro_start_wait_time+7
+ 2643 0ae4 0E94 0000 		call nrk_wait
+ 2644               	/* epilogue start */
+  79:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2646               	.LM222:
+ 2647 0ae8 0F90      		pop __tmp_reg__
+ 2648 0aea 0F90      		pop __tmp_reg__
+ 2649 0aec DF91      		pop r29
+ 2650 0aee CF91      		pop r28
+ 2651 0af0 0F91      		pop r16
+ 2652 0af2 EF90      		pop r14
+ 2653 0af4 CF90      		pop r12
+ 2654 0af6 0895      		ret
+ 2656               	.Lscope46:
+ 2658               		.stabd	78,0,0
+ 2661               	.global	init_gyro_uint_address
+ 2663               	init_gyro_uint_address:
+ 2664               		.stabd	46,0,0
+  50:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void init_gyro_uint_address(uint16_t  address) {
+ 2666               	.LM223:
+ 2667               	.LFBB47:
+ 2668 0af8 CF92      		push r12
+ 2669 0afa EF92      		push r14
+ 2670 0afc 0F93      		push r16
+ 2671               	/* prologue: function */
+ 2672               	/* frame size = 0 */
+ 2673               	/* stack size = 3 */
+ 2674               	.L__stack_usage = 3
+  54:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	init_gyro_all(address, NOSRDIVIDER, RANGE2000, BW256_SR8, PLL_XGYRO_REF, true, true);//BW256_SR8
+ 2676               	.LM224:
+ 2677 0afe 60E0      		ldi r22,lo8(0)
+ 2678 0b00 43E0      		ldi r20,lo8(3)
+ 2679 0b02 20E0      		ldi r18,lo8(0)
+ 2680 0b04 01E0      		ldi r16,lo8(1)
+ 2681 0b06 EE24      		clr r14
+ 2682 0b08 E394      		inc r14
+ 2683 0b0a CC24      		clr r12
+ 2684 0b0c C394      		inc r12
+ 2685 0b0e 0E94 0000 		call init_gyro_all
+ 2686               	/* epilogue start */
+  64:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2688               	.LM225:
+ 2689 0b12 0F91      		pop r16
+ 2690 0b14 EF90      		pop r14
+ 2691 0b16 CF90      		pop r12
+ 2692 0b18 0895      		ret
+ 2694               	.Lscope47:
+ 2696               		.stabd	78,0,0
+ 2698               	.global	set_up_ITG3200
+ 2700               	set_up_ITG3200:
+ 2701               		.stabd	46,0,0
+  40:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void set_up_ITG3200() {
+ 2703               	.LM226:
+ 2704               	.LFBB48:
+ 2705 0b1a CF92      		push r12
+ 2706 0b1c EF92      		push r14
+ 2707 0b1e FF92      		push r15
+ 2708 0b20 0F93      		push r16
+ 2709 0b22 1F93      		push r17
+ 2710               	/* prologue: function */
+ 2711               	/* frame size = 0 */
+ 2712               	/* stack size = 5 */
+ 2713               	.L__stack_usage = 5
+ 2714               	.LBB10:
+ 2715               	.LBB11:
+ 220:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	offsets[0] = _Xoffset;
+ 2717               	.LM227:
+ 2718 0b24 1092 0000 		sts offsets+1,__zero_reg__
+ 2719 0b28 1092 0000 		sts offsets,__zero_reg__
+ 221:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	offsets[1] = _Yoffset;
+ 2721               	.LM228:
+ 2722 0b2c 1092 0000 		sts offsets+2+1,__zero_reg__
+ 2723 0b30 1092 0000 		sts offsets+2,__zero_reg__
+ 222:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	offsets[2] = _Zoffset;
+ 2725               	.LM229:
+ 2726 0b34 1092 0000 		sts offsets+4+1,__zero_reg__
+ 2727 0b38 1092 0000 		sts offsets+4,__zero_reg__
+ 2728               	.LBE11:
+ 2729               	.LBE10:
+  42:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	setScaleFactor(1.0, 1.0, 1.0, false);  // true to change readGyro output to radians
+ 2731               	.LM230:
+ 2732 0b3c 60E0      		ldi r22,lo8(0x3f800000)
+ 2733 0b3e 70E0      		ldi r23,hi8(0x3f800000)
+ 2734 0b40 80E8      		ldi r24,hlo8(0x3f800000)
+ 2735 0b42 9FE3      		ldi r25,hhi8(0x3f800000)
+ 2736 0b44 9B01      		movw r18,r22
+ 2737 0b46 AC01      		movw r20,r24
+ 2738 0b48 7B01      		movw r14,r22
+ 2739 0b4a 8C01      		movw r16,r24
+ 2740 0b4c CC24      		clr r12
+ 2741 0b4e 0E94 0000 		call setScaleFactor
+  43:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	init_gyro_uint_address(ITG3200_ADDR_AD0_LOW);
+ 2743               	.LM231:
+ 2744 0b52 88E6      		ldi r24,lo8(104)
+ 2745 0b54 90E0      		ldi r25,hi8(104)
+ 2746 0b56 0E94 0000 		call init_gyro_uint_address
+  44:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	nrk_kprintf( PSTR("ITG3200(Gyro) Boot Success. Zero Calibrating. . .\r\n") );
+ 2748               	.LM232:
+ 2749 0b5a 80E0      		ldi r24,lo8(__c.2998)
+ 2750 0b5c 90E0      		ldi r25,hi8(__c.2998)
+ 2751 0b5e 0E94 0000 		call nrk_kprintf
+  45:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	gyro_zero_calibrate(1000, 2);
+ 2753               	.LM233:
+ 2754 0b62 88EE      		ldi r24,lo8(1000)
+ 2755 0b64 93E0      		ldi r25,hi8(1000)
+ 2756 0b66 62E0      		ldi r22,lo8(2)
+ 2757 0b68 70E0      		ldi r23,hi8(2)
+ 2758 0b6a 0E94 0000 		call gyro_zero_calibrate
+  46:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	nrk_kprintf( PSTR(" Gyro calibrated\r\n"));
+ 2760               	.LM234:
+ 2761 0b6e 80E0      		ldi r24,lo8(__c.3000)
+ 2762 0b70 90E0      		ldi r25,hi8(__c.3000)
+ 2763 0b72 0E94 0000 		call nrk_kprintf
+ 2764               	/* epilogue start */
+  47:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** }
+ 2766               	.LM235:
+ 2767 0b76 1F91      		pop r17
+ 2768 0b78 0F91      		pop r16
+ 2769 0b7a FF90      		pop r15
+ 2770 0b7c EF90      		pop r14
+ 2771 0b7e CF90      		pop r12
+ 2772 0b80 0895      		ret
+ 2774               	.Lscope48:
+ 2776               		.stabd	78,0,0
+ 2781               	.global	readmem
+ 2783               	readmem:
+ 2784               		.stabd	46,0,0
+ 333:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** void readmem(uint8_t _addr, uint8_t _nbytes, uint8_t __buff[]) {
+ 2786               	.LM236:
+ 2787               	.LFBB49:
+ 2788 0b82 CF92      		push r12
+ 2789 0b84 DF92      		push r13
+ 2790 0b86 FF92      		push r15
+ 2791 0b88 0F93      		push r16
+ 2792 0b8a 1F93      		push r17
+ 2793 0b8c CF93      		push r28
+ 2794 0b8e DF93      		push r29
+ 2795 0b90 0F92      		push __tmp_reg__
+ 2796 0b92 CDB7      		in r28,__SP_L__
+ 2797 0b94 DEB7      		in r29,__SP_H__
+ 2798               	/* prologue: function */
+ 2799               	/* frame size = 1 */
+ 2800               	/* stack size = 8 */
+ 2801               	.L__stack_usage = 8
+ 2802 0b96 F82E      		mov r15,r24
+ 2803 0b98 8A01      		movw r16,r20
+ 334:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	beginTransmission_uint8(_dev_address); // start transmission to device 
+ 2805               	.LM237:
+ 2806 0b9a 8091 0000 		lds r24,_dev_address
+ 2807 0b9e 6983      		std Y+1,r22
+ 2808 0ba0 0E94 0000 		call beginTransmission_uint8
+ 335:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	send_uint8(_addr); // sends register address to read from
+ 2810               	.LM238:
+ 2811 0ba4 8F2D      		mov r24,r15
+ 2812 0ba6 0E94 0000 		call send_uint8
+ 336:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	endTransmission(); // end transmission
+ 2814               	.LM239:
+ 2815 0baa 0E94 0000 		call endTransmission
+ 338:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	beginTransmission_uint8(_dev_address); // start transmission to device 
+ 2817               	.LM240:
+ 2818 0bae 8091 0000 		lds r24,_dev_address
+ 2819 0bb2 0E94 0000 		call beginTransmission_uint8
+ 339:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	requestFrom_2uint8(_dev_address, _nbytes);// send data n-bytes read
+ 2821               	.LM241:
+ 2822 0bb6 8091 0000 		lds r24,_dev_address
+ 2823 0bba 6981      		ldd r22,Y+1
+ 2824 0bbc 0E94 0000 		call requestFrom_2uint8
+ 340:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	uint8_t i = 0; 
+ 2826               	.LM242:
+ 2827 0bc0 FF24      		clr r15
+ 341:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	while (available()) {
+ 2829               	.LM243:
+ 2830 0bc2 00C0      		rjmp .L57
+ 2831               	.L58:
+ 342:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		__buff[i] = receive(); // receive DATA
+ 2833               	.LM244:
+ 2834 0bc4 6801      		movw r12,r16
+ 2835 0bc6 CF0C      		add r12,r15
+ 2836 0bc8 D11C      		adc r13,__zero_reg__
+ 2837 0bca 0E94 0000 		call receive
+ 2838 0bce F601      		movw r30,r12
+ 2839 0bd0 8083      		st Z,r24
+ 343:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 		i++;
+ 2841               	.LM245:
+ 2842 0bd2 F394      		inc r15
+ 2843               	.L57:
+ 341:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	while (available()) {
+ 2845               	.LM246:
+ 2846 0bd4 0E94 0000 		call available
+ 2847 0bd8 8823      		tst r24
+ 2848 0bda 01F4      		brne .L58
+ 345:../../../../../src/drivers/platform/MARS/source/ITG3200.c **** 	endTransmission(); // end transmission
+ 2850               	.LM247:
+ 2851 0bdc 0E94 0000 		call endTransmission
+ 2852               	/* epilogue start */
+ 2854               	.LM248:
+ 2855 0be0 0F90      		pop __tmp_reg__
+ 2856 0be2 DF91      		pop r29
+ 2857 0be4 CF91      		pop r28
+ 2858 0be6 1F91      		pop r17
+ 2859 0be8 0F91      		pop r16
+ 2860 0bea FF90      		pop r15
+ 2861 0bec DF90      		pop r13
+ 2862 0bee CF90      		pop r12
+ 2863 0bf0 0895      		ret
+ 2868               	.Lscope49:
+ 2870               		.stabd	78,0,0
+ 2871               		.comm nrk_kernel_stk_ptr,2,1
+ 2872               		.comm nrk_idle_task_stk,256,1
+ 2873               		.comm error_num,1,1
+ 2874               		.comm error_task,1,1
+ 2875               		.comm _buff,6,1
+ 2876               		.comm _dev_address,1,1
+ 2877               		.comm offsets,6,1
+ 2878               		.comm scalefactor,12,1
+ 2879               		.comm gyro_start_wait_time,8,1
+ 2880               		.comm _nrk_signal_list,4,1
+ 2881               		.section	.progmem.data,"a",@progbits
+ 2884               	__c.2998:
+ 2885 0000 4954 4733 		.string	"ITG3200(Gyro) Boot Success. Zero Calibrating. . .\r\n"
+ 2885      3230 3028 
+ 2885      4779 726F 
+ 2885      2920 426F 
+ 2885      6F74 2053 
+ 2888               	__c.3000:
+ 2889 0034 2047 7972 		.string	" Gyro calibrated\r\n"
+ 2889      6F20 6361 
+ 2889      6C69 6272 
+ 2889      6174 6564 
+ 2889      0D0A 00
+ 2900               		.text
+ 2902               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 ITG3200.c
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2      *ABS*:000000000000003f __SREG__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:3      *ABS*:000000000000003e __SP_H__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:4      *ABS*:000000000000003d __SP_L__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:5      *ABS*:0000000000000000 __tmp_reg__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:6      *ABS*:0000000000000001 __zero_reg__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:291    .text:0000000000000000 readmem.constprop.0
+                            *COM*:0000000000000001 _dev_address
+                            *COM*:0000000000000006 _buff
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:371    .text:000000000000005e get_gyro_addr
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:392    .text:0000000000000064 get_gyro_sample_rate_div
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:418    .text:0000000000000072 get_gyro_FS_range
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:454    .text:0000000000000090 get_gyro_filter_BW
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:483    .text:00000000000000a0 is_gyro_INT_active_On_Low
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:515    .text:00000000000000b6 is_gyro_INT_open_drain
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:551    .text:00000000000000d4 isLatchUntilCleared
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:587    .text:00000000000000f2 isAnyRegClrMode
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:623    .text:0000000000000110 isITGReadyOn
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:658    .text:000000000000012c isRawDataReadyOn
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:687    .text:000000000000013c isITGReady
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:722    .text:0000000000000158 isRawDataReady
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:752    .text:0000000000000168 readTemp
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:816    .text:00000000000001c0 read_gyro_raw_xyz_three_ptr
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:889    .text:0000000000000228 read_gyro_raw_xyz_one_ptr
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:922    .text:000000000000023a setScaleFactor
+                            *COM*:000000000000000c scalefactor
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:1109   .text:00000000000003a2 setOffsets
+                            *COM*:0000000000000006 offsets
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:1147   .text:00000000000003bc gyro_zero_calibrate
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:1450   .text:00000000000005cc read_gyro_raw_cal_xyz_three_ptr
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:1521   .text:0000000000000630 read_gyro_raw_cal_xyz_one_ptr
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:1553   .text:0000000000000642 read_gyro_xyz_three_ptr
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:1695   .text:000000000000074e read_gyro_xyz_one_ptr
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:1724   .text:0000000000000760 isLowPower
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:1760   .text:000000000000077e isXgyroStandby
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:1796   .text:000000000000079c isYgyroStandby
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:1832   .text:00000000000007ba isZgyroStandby
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:1868   .text:00000000000007d8 getClockSource
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:1899   .text:00000000000007e8 writemem
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:1947   .text:000000000000081c reset
+                            *COM*:0000000000000008 gyro_start_wait_time
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2000   .text:000000000000086e set_gyro_sample_rate_div
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2025   .text:0000000000000878 set_gyro_addr
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2057   .text:000000000000088c setClockSource
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2093   .text:00000000000008aa setZgyroStandby
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2133   .text:00000000000008d0 setYgyroStandby
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2172   .text:00000000000008f4 setXgyroStandby
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2212   .text:000000000000091a setPowerMode
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2253   .text:0000000000000942 setRawDataReady
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2289   .text:0000000000000960 setITGReady
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2328   .text:0000000000000984 setLatchClearMode
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2367   .text:00000000000009a8 setLatchMode
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2407   .text:00000000000009ce setINTDriveType
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2448   .text:00000000000009f6 set_gyro_INT_Logic_lvl
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2488   .text:0000000000000a1c set_gyro_filter_BW
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2524   .text:0000000000000a3a set_gyro_FS_range
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2569   .text:0000000000000a60 init_gyro_all
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2663   .text:0000000000000af8 init_gyro_uint_address
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2700   .text:0000000000000b1a set_up_ITG3200
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2884   .progmem.data:0000000000000000 __c.2998
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2888   .progmem.data:0000000000000034 __c.3000
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccxfuaeR.s:2783   .text:0000000000000b82 readmem
+                            *COM*:0000000000000002 nrk_kernel_stk_ptr
+                            *COM*:0000000000000100 nrk_idle_task_stk
+                            *COM*:0000000000000001 error_num
+                            *COM*:0000000000000001 error_task
+                            *COM*:0000000000000004 _nrk_signal_list
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+beginTransmission_uint8
+send_uint8
+endTransmission
+requestFrom_2uint8
+receive
+available
+__floatsisf
+__divsf3
+__addsf3
+__mulsf3
+__mulsi3
+nrk_wait
+__divmodhi4
+printf
+__floatunsisf
+__fixsfsi
+nrk_kprintf

@@ -1,0 +1,59 @@
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h> 
+
+#define Vmin 5
+
+/* edgeDetect
+ * 
+ * Takes signal, window sizes and minimum step change and
+ * outputs the sample number where edge was detected 
+ */
+uint16_t edgeDetect(uint16_t* signal, uint8_t w0, uint8_t w1, uint16_t v_min);
+
+/* supremum
+ *
+ * Takes in signal, window sizes and minimum step change, along
+ * with a pointer to the supremum result, returns the sample
+ * number. 
+ */
+uint16_t supremum(uint16_t *signal);
+
+int16_t loglikeratio(uint16_t value, uint16_t* before, uint16_t* after, uint16_t v_min);
+
+int16_t normpdf(uint16_t value, uint16_t mean, uint16_t stdv);
+
+int main(int argc, char* argv[])
+{
+  uint16_t sup_index; 	/* Supremum index */
+  uint16_t sup;		/* Supremum */
+
+  uint16_t signal[14] = {1, 1, 1, 2, 2, 2, 7, 8, 9, 10, 11, 2, 3, 4};
+  uint16_t before[5] = {2, 3, 5, 7};
+  uint16_t after[5] = {5, 3, 22, 56};
+
+  uint16_t u0;
+
+  u0 = loglikeratio(signal[1], before, after, Vmin);
+
+  return 0;
+}
+
+uint16_t supremum(uint16_t* signal)
+{
+  int16_t ratio;
+
+  ratio = loglikeratio(5, signal, signal, Vmin);
+
+  return 0;
+}
+
+double loglikeratio(double value, const double * before, const double * after, double Vmin_test) 
+{
+  double u0, u1, sigma0, sigma1;
+
+  u0 = gsl_stats_mean(before, 1, );
+
+  return u0;
+} 
+ 

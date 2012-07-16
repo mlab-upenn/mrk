@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><feed version="2.0" xmlns:media="http://search.yahoo.com/mrss/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#" xmlns:georss="http://www.georss.org/georss">
+<entry>
+<title>Node Id: 0xA12</title><geo:long>-825</geo:long><geo:lat>362</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA0F</title><geo:long>-525</geo:long><geo:lat>300</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA10</title><geo:long>-448</geo:long><geo:lat>375</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA03</title><geo:long>104</geo:long><geo:lat>325</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA0A</title><geo:long>-805</geo:long><geo:lat>75</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA0B</title><geo:long>-730</geo:long><geo:lat>-98</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA02</title><geo:long>-870</geo:long><geo:lat>-160</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA05</title><geo:long>-490</geo:long><geo:lat>-170</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA11</title><geo:long>-408</geo:long><geo:lat>-126</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA13</title><geo:long>-317</geo:long><geo:lat>-295</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA01</title><geo:long>-181</geo:long><geo:lat>-255</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA07</title><geo:long>-116</geo:long><geo:lat>-140</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA06</title><geo:long>0</geo:long><geo:lat>-378</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA08</title><geo:long>77</geo:long><geo:lat>-245</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA0C</title><geo:long>357</geo:long><geo:lat>-245</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA04</title><geo:long>500</geo:long><geo:lat>-353</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA09</title><geo:long>613</geo:long><geo:lat>-259</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> <entry>
+<title>Node Id: 0xA0D</title><geo:long>748</geo:long><geo:lat>-260</geo:lat><media:thumbnail url="./icons/green-marker.gif" height="100" width="100" /> </entry> </feed>

@@ -1,0 +1,15 @@
+<FireflyConfig>
+
+<PacketSequence>
+
+	<FireFlyDSPacket type="transducerCmd" rssiThresh="-32" encryptFlag="enable" treeFilterFlag="enable" linkAckFlag="enable" ackRetry="15" seqNum="auto" prio="1" nav="0" maxHopCnt="5" delayPerLevel="1" MACCheckRate="100" >
+		<Transducer macAddr="ff" type="TRAN_LED_BLINK" params="RED|GREEN|BLUE|ORANGE"/>
+	</FireFlyDSPacket>	
+
+	<Sleep value="400"></Sleep>
+
+
+
+</PacketSequence>
+
+</FireflyConfig>

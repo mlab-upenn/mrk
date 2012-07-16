@@ -1,0 +1,912 @@
+   1               		.file	"Wire.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.global __do_copy_data
+   8               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+  76               	onRequestService:
+  77               		.stabd	46,0,0
+   1:../../../../../src/drivers/platform/MARS/source/Wire.c **** /*
+   2:../../../../../src/drivers/platform/MARS/source/Wire.c ****  TwoWire.cpp - TWI/I2C library for Wiring & Arduino
+   3:../../../../../src/drivers/platform/MARS/source/Wire.c ****  Copyright (c) 2006 Nicholas Zambetti.  All right reserved.
+   4:../../../../../src/drivers/platform/MARS/source/Wire.c ****  
+   5:../../../../../src/drivers/platform/MARS/source/Wire.c ****  This library is free software; you can redistribute it and/or
+   6:../../../../../src/drivers/platform/MARS/source/Wire.c ****  modify it under the terms of the GNU Lesser General Public
+   7:../../../../../src/drivers/platform/MARS/source/Wire.c ****  License as published by the Free Software Foundation; either
+   8:../../../../../src/drivers/platform/MARS/source/Wire.c ****  version 2.1 of the License, or (at your option) any later version.
+   9:../../../../../src/drivers/platform/MARS/source/Wire.c ****  
+  10:../../../../../src/drivers/platform/MARS/source/Wire.c ****  This library is distributed in the hope that it will be useful,
+  11:../../../../../src/drivers/platform/MARS/source/Wire.c ****  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  12:../../../../../src/drivers/platform/MARS/source/Wire.c ****  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  13:../../../../../src/drivers/platform/MARS/source/Wire.c ****  Lesser General Public License for more details.
+  14:../../../../../src/drivers/platform/MARS/source/Wire.c ****  
+  15:../../../../../src/drivers/platform/MARS/source/Wire.c ****  You should have received a copy of the GNU Lesser General Public
+  16:../../../../../src/drivers/platform/MARS/source/Wire.c ****  License along with this library; if not, write to the Free Software
+  17:../../../../../src/drivers/platform/MARS/source/Wire.c ****  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  18:../../../../../src/drivers/platform/MARS/source/Wire.c ****  *
+  19:../../../../../src/drivers/platform/MARS/source/Wire.c ****  *  Created by frank mokaya on 3/6/12.
+  20:../../../../../src/drivers/platform/MARS/source/Wire.c ****  *  Copyright 2012 Carnegie Mellon Univ. All rights reserved.
+  21:../../../../../src/drivers/platform/MARS/source/Wire.c ****  *
+  22:../../../../../src/drivers/platform/MARS/source/Wire.c ****  */
+  23:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+  24:../../../../../src/drivers/platform/MARS/source/Wire.c **** #include <stdlib.h>
+  25:../../../../../src/drivers/platform/MARS/source/Wire.c **** #include <string.h>
+  26:../../../../../src/drivers/platform/MARS/source/Wire.c **** #include <inttypes.h>
+  27:../../../../../src/drivers/platform/MARS/source/Wire.c **** #include "twi.h"
+  28:../../../../../src/drivers/platform/MARS/source/Wire.c **** #include "Wire.h"
+  29:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+  30:../../../../../src/drivers/platform/MARS/source/Wire.c **** // Initialize Class Variables //////////////////////////////////////////////////
+  31:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+  32:../../../../../src/drivers/platform/MARS/source/Wire.c **** uint8_t rxBuffer[BUFFER_LENGTH];
+  33:../../../../../src/drivers/platform/MARS/source/Wire.c **** uint8_t rxBufferIndex = 0;
+  34:../../../../../src/drivers/platform/MARS/source/Wire.c **** uint8_t rxBufferLength = 0;
+  35:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+  36:../../../../../src/drivers/platform/MARS/source/Wire.c **** uint8_t txAddress = 0;
+  37:../../../../../src/drivers/platform/MARS/source/Wire.c **** uint8_t txBuffer[BUFFER_LENGTH];
+  38:../../../../../src/drivers/platform/MARS/source/Wire.c **** uint8_t txBufferIndex = 0;
+  39:../../../../../src/drivers/platform/MARS/source/Wire.c **** uint8_t txBufferLength = 0;
+  40:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+  41:../../../../../src/drivers/platform/MARS/source/Wire.c **** uint8_t transmitting = 0;
+  42:../../../../../src/drivers/platform/MARS/source/Wire.c **** void (*user_onRequest)(void);
+  43:../../../../../src/drivers/platform/MARS/source/Wire.c **** void (*user_onReceive)(int);
+  44:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+  45:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+  46:../../../../../src/drivers/platform/MARS/source/Wire.c **** // Public Methods //////////////////////////////////////////////////////////////
+  47:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+  48:../../../../../src/drivers/platform/MARS/source/Wire.c **** void begin(void)
+  49:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+  50:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	rxBufferIndex = 0;
+  51:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	rxBufferLength = 0;
+  52:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	
+  53:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txBufferIndex = 0;
+  54:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txBufferLength = 0;
+  55:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	
+  56:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	twi_init();
+  57:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+  58:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+  59:../../../../../src/drivers/platform/MARS/source/Wire.c **** void begin_uint8(uint8_t address)
+  60:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+  61:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	twi_setAddress(address);
+  62:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	twi_attachSlaveTxEvent(onRequestService);
+  63:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	twi_attachSlaveRxEvent(onReceiveService);
+  64:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	begin();
+  65:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+  66:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+  67:../../../../../src/drivers/platform/MARS/source/Wire.c **** void begin_int(int address)
+  68:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+  69:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	begin_uint8((uint8_t)address);
+  70:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+  71:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+  72:../../../../../src/drivers/platform/MARS/source/Wire.c **** uint8_t requestFrom_2uint8(uint8_t address, uint8_t quantity)
+  73:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+  74:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// clamp to buffer length
+  75:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	if(quantity > BUFFER_LENGTH){
+  76:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		quantity = BUFFER_LENGTH;
+  77:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	}
+  78:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// perform blocking read into buffer
+  79:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	uint8_t read = twi_readFrom(address, rxBuffer, quantity);
+  80:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// set rx buffer iterator vars
+  81:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	rxBufferIndex = 0;
+  82:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	rxBufferLength = read;
+  83:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	
+  84:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	return read;
+  85:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+  86:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+  87:../../../../../src/drivers/platform/MARS/source/Wire.c **** uint8_t requestFrom_2int(int address, int quantity)
+  88:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+  89:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	return requestFrom_2uint8((uint8_t)address, (uint8_t)quantity);
+  90:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+  91:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+  92:../../../../../src/drivers/platform/MARS/source/Wire.c **** void beginTransmission_uint8(uint8_t address)
+  93:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+  94:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// indicate that we are transmitting
+  95:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	transmitting = 1;
+  96:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// set address of targeted slave
+  97:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txAddress = address;
+  98:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// reset tx buffer iterator vars
+  99:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txBufferIndex = 0;
+ 100:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txBufferLength = 0;
+ 101:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 102:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+ 103:../../../../../src/drivers/platform/MARS/source/Wire.c **** void beginTransmission_int(int address)
+ 104:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 105:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	beginTransmission_uint8((uint8_t)address);
+ 106:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 107:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+ 108:../../../../../src/drivers/platform/MARS/source/Wire.c **** uint8_t endTransmission(void)
+ 109:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 110:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// transmit buffer (blocking)
+ 111:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	int8_t ret = twi_writeTo(txAddress, txBuffer, txBufferLength, 1);
+ 112:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// reset tx buffer iterator vars
+ 113:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txBufferIndex = 0;
+ 114:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txBufferLength = 0;
+ 115:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// indicate that we are done transmitting
+ 116:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	transmitting = 0;
+ 117:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	return ret;
+ 118:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 119:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+ 120:../../../../../src/drivers/platform/MARS/source/Wire.c **** // must be called in:
+ 121:../../../../../src/drivers/platform/MARS/source/Wire.c **** // slave tx event callback
+ 122:../../../../../src/drivers/platform/MARS/source/Wire.c **** // or after beginTransmission(address)
+ 123:../../../../../src/drivers/platform/MARS/source/Wire.c **** void send_uint8(uint8_t data)
+ 124:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 125:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	if(transmitting){
+ 126:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		// in master transmitter mode
+ 127:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		// don't bother if buffer is full
+ 128:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		if(txBufferLength >= BUFFER_LENGTH){
+ 129:../../../../../src/drivers/platform/MARS/source/Wire.c **** 			return;
+ 130:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		}
+ 131:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		// put byte in tx buffer
+ 132:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		txBuffer[txBufferIndex] = data;
+ 133:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		++txBufferIndex;
+ 134:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		// update amount in buffer   
+ 135:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		txBufferLength = txBufferIndex;
+ 136:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	}else{
+ 137:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		// in slave send mode
+ 138:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		// reply to master
+ 139:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		twi_transmit(&data, 1);
+ 140:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	}
+ 141:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 142:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+ 143:../../../../../src/drivers/platform/MARS/source/Wire.c **** // must be called in:
+ 144:../../../../../src/drivers/platform/MARS/source/Wire.c **** // slave tx event callback
+ 145:../../../../../src/drivers/platform/MARS/source/Wire.c **** // or after beginTransmission(address)
+ 146:../../../../../src/drivers/platform/MARS/source/Wire.c **** void send_uint8st_uint8(uint8_t* data, uint8_t quantity)
+ 147:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 148:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	if(transmitting){
+ 149:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		// in master transmitter mode
+ 150:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		for(uint8_t i = 0; i < quantity; ++i){
+ 151:../../../../../src/drivers/platform/MARS/source/Wire.c **** 			send_uint8(data[i]);
+ 152:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		}
+ 153:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	}else{
+ 154:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		// in slave send mode
+ 155:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		// reply to master
+ 156:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		twi_transmit(data, quantity);
+ 157:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	}
+ 158:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 159:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+ 160:../../../../../src/drivers/platform/MARS/source/Wire.c **** // must be called in:
+ 161:../../../../../src/drivers/platform/MARS/source/Wire.c **** // slave tx event callback
+ 162:../../../../../src/drivers/platform/MARS/source/Wire.c **** // or after beginTransmission(address)
+ 163:../../../../../src/drivers/platform/MARS/source/Wire.c **** void send_char(char* data)
+ 164:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 165:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	send_uint8st_uint8((uint8_t*)data, strlen(data));
+ 166:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 167:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+ 168:../../../../../src/drivers/platform/MARS/source/Wire.c **** // must be called in:
+ 169:../../../../../src/drivers/platform/MARS/source/Wire.c **** // slave tx event callback
+ 170:../../../../../src/drivers/platform/MARS/source/Wire.c **** // or after beginTransmission(address)
+ 171:../../../../../src/drivers/platform/MARS/source/Wire.c **** void send_int(int data)
+ 172:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 173:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	send_uint8((uint8_t)data);
+ 174:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 175:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+ 176:../../../../../src/drivers/platform/MARS/source/Wire.c **** // must be called in:
+ 177:../../../../../src/drivers/platform/MARS/source/Wire.c **** // slave rx event callback
+ 178:../../../../../src/drivers/platform/MARS/source/Wire.c **** // or after requestFrom(address, numBytes)
+ 179:../../../../../src/drivers/platform/MARS/source/Wire.c **** uint8_t available(void)
+ 180:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 181:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	return rxBufferLength - rxBufferIndex;
+ 182:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 183:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+ 184:../../../../../src/drivers/platform/MARS/source/Wire.c **** // must be called in:
+ 185:../../../../../src/drivers/platform/MARS/source/Wire.c **** // slave rx event callback
+ 186:../../../../../src/drivers/platform/MARS/source/Wire.c **** // or after requestFrom(address, numBytes)
+ 187:../../../../../src/drivers/platform/MARS/source/Wire.c **** uint8_t receive(void)
+ 188:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 189:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// default to returning null char
+ 190:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// for people using with char strings
+ 191:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	uint8_t value = '\0';
+ 192:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	
+ 193:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// get each successive byte on each call
+ 194:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	if(rxBufferIndex < rxBufferLength){
+ 195:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		value = rxBuffer[rxBufferIndex];
+ 196:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		++rxBufferIndex;
+ 197:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	}
+ 198:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	
+ 199:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	return value;
+ 200:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 201:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+ 202:../../../../../src/drivers/platform/MARS/source/Wire.c **** // behind the scenes function that is called when data is received
+ 203:../../../../../src/drivers/platform/MARS/source/Wire.c **** void onReceiveService(uint8_t* inBytes, int numBytes)
+ 204:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 205:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// don't bother if user hasn't registered a callback
+ 206:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	if(!user_onReceive){
+ 207:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		return;
+ 208:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	}
+ 209:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// don't bother if rx buffer is in use by a master requestFrom() op
+ 210:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// i know this drops data, but it allows for slight stupidity
+ 211:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// meaning, they may not have read all the master requestFrom() data yet
+ 212:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	if(rxBufferIndex < rxBufferLength){
+ 213:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		return;
+ 214:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	}
+ 215:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// copy twi rx buffer into local read buffer
+ 216:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// this enables new reads to happen in parallel
+ 217:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	for(uint8_t i = 0; i < numBytes; ++i){
+ 218:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		rxBuffer[i] = inBytes[i];    
+ 219:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	}
+ 220:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// set rx iterator vars
+ 221:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	rxBufferIndex = 0;
+ 222:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	rxBufferLength = numBytes;
+ 223:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// alert user program
+ 224:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	user_onReceive(numBytes);
+ 225:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 226:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+ 227:../../../../../src/drivers/platform/MARS/source/Wire.c **** // behind the scenes function that is called when data is requested
+ 228:../../../../../src/drivers/platform/MARS/source/Wire.c **** void onRequestService(void)
+ 229:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+  79               	.LM0:
+  80               	.LFBB1:
+  81               	/* prologue: function */
+  82               	/* frame size = 0 */
+  83               	/* stack size = 0 */
+  84               	.L__stack_usage = 0
+ 230:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// don't bother if user hasn't registered a callback
+ 231:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	if(!user_onRequest){
+  86               	.LM1:
+  87 0000 E091 0000 		lds r30,user_onRequest
+  88 0004 F091 0000 		lds r31,user_onRequest+1
+  89 0008 3097      		sbiw r30,0
+  90 000a 01F0      		breq .L1
+ 232:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		return;
+ 233:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	}
+ 234:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// reset tx buffer iterator vars
+ 235:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// !!! this will kill any pending pre-master sendTo() activity
+ 236:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txBufferIndex = 0;
+  92               	.LM2:
+  93 000c 1092 0000 		sts txBufferIndex,__zero_reg__
+ 237:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txBufferLength = 0;
+  95               	.LM3:
+  96 0010 1092 0000 		sts txBufferLength,__zero_reg__
+ 238:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	// alert user program
+ 239:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	user_onRequest();
+  98               	.LM4:
+  99 0014 0995      		icall
+ 100               	.L1:
+ 101 0016 0895      		ret
+ 103               	.Lscope1:
+ 105               		.stabd	78,0,0
+ 110               	onReceiveService:
+ 111               		.stabd	46,0,0
+ 204:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 113               	.LM5:
+ 114               	.LFBB2:
+ 115 0018 CF93      		push r28
+ 116 001a DF93      		push r29
+ 117               	/* prologue: function */
+ 118               	/* frame size = 0 */
+ 119               	/* stack size = 2 */
+ 120               	.L__stack_usage = 2
+ 121 001c AC01      		movw r20,r24
+ 206:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	if(!user_onReceive){
+ 123               	.LM6:
+ 124 001e 2091 0000 		lds r18,user_onReceive
+ 125 0022 3091 0000 		lds r19,user_onReceive+1
+ 126 0026 2115      		cp r18,__zero_reg__
+ 127 0028 3105      		cpc r19,__zero_reg__
+ 128 002a 01F0      		breq .L3
+ 212:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	if(rxBufferIndex < rxBufferLength){
+ 130               	.LM7:
+ 131 002c 9091 0000 		lds r25,rxBufferIndex
+ 132 0030 8091 0000 		lds r24,rxBufferLength
+ 133 0034 9817      		cp r25,r24
+ 134 0036 00F0      		brlo .L3
+ 135 0038 A0E0      		ldi r26,lo8(0)
+ 136 003a 00C0      		rjmp .L5
+ 137               	.L6:
+ 138               	.LBB7:
+ 139               	.LBB8:
+ 140               	.LBB9:
+ 218:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		rxBuffer[i] = inBytes[i];    
+ 142               	.LM8:
+ 143 003c FA01      		movw r30,r20
+ 144 003e E80F      		add r30,r24
+ 145 0040 F91F      		adc r31,r25
+ 146 0042 E081      		ld r30,Z
+ 147 0044 8050      		subi r24,lo8(-(rxBuffer))
+ 148 0046 9040      		sbci r25,hi8(-(rxBuffer))
+ 149 0048 EC01      		movw r28,r24
+ 150 004a E883      		st Y,r30
+ 217:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	for(uint8_t i = 0; i < numBytes; ++i){
+ 152               	.LM9:
+ 153 004c AF5F      		subi r26,lo8(-(1))
+ 154               	.L5:
+ 155 004e 8A2F      		mov r24,r26
+ 156 0050 90E0      		ldi r25,lo8(0)
+ 157 0052 8617      		cp r24,r22
+ 158 0054 9707      		cpc r25,r23
+ 159 0056 04F0      		brlt .L6
+ 160               	.LBE9:
+ 221:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	rxBufferIndex = 0;
+ 162               	.LM10:
+ 163 0058 1092 0000 		sts rxBufferIndex,__zero_reg__
+ 222:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	rxBufferLength = numBytes;
+ 165               	.LM11:
+ 166 005c 6093 0000 		sts rxBufferLength,r22
+ 224:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	user_onReceive(numBytes);
+ 168               	.LM12:
+ 169 0060 CB01      		movw r24,r22
+ 170 0062 F901      		movw r30,r18
+ 171 0064 0995      		icall
+ 172               	.L3:
+ 173               	/* epilogue start */
+ 174               	.LBE8:
+ 175               	.LBE7:
+ 225:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 177               	.LM13:
+ 178 0066 DF91      		pop r29
+ 179 0068 CF91      		pop r28
+ 180 006a 0895      		ret
+ 185               	.Lscope2:
+ 187               		.stabd	78,0,0
+ 189               	.global	begin
+ 191               	begin:
+ 192               		.stabd	46,0,0
+  49:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 194               	.LM14:
+ 195               	.LFBB3:
+ 196               	/* prologue: function */
+ 197               	/* frame size = 0 */
+ 198               	/* stack size = 0 */
+ 199               	.L__stack_usage = 0
+  50:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	rxBufferIndex = 0;
+ 201               	.LM15:
+ 202 006c 1092 0000 		sts rxBufferIndex,__zero_reg__
+  51:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	rxBufferLength = 0;
+ 204               	.LM16:
+ 205 0070 1092 0000 		sts rxBufferLength,__zero_reg__
+  53:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txBufferIndex = 0;
+ 207               	.LM17:
+ 208 0074 1092 0000 		sts txBufferIndex,__zero_reg__
+  54:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txBufferLength = 0;
+ 210               	.LM18:
+ 211 0078 1092 0000 		sts txBufferLength,__zero_reg__
+  56:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	twi_init();
+ 213               	.LM19:
+ 214 007c 0E94 0000 		call twi_init
+ 215               	/* epilogue start */
+  57:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 217               	.LM20:
+ 218 0080 0895      		ret
+ 220               	.Lscope3:
+ 222               		.stabd	78,0,0
+ 225               	.global	begin_uint8
+ 227               	begin_uint8:
+ 228               		.stabd	46,0,0
+  60:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 230               	.LM21:
+ 231               	.LFBB4:
+ 232               	/* prologue: function */
+ 233               	/* frame size = 0 */
+ 234               	/* stack size = 0 */
+ 235               	.L__stack_usage = 0
+  61:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	twi_setAddress(address);
+ 237               	.LM22:
+ 238 0082 0E94 0000 		call twi_setAddress
+  62:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	twi_attachSlaveTxEvent(onRequestService);
+ 240               	.LM23:
+ 241 0086 80E0      		ldi r24,lo8(gs(onRequestService))
+ 242 0088 90E0      		ldi r25,hi8(gs(onRequestService))
+ 243 008a 0E94 0000 		call twi_attachSlaveTxEvent
+  63:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	twi_attachSlaveRxEvent(onReceiveService);
+ 245               	.LM24:
+ 246 008e 80E0      		ldi r24,lo8(gs(onReceiveService))
+ 247 0090 90E0      		ldi r25,hi8(gs(onReceiveService))
+ 248 0092 0E94 0000 		call twi_attachSlaveRxEvent
+  64:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	begin();
+ 250               	.LM25:
+ 251 0096 0E94 0000 		call begin
+ 252               	/* epilogue start */
+  65:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 254               	.LM26:
+ 255 009a 0895      		ret
+ 257               	.Lscope4:
+ 259               		.stabd	78,0,0
+ 261               	.global	begin_int
+ 263               	begin_int:
+ 264               		.stabd	46,0,0
+  68:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 266               	.LM27:
+ 267               	.LFBB5:
+ 268               	/* prologue: function */
+ 269               	/* frame size = 0 */
+ 270               	/* stack size = 0 */
+ 271               	.L__stack_usage = 0
+  69:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	begin_uint8((uint8_t)address);
+ 273               	.LM28:
+ 274 009c 0E94 0000 		call begin_uint8
+ 275               	/* epilogue start */
+  70:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 277               	.LM29:
+ 278 00a0 0895      		ret
+ 280               	.Lscope5:
+ 282               		.stabd	78,0,0
+ 286               	.global	requestFrom_2uint8
+ 288               	requestFrom_2uint8:
+ 289               		.stabd	46,0,0
+  73:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 291               	.LM30:
+ 292               	.LFBB6:
+ 293               	/* prologue: function */
+ 294               	/* frame size = 0 */
+ 295               	/* stack size = 0 */
+ 296               	.L__stack_usage = 0
+ 297 00a2 462F      		mov r20,r22
+  79:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	uint8_t read = twi_readFrom(address, rxBuffer, quantity);
+ 299               	.LM31:
+ 300 00a4 6132      		cpi r22,lo8(33)
+ 301 00a6 00F0      		brlo .L11
+ 302 00a8 40E2      		ldi r20,lo8(32)
+ 303               	.L11:
+ 304 00aa 60E0      		ldi r22,lo8(rxBuffer)
+ 305 00ac 70E0      		ldi r23,hi8(rxBuffer)
+ 306 00ae 0E94 0000 		call twi_readFrom
+  81:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	rxBufferIndex = 0;
+ 308               	.LM32:
+ 309 00b2 1092 0000 		sts rxBufferIndex,__zero_reg__
+  82:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	rxBufferLength = read;
+ 311               	.LM33:
+ 312 00b6 8093 0000 		sts rxBufferLength,r24
+ 313               	/* epilogue start */
+  85:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 315               	.LM34:
+ 316 00ba 0895      		ret
+ 321               	.Lscope6:
+ 323               		.stabd	78,0,0
+ 325               	.global	requestFrom_2int
+ 327               	requestFrom_2int:
+ 328               		.stabd	46,0,0
+  88:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 330               	.LM35:
+ 331               	.LFBB7:
+ 332               	/* prologue: function */
+ 333               	/* frame size = 0 */
+ 334               	/* stack size = 0 */
+ 335               	.L__stack_usage = 0
+  89:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	return requestFrom_2uint8((uint8_t)address, (uint8_t)quantity);
+ 337               	.LM36:
+ 338 00bc 0E94 0000 		call requestFrom_2uint8
+ 339               	/* epilogue start */
+  90:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 341               	.LM37:
+ 342 00c0 0895      		ret
+ 344               	.Lscope7:
+ 346               		.stabd	78,0,0
+ 349               	.global	beginTransmission_uint8
+ 351               	beginTransmission_uint8:
+ 352               		.stabd	46,0,0
+  93:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 354               	.LM38:
+ 355               	.LFBB8:
+ 356               	/* prologue: function */
+ 357               	/* frame size = 0 */
+ 358               	/* stack size = 0 */
+ 359               	.L__stack_usage = 0
+  95:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	transmitting = 1;
+ 361               	.LM39:
+ 362 00c2 91E0      		ldi r25,lo8(1)
+ 363 00c4 9093 0000 		sts transmitting,r25
+  97:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txAddress = address;
+ 365               	.LM40:
+ 366 00c8 8093 0000 		sts txAddress,r24
+  99:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txBufferIndex = 0;
+ 368               	.LM41:
+ 369 00cc 1092 0000 		sts txBufferIndex,__zero_reg__
+ 100:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txBufferLength = 0;
+ 371               	.LM42:
+ 372 00d0 1092 0000 		sts txBufferLength,__zero_reg__
+ 373               	/* epilogue start */
+ 101:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 375               	.LM43:
+ 376 00d4 0895      		ret
+ 378               	.Lscope8:
+ 380               		.stabd	78,0,0
+ 382               	.global	beginTransmission_int
+ 384               	beginTransmission_int:
+ 385               		.stabd	46,0,0
+ 104:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 387               	.LM44:
+ 388               	.LFBB9:
+ 389               	/* prologue: function */
+ 390               	/* frame size = 0 */
+ 391               	/* stack size = 0 */
+ 392               	.L__stack_usage = 0
+ 105:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	beginTransmission_uint8((uint8_t)address);
+ 394               	.LM45:
+ 395 00d6 0E94 0000 		call beginTransmission_uint8
+ 396               	/* epilogue start */
+ 106:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 398               	.LM46:
+ 399 00da 0895      		ret
+ 401               	.Lscope9:
+ 403               		.stabd	78,0,0
+ 405               	.global	endTransmission
+ 407               	endTransmission:
+ 408               		.stabd	46,0,0
+ 109:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 410               	.LM47:
+ 411               	.LFBB10:
+ 412               	/* prologue: function */
+ 413               	/* frame size = 0 */
+ 414               	/* stack size = 0 */
+ 415               	.L__stack_usage = 0
+ 111:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	int8_t ret = twi_writeTo(txAddress, txBuffer, txBufferLength, 1);
+ 417               	.LM48:
+ 418 00dc 8091 0000 		lds r24,txAddress
+ 419 00e0 60E0      		ldi r22,lo8(txBuffer)
+ 420 00e2 70E0      		ldi r23,hi8(txBuffer)
+ 421 00e4 4091 0000 		lds r20,txBufferLength
+ 422 00e8 21E0      		ldi r18,lo8(1)
+ 423 00ea 0E94 0000 		call twi_writeTo
+ 113:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txBufferIndex = 0;
+ 425               	.LM49:
+ 426 00ee 1092 0000 		sts txBufferIndex,__zero_reg__
+ 114:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	txBufferLength = 0;
+ 428               	.LM50:
+ 429 00f2 1092 0000 		sts txBufferLength,__zero_reg__
+ 116:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	transmitting = 0;
+ 431               	.LM51:
+ 432 00f6 1092 0000 		sts transmitting,__zero_reg__
+ 433               	/* epilogue start */
+ 118:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 435               	.LM52:
+ 436 00fa 0895      		ret
+ 438               	.Lscope10:
+ 440               		.stabd	78,0,0
+ 443               	.global	send_uint8
+ 445               	send_uint8:
+ 446               		.stabd	46,0,0
+ 124:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 448               	.LM53:
+ 449               	.LFBB11:
+ 450 00fc CF93      		push r28
+ 451 00fe DF93      		push r29
+ 452 0100 0F92      		push __tmp_reg__
+ 453 0102 CDB7      		in r28,__SP_L__
+ 454 0104 DEB7      		in r29,__SP_H__
+ 455               	/* prologue: function */
+ 456               	/* frame size = 1 */
+ 457               	/* stack size = 3 */
+ 458               	.L__stack_usage = 3
+ 459 0106 8983      		std Y+1,r24
+ 125:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	if(transmitting){
+ 461               	.LM54:
+ 462 0108 8091 0000 		lds r24,transmitting
+ 463 010c 8823      		tst r24
+ 464 010e 01F0      		breq .L17
+ 128:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		if(txBufferLength >= BUFFER_LENGTH){
+ 466               	.LM55:
+ 467 0110 8091 0000 		lds r24,txBufferLength
+ 468 0114 8032      		cpi r24,lo8(32)
+ 469 0116 00F4      		brsh .L16
+ 132:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		txBuffer[txBufferIndex] = data;
+ 471               	.LM56:
+ 472 0118 8091 0000 		lds r24,txBufferIndex
+ 473 011c E82F      		mov r30,r24
+ 474 011e F0E0      		ldi r31,lo8(0)
+ 475 0120 E050      		subi r30,lo8(-(txBuffer))
+ 476 0122 F040      		sbci r31,hi8(-(txBuffer))
+ 477 0124 9981      		ldd r25,Y+1
+ 478 0126 9083      		st Z,r25
+ 133:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		++txBufferIndex;
+ 480               	.LM57:
+ 481 0128 8F5F      		subi r24,lo8(-(1))
+ 482 012a 8093 0000 		sts txBufferIndex,r24
+ 135:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		txBufferLength = txBufferIndex;
+ 484               	.LM58:
+ 485 012e 8093 0000 		sts txBufferLength,r24
+ 486 0132 00C0      		rjmp .L16
+ 487               	.L17:
+ 139:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		twi_transmit(&data, 1);
+ 489               	.LM59:
+ 490 0134 CE01      		movw r24,r28
+ 491 0136 0196      		adiw r24,1
+ 492 0138 61E0      		ldi r22,lo8(1)
+ 493 013a 0E94 0000 		call twi_transmit
+ 494               	.L16:
+ 495               	/* epilogue start */
+ 141:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 497               	.LM60:
+ 498 013e 0F90      		pop __tmp_reg__
+ 499 0140 DF91      		pop r29
+ 500 0142 CF91      		pop r28
+ 501 0144 0895      		ret
+ 503               	.Lscope11:
+ 505               		.stabd	78,0,0
+ 508               	.global	send_uint8st_uint8
+ 510               	send_uint8st_uint8:
+ 511               		.stabd	46,0,0
+ 147:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 513               	.LM61:
+ 514               	.LFBB12:
+ 515 0146 EF92      		push r14
+ 516 0148 FF92      		push r15
+ 517 014a 1F93      		push r17
+ 518 014c CF93      		push r28
+ 519 014e DF93      		push r29
+ 520 0150 0F92      		push __tmp_reg__
+ 521 0152 CDB7      		in r28,__SP_L__
+ 522 0154 DEB7      		in r29,__SP_H__
+ 523               	/* prologue: function */
+ 524               	/* frame size = 1 */
+ 525               	/* stack size = 6 */
+ 526               	.L__stack_usage = 6
+ 527 0156 182F      		mov r17,r24
+ 148:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	if(transmitting){
+ 529               	.LM62:
+ 530 0158 8091 0000 		lds r24,transmitting
+ 531 015c 8823      		tst r24
+ 532 015e 01F0      		breq .L20
+ 533 0160 E12E      		mov r14,r17
+ 534 0162 F92E      		mov r15,r25
+ 535 0164 00C0      		rjmp .L21
+ 536               	.L22:
+ 537               	.LBB10:
+ 151:../../../../../src/drivers/platform/MARS/source/Wire.c **** 			send_uint8(data[i]);
+ 539               	.LM63:
+ 540 0166 F701      		movw r30,r14
+ 541 0168 8191      		ld r24,Z+
+ 542 016a 7F01      		movw r14,r30
+ 543 016c 6983      		std Y+1,r22
+ 544 016e 0E94 0000 		call send_uint8
+ 545 0172 6981      		ldd r22,Y+1
+ 546               	.L21:
+ 150:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		for(uint8_t i = 0; i < quantity; ++i){
+ 548               	.LM64:
+ 549 0174 8E2D      		mov r24,r14
+ 550 0176 811B      		sub r24,r17
+ 551 0178 8617      		cp r24,r22
+ 552 017a 00F0      		brlo .L22
+ 553 017c 00C0      		rjmp .L19
+ 554               	.L20:
+ 555               	.LBE10:
+ 156:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		twi_transmit(data, quantity);
+ 557               	.LM65:
+ 558 017e 812F      		mov r24,r17
+ 559 0180 0E94 0000 		call twi_transmit
+ 560               	.L19:
+ 561               	/* epilogue start */
+ 158:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 563               	.LM66:
+ 564 0184 0F90      		pop __tmp_reg__
+ 565 0186 DF91      		pop r29
+ 566 0188 CF91      		pop r28
+ 567 018a 1F91      		pop r17
+ 568 018c FF90      		pop r15
+ 569 018e EF90      		pop r14
+ 570 0190 0895      		ret
+ 572               	.Lscope12:
+ 574               		.stabd	78,0,0
+ 576               	.global	send_char
+ 578               	send_char:
+ 579               		.stabd	46,0,0
+ 164:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 581               	.LM67:
+ 582               	.LFBB13:
+ 583               	/* prologue: function */
+ 584               	/* frame size = 0 */
+ 585               	/* stack size = 0 */
+ 586               	.L__stack_usage = 0
+ 165:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	send_uint8st_uint8((uint8_t*)data, strlen(data));
+ 588               	.LM68:
+ 589 0192 DC01      		movw r26,r24
+ 590 0194 0D90      		ld __tmp_reg__,X+
+ 591 0196 0020      		tst __tmp_reg__
+ 592 0198 01F4      		brne .-6
+ 593 019a BD01      		movw r22,r26
+ 594 019c 6150      		subi r22,lo8(-(-1))
+ 595 019e 7040      		sbci r23,hi8(-(-1))
+ 596 01a0 681B      		sub r22,r24
+ 597 01a2 790B      		sbc r23,r25
+ 598 01a4 0E94 0000 		call send_uint8st_uint8
+ 599               	/* epilogue start */
+ 166:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 601               	.LM69:
+ 602 01a8 0895      		ret
+ 604               	.Lscope13:
+ 606               		.stabd	78,0,0
+ 608               	.global	send_int
+ 610               	send_int:
+ 611               		.stabd	46,0,0
+ 172:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 613               	.LM70:
+ 614               	.LFBB14:
+ 615               	/* prologue: function */
+ 616               	/* frame size = 0 */
+ 617               	/* stack size = 0 */
+ 618               	.L__stack_usage = 0
+ 173:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	send_uint8((uint8_t)data);
+ 620               	.LM71:
+ 621 01aa 0E94 0000 		call send_uint8
+ 622               	/* epilogue start */
+ 174:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 624               	.LM72:
+ 625 01ae 0895      		ret
+ 627               	.Lscope14:
+ 629               		.stabd	78,0,0
+ 631               	.global	available
+ 633               	available:
+ 634               		.stabd	46,0,0
+ 180:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 636               	.LM73:
+ 637               	.LFBB15:
+ 638               	/* prologue: function */
+ 639               	/* frame size = 0 */
+ 640               	/* stack size = 0 */
+ 641               	.L__stack_usage = 0
+ 181:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	return rxBufferLength - rxBufferIndex;
+ 643               	.LM74:
+ 644 01b0 8091 0000 		lds r24,rxBufferLength
+ 645 01b4 9091 0000 		lds r25,rxBufferIndex
+ 182:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 647               	.LM75:
+ 648 01b8 891B      		sub r24,r25
+ 649               	/* epilogue start */
+ 650 01ba 0895      		ret
+ 652               	.Lscope15:
+ 654               		.stabd	78,0,0
+ 656               	.global	receive
+ 658               	receive:
+ 659               		.stabd	46,0,0
+ 188:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 661               	.LM76:
+ 662               	.LFBB16:
+ 663               	/* prologue: function */
+ 664               	/* frame size = 0 */
+ 665               	/* stack size = 0 */
+ 666               	.L__stack_usage = 0
+ 194:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	if(rxBufferIndex < rxBufferLength){
+ 668               	.LM77:
+ 669 01bc 9091 0000 		lds r25,rxBufferIndex
+ 670 01c0 8091 0000 		lds r24,rxBufferLength
+ 671 01c4 9817      		cp r25,r24
+ 672 01c6 00F4      		brsh .L29
+ 195:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		value = rxBuffer[rxBufferIndex];
+ 674               	.LM78:
+ 675 01c8 E92F      		mov r30,r25
+ 676 01ca F0E0      		ldi r31,lo8(0)
+ 677 01cc E050      		subi r30,lo8(-(rxBuffer))
+ 678 01ce F040      		sbci r31,hi8(-(rxBuffer))
+ 679 01d0 8081      		ld r24,Z
+ 196:../../../../../src/drivers/platform/MARS/source/Wire.c **** 		++rxBufferIndex;
+ 681               	.LM79:
+ 682 01d2 9F5F      		subi r25,lo8(-(1))
+ 683 01d4 9093 0000 		sts rxBufferIndex,r25
+ 684 01d8 0895      		ret
+ 685               	.L29:
+ 191:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	uint8_t value = '\0';
+ 687               	.LM80:
+ 688 01da 80E0      		ldi r24,lo8(0)
+ 200:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 690               	.LM81:
+ 691 01dc 0895      		ret
+ 696               	.Lscope16:
+ 698               		.stabd	78,0,0
+ 701               	.global	onReceive
+ 703               	onReceive:
+ 704               		.stabd	46,0,0
+ 240:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 241:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+ 242:../../../../../src/drivers/platform/MARS/source/Wire.c **** // sets function called on slave write
+ 243:../../../../../src/drivers/platform/MARS/source/Wire.c **** void onReceive( void (*function)(int) )
+ 244:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 706               	.LM82:
+ 707               	.LFBB17:
+ 708               	/* prologue: function */
+ 709               	/* frame size = 0 */
+ 710               	/* stack size = 0 */
+ 711               	.L__stack_usage = 0
+ 245:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	user_onReceive = function;
+ 713               	.LM83:
+ 714 01de 9093 0000 		sts user_onReceive+1,r25
+ 715 01e2 8093 0000 		sts user_onReceive,r24
+ 716               	/* epilogue start */
+ 246:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 718               	.LM84:
+ 719 01e6 0895      		ret
+ 721               	.Lscope17:
+ 723               		.stabd	78,0,0
+ 726               	.global	onRequest
+ 728               	onRequest:
+ 729               		.stabd	46,0,0
+ 247:../../../../../src/drivers/platform/MARS/source/Wire.c **** 
+ 248:../../../../../src/drivers/platform/MARS/source/Wire.c **** // sets function called on slave read
+ 249:../../../../../src/drivers/platform/MARS/source/Wire.c **** void onRequest( void (*function)(void) )
+ 250:../../../../../src/drivers/platform/MARS/source/Wire.c **** {
+ 731               	.LM85:
+ 732               	.LFBB18:
+ 733               	/* prologue: function */
+ 734               	/* frame size = 0 */
+ 735               	/* stack size = 0 */
+ 736               	.L__stack_usage = 0
+ 251:../../../../../src/drivers/platform/MARS/source/Wire.c **** 	user_onRequest = function;
+ 738               	.LM86:
+ 739 01e8 9093 0000 		sts user_onRequest+1,r25
+ 740 01ec 8093 0000 		sts user_onRequest,r24
+ 741               	/* epilogue start */
+ 252:../../../../../src/drivers/platform/MARS/source/Wire.c **** }
+ 743               	.LM87:
+ 744 01f0 0895      		ret
+ 746               	.Lscope18:
+ 748               		.stabd	78,0,0
+ 749               		.comm user_onReceive,2,1
+ 750               		.comm user_onRequest,2,1
+ 751               	.global	transmitting
+ 752               	.global	transmitting
+ 753               		.section .bss
+ 756               	transmitting:
+ 757 0000 00        		.skip 1,0
+ 758               	.global	txBufferLength
+ 759               	.global	txBufferLength
+ 762               	txBufferLength:
+ 763 0001 00        		.skip 1,0
+ 764               	.global	txBufferIndex
+ 765               	.global	txBufferIndex
+ 768               	txBufferIndex:
+ 769 0002 00        		.skip 1,0
+ 770               		.comm txBuffer,32,1
+ 771               	.global	txAddress
+ 772               	.global	txAddress
+ 775               	txAddress:
+ 776 0003 00        		.skip 1,0
+ 777               	.global	rxBufferLength
+ 778               	.global	rxBufferLength
+ 781               	rxBufferLength:
+ 782 0004 00        		.skip 1,0
+ 783               	.global	rxBufferIndex
+ 784               	.global	rxBufferIndex
+ 787               	rxBufferIndex:
+ 788 0005 00        		.skip 1,0
+ 789               		.comm rxBuffer,32,1
+ 800               		.text
+ 802               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 Wire.c
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:2      *ABS*:000000000000003f __SREG__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:3      *ABS*:000000000000003e __SP_H__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:4      *ABS*:000000000000003d __SP_L__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:5      *ABS*:0000000000000000 __tmp_reg__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:6      *ABS*:0000000000000001 __zero_reg__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:76     .text:0000000000000000 onRequestService
+                            *COM*:0000000000000002 user_onRequest
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:768    .bss:0000000000000002 txBufferIndex
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:762    .bss:0000000000000001 txBufferLength
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:110    .text:0000000000000018 onReceiveService
+                            *COM*:0000000000000002 user_onReceive
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:787    .bss:0000000000000005 rxBufferIndex
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:781    .bss:0000000000000004 rxBufferLength
+                            *COM*:0000000000000020 rxBuffer
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:191    .text:000000000000006c begin
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:227    .text:0000000000000082 begin_uint8
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:263    .text:000000000000009c begin_int
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:288    .text:00000000000000a2 requestFrom_2uint8
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:327    .text:00000000000000bc requestFrom_2int
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:351    .text:00000000000000c2 beginTransmission_uint8
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:756    .bss:0000000000000000 transmitting
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:775    .bss:0000000000000003 txAddress
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:384    .text:00000000000000d6 beginTransmission_int
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:407    .text:00000000000000dc endTransmission
+                            *COM*:0000000000000020 txBuffer
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:445    .text:00000000000000fc send_uint8
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:510    .text:0000000000000146 send_uint8st_uint8
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:578    .text:0000000000000192 send_char
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:610    .text:00000000000001aa send_int
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:633    .text:00000000000001b0 available
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:658    .text:00000000000001bc receive
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:703    .text:00000000000001de onReceive
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//ccBzadRn.s:728    .text:00000000000001e8 onRequest
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+twi_init
+twi_setAddress
+twi_attachSlaveTxEvent
+twi_attachSlaveRxEvent
+twi_readFrom
+twi_writeTo
+twi_transmit

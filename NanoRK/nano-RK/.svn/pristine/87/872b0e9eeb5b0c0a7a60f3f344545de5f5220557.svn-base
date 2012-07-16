@@ -1,0 +1,672 @@
+   1               		.file	"main.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.global __do_copy_data
+   8               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+ 303               		.data
+ 304               	.LC0:
+ 305 0000 7478 5F74 		.string	"tx_task PID=%d\r\n"
+ 305      6173 6B20 
+ 305      5049 443D 
+ 305      2564 0D0A 
+ 305      00
+ 306               	.LC1:
+ 307 0011 2564 2C25 		.string	"%d,%d,%d,%d,%d,%d,%d,%d,%d,%u\r\n"
+ 307      642C 2564 
+ 307      2C25 642C 
+ 307      2564 2C25 
+ 307      642C 2564 
+ 308               		.text
+ 310               	.global	Task1
+ 312               	Task1:
+ 313               		.stabd	46,0,0
+   1:main.c        **** /******************************************************************************
+   2:main.c        **** *  Nano-RK, a real-time operating system for sensor networks.
+   3:main.c        **** *  Copyright (C) 2007, Real-Time and Multimedia Lab, Carnegie Mellon University
+   4:main.c        **** *  All rights reserved.
+   5:main.c        **** *
+   6:main.c        **** *  This is the Open Source Version of Nano-RK included as part of a Dual
+   7:main.c        **** *  Licensing Model. If you are unsure which license to use please refer to:
+   8:main.c        **** *  http://www.nanork.org/nano-RK/wiki/Licensing
+   9:main.c        **** *
+  10:main.c        **** *  This program is free software: you can redistribute it and/or modify
+  11:main.c        **** *  it under the terms of the GNU General Public License as published by
+  12:main.c        **** *  the Free Software Foundation, version 2.0 of the License.
+  13:main.c        **** *
+  14:main.c        **** *  This program is distributed in the hope that it will be useful,
+  15:main.c        **** *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  16:main.c        **** *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  17:main.c        **** *  GNU General Public License for more details.
+  18:main.c        **** *
+  19:main.c        **** *  You should have received a copy of the GNU General Public License
+  20:main.c        **** *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  21:main.c        **** *
+  22:main.c        **** *  Contributing Authors (specific to this file):
+  23:main.c        **** *  Zane Starr
+  24:main.c        **** *******************************************************************************/
+  25:main.c        **** 
+  26:main.c        **** 
+  27:main.c        **** #include <nrk.h>
+  28:main.c        **** #include <include.h>
+  29:main.c        **** #include <ulib.h>
+  30:main.c        **** #include <stdio.h>
+  31:main.c        **** #include <avr/sleep.h>
+  32:main.c        **** #include <hal.h>
+  33:main.c        **** #include <nrk_error.h>
+  34:main.c        **** #include <nrk_timer.h>
+  35:main.c        **** #include <nrk_eeprom.h>
+  36:main.c        **** #include <nrk_driver_list.h>
+  37:main.c        **** #include <nrk_driver.h>
+  38:main.c        **** #include <Wire.h>
+  39:main.c        **** #include <HMC5883L.h>
+  40:main.c        **** #include <ADXL345.h>
+  41:main.c        **** #include <ITG3200.h>
+  42:main.c        **** #include <MARS_basic_sensor.h>
+  43:main.c        **** 
+  44:main.c        **** NRK_STK Stack1[NRK_APP_STACKSIZE];
+  45:main.c        **** nrk_task_type TaskOne;
+  46:main.c        **** void Task1(void);
+  47:main.c        **** 
+  48:main.c        **** 
+  49:main.c        **** void nrk_create_taskset();
+  50:main.c        **** void nrk_register_drivers();
+  51:main.c        **** uint8_t kill_stack(uint8_t val);
+  52:main.c        **** 
+  53:main.c        **** int16_t acbuf[3];
+  54:main.c        **** int16_t gyrobuf[3];
+  55:main.c        **** int16_t magbuf[3];
+  56:main.c        **** uint8_t buffer[6];
+  57:main.c        **** int8_t* success;
+  58:main.c        **** uint16_t cnt;
+  59:main.c        **** 
+  60:main.c        **** int main ()
+  61:main.c        **** {
+  62:main.c        ****   uint8_t t;
+  63:main.c        ****   nrk_setup_ports();
+  64:main.c        ****   nrk_setup_uart(UART_BAUDRATE_115K2);
+  65:main.c        ****   begin(); //start I2C bus
+  66:main.c        **** 
+  67:main.c        **** 
+  68:main.c        ****   printf( PSTR("starting...\r\n") );
+  69:main.c        **** 
+  70:main.c        ****   nrk_init();
+  71:main.c        ****   nrk_led_clr (0);
+  72:main.c        ****   nrk_led_clr (1);
+  73:main.c        ****   nrk_led_clr (2);
+  74:main.c        ****   nrk_led_clr (3);
+  75:main.c        **** 	
+  76:main.c        ****   nrk_time_set(0,0);
+  77:main.c        **** 	
+  78:main.c        ****   nrk_create_taskset ();
+  79:main.c        ****   nrk_start();
+  80:main.c        ****   
+  81:main.c        ****   return 0;
+  82:main.c        **** }
+  83:main.c        **** 
+  84:main.c        **** 
+  85:main.c        **** /*void my_timer_callback()
+  86:main.c        **** {
+  87:main.c        **** 	sei();
+  88:main.c        **** 	get_acc_values(acbuf);
+  89:main.c        **** 	//read gyroscope
+  90:main.c        **** 	read_gyro_xyz_one_ptr(gyrobuf);
+  91:main.c        **** 	//read magnetometer	
+  92:main.c        **** 	get_Magneto_Values_scaled(magbuf);	
+  93:main.c        **** }*/
+  94:main.c        **** 
+  95:main.c        **** void Task1()
+  96:main.c        **** {
+ 315               	.LM0:
+ 316               	.LFBB1:
+ 317               	/* prologue: function */
+ 318               	/* frame size = 0 */
+ 319               	/* stack size = 0 */
+ 320               	.L__stack_usage = 0
+  97:main.c        **** 	nrk_time_t t;
+  98:main.c        **** 	
+  99:main.c        **** 	nrk_kprintf( PSTR("Booting Up ADXL345. . .\r\n") );
+ 322               	.LM1:
+ 323 0000 80E0      		ldi r24,lo8(__c.3072)
+ 324 0002 90E0      		ldi r25,hi8(__c.3072)
+ 325 0004 0E94 0000 		call nrk_kprintf
+ 100:main.c        **** 	/**** Start Accelerometer and check connections 
+ 101:main.c        **** 	 * Start up accelerometer
+ 102:main.c        **** 	 * Ensure ADXL is connected. 
+ 103:main.c        **** 	 * Enable continous measurement
+ 104:main.c        **** 	 * INT_SCALER =  10000 
+ 105:main.c        **** 	 * Set accelerometer range to maximum og 2G
+ 106:main.c        **** 	 * Set sample rate to 1.6Khz
+ 107:main.c        **** 	 ****/	
+ 108:main.c        **** 	set_up_ADXL345();
+ 327               	.LM2:
+ 328 0008 0E94 0000 		call set_up_ADXL345
+ 109:main.c        **** 	
+ 110:main.c        **** 	/**** Start Gyro and check connections 
+ 111:main.c        **** 	 * Start up gyro
+ 112:main.c        **** 	 * Zero calibrate gyro.
+ 113:main.c        **** 	 * INT_SCALER_GYRO =  100  
+ 114:main.c        **** 	 * Leave gyro still for about 2 seconds to zero-calibrate
+ 115:main.c        **** 	 * sets gyro sample rate to 8Khz with a 256Hz BW(bandwidth) LP (low pass) filter
+ 116:main.c        **** 	 ****/
+ 117:main.c        **** 	set_up_ITG3200();	
+ 330               	.LM3:
+ 331 000c 0E94 0000 		call set_up_ITG3200
+ 118:main.c        **** 	
+ 119:main.c        **** 	/**** Start magnetometer and check connections 
+ 120:main.c        **** 	 * set scale to +/- 1.3 gauss
+ 121:main.c        **** 	 * set measurement mode to continous	
+ 122:main.c        **** 	 * INT_SCALER_MAG = 1000
+ 123:main.c        **** 	 * sets sample rate to highest value of 75Hz
+ 124:main.c        **** 	 * sets averaging value to 8 samples per reading givein at 75 Hz
+ 125:main.c        **** 	 ****/
+ 126:main.c        **** 	success = set_up_HMC5883L();
+ 333               	.LM4:
+ 334 0010 0E94 0000 		call set_up_HMC5883L
+ 335 0014 9093 0000 		sts success+1,r25
+ 336 0018 8093 0000 		sts success,r24
+ 127:main.c        **** 	if (*success) nrk_kprintf( PSTR("HMC5883L(Magnetometer) boot success. Scale +/- 1.3 Ga. . .\r\n"))
+ 338               	.LM5:
+ 339 001c DC01      		movw r26,r24
+ 340 001e 8C91      		ld r24,X
+ 341 0020 8823      		tst r24
+ 342 0022 01F0      		breq .L2
+ 344               	.LM6:
+ 345 0024 80E0      		ldi r24,lo8(__c.3074)
+ 346 0026 90E0      		ldi r25,hi8(__c.3074)
+ 347 0028 0E94 0000 		call nrk_kprintf
+ 348               	.L2:
+ 128:main.c        **** 	if ( *(success+1) ) nrk_kprintf( PSTR("HMC5883L measurement mode: continuous . .\r\n") );
+ 350               	.LM7:
+ 351 002c E091 0000 		lds r30,success
+ 352 0030 F091 0000 		lds r31,success+1
+ 353 0034 8181      		ldd r24,Z+1
+ 354 0036 8823      		tst r24
+ 355 0038 01F0      		breq .L3
+ 357               	.LM8:
+ 358 003a 80E0      		ldi r24,lo8(__c.3076)
+ 359 003c 90E0      		ldi r25,hi8(__c.3076)
+ 360 003e 0E94 0000 		call nrk_kprintf
+ 361               	.L3:
+ 129:main.c        **** 	
+ 130:main.c        **** 	//printf( "My node's address is %d\r\n",NODE_ADDR );
+ 131:main.c        **** 	
+ 132:main.c        **** 	/* Setup application timer with:
+ 133:main.c        **** 	 *      Prescaler = 2 
+ 134:main.c        **** 	 *     Compare Match = 5000
+ 135:main.c        **** 	 *     Sys Clock = 16MHz
+ 136:main.c        **** 	 *  Prescaler 2 means divide sys clock by 8
+ 137:main.c        **** 	 * 16000000 / 8 = 2000000 Hz clock
+ 138:main.c        **** 	 * 1 / 2000000 = 0.0005 ms per tick
+ 139:main.c        **** 	 * 0.0005 ms * 5000 = 2.5 ms / per interrupt callback
+ 140:main.c        **** 	 */
+ 141:main.c        **** 	
+ 142:main.c        **** 	/*val=nrk_timer_int_configure(NRK_APP_TIMER_0,2,50000, &my_timer_callback ); // give 400Hz timer
+ 143:main.c        **** 	if(val==NRK_OK) nrk_kprintf( PSTR("Callback timer setup\r\n"));
+ 144:main.c        **** 	else nrk_kprintf( PSTR("Error setting up timer callback\r\n"));
+ 145:main.c        **** 	
+ 146:main.c        **** 	// Zero the timer...
+ 147:main.c        **** 	nrk_timer_int_reset(NRK_APP_TIMER_0);
+ 148:main.c        **** 	
+ 149:main.c        **** 	// Start the timer...
+ 150:main.c        **** 	nrk_timer_int_start(NRK_APP_TIMER_0);*/
+ 151:main.c        **** 	
+ 152:main.c        ****     printf ("tx_task PID=%d\r\n", nrk_get_pid ());
+ 363               	.LM9:
+ 364 0042 0E94 0000 		call nrk_get_pid
+ 365 0046 00D0      		rcall .
+ 366 0048 00D0      		rcall .
+ 367 004a EDB7      		in r30,__SP_L__
+ 368 004c FEB7      		in r31,__SP_H__
+ 369 004e 3196      		adiw r30,1
+ 370 0050 20E0      		ldi r18,lo8(.LC0)
+ 371 0052 30E0      		ldi r19,hi8(.LC0)
+ 372 0054 ADB7      		in r26,__SP_L__
+ 373 0056 BEB7      		in r27,__SP_H__
+ 374 0058 1296      		adiw r26,1+1
+ 375 005a 3C93      		st X,r19
+ 376 005c 2E93      		st -X,r18
+ 377 005e 1197      		sbiw r26,1
+ 378 0060 8283      		std Z+2,r24
+ 379 0062 1382      		std Z+3,__zero_reg__
+ 380 0064 0E94 0000 		call printf
+ 153:main.c        **** 	
+ 154:main.c        **** 	cnt = 0;
+ 382               	.LM10:
+ 383 0068 1092 0000 		sts cnt+1,__zero_reg__
+ 384 006c 1092 0000 		sts cnt,__zero_reg__
+ 385 0070 0F90      		pop __tmp_reg__
+ 386 0072 0F90      		pop __tmp_reg__
+ 387 0074 0F90      		pop __tmp_reg__
+ 388 0076 0F90      		pop __tmp_reg__
+ 155:main.c        **** 	
+ 156:main.c        **** 	while (1) {
+ 157:main.c        **** 		nrk_led_toggle(GREEN_LED);
+ 158:main.c        **** 		
+ 159:main.c        **** 		if (cnt >= 65534) cnt = 0;
+ 160:main.c        **** 		else cnt++;
+ 161:main.c        **** 		
+ 162:main.c        **** 		//read acc
+ 163:main.c        **** 		get_acc_values(acbuf);
+ 164:main.c        **** 		//read gyroscope
+ 165:main.c        **** 		read_gyro_xyz_one_ptr(gyrobuf);
+ 166:main.c        **** 		//read magnetometer	
+ 167:main.c        **** 		get_Magneto_Values_scaled(magbuf);
+ 168:main.c        **** 		
+ 169:main.c        **** 		printf("%d,%d,%d,%d,%d,%d,%d,%d,%d,%u\r\n",acbuf[0],acbuf[1],acbuf[2],
+ 390               	.LM11:
+ 391 0078 C0E0      		ldi r28,lo8(.LC1)
+ 392 007a D0E0      		ldi r29,hi8(.LC1)
+ 393               	.L6:
+ 157:main.c        **** 		nrk_led_toggle(GREEN_LED);
+ 395               	.LM12:
+ 396 007c 81E0      		ldi r24,lo8(1)
+ 397 007e 90E0      		ldi r25,hi8(1)
+ 398 0080 0E94 0000 		call nrk_led_toggle
+ 159:main.c        **** 		if (cnt >= 65534) cnt = 0;
+ 400               	.LM13:
+ 401 0084 8091 0000 		lds r24,cnt
+ 402 0088 9091 0000 		lds r25,cnt+1
+ 403 008c BFEF      		ldi r27,hi8(-2)
+ 404 008e 8E3F      		cpi r24,lo8(-2)
+ 405 0090 9B07      		cpc r25,r27
+ 406 0092 00F0      		brlo .L4
+ 159:main.c        **** 		if (cnt >= 65534) cnt = 0;
+ 408               	.LM14:
+ 409 0094 1092 0000 		sts cnt+1,__zero_reg__
+ 410 0098 1092 0000 		sts cnt,__zero_reg__
+ 411 009c 00C0      		rjmp .L5
+ 412               	.L4:
+ 160:main.c        **** 		else cnt++;
+ 414               	.LM15:
+ 415 009e 0196      		adiw r24,1
+ 416 00a0 9093 0000 		sts cnt+1,r25
+ 417 00a4 8093 0000 		sts cnt,r24
+ 418               	.L5:
+ 163:main.c        **** 		get_acc_values(acbuf);
+ 420               	.LM16:
+ 421 00a8 80E0      		ldi r24,lo8(acbuf)
+ 422 00aa 90E0      		ldi r25,hi8(acbuf)
+ 423 00ac 0E94 0000 		call get_acc_values
+ 165:main.c        **** 		read_gyro_xyz_one_ptr(gyrobuf);
+ 425               	.LM17:
+ 426 00b0 80E0      		ldi r24,lo8(gyrobuf)
+ 427 00b2 90E0      		ldi r25,hi8(gyrobuf)
+ 428 00b4 0E94 0000 		call read_gyro_xyz_one_ptr
+ 167:main.c        **** 		get_Magneto_Values_scaled(magbuf);
+ 430               	.LM18:
+ 431 00b8 80E0      		ldi r24,lo8(magbuf)
+ 432 00ba 90E0      		ldi r25,hi8(magbuf)
+ 433 00bc 0E94 0000 		call get_Magneto_Values_scaled
+ 435               	.LM19:
+ 436 00c0 EDB7      		in r30,__SP_L__
+ 437 00c2 FEB7      		in r31,__SP_H__
+ 438 00c4 7697      		sbiw r30,22
+ 439 00c6 0FB6      		in __tmp_reg__,__SREG__
+ 440 00c8 F894      		cli
+ 441 00ca FEBF      		out __SP_H__,r31
+ 442 00cc 0FBE      		out __SREG__,__tmp_reg__
+ 443 00ce EDBF      		out __SP_L__,r30
+ 444 00d0 3196      		adiw r30,1
+ 445 00d2 ADB7      		in r26,__SP_L__
+ 446 00d4 BEB7      		in r27,__SP_H__
+ 447 00d6 1296      		adiw r26,1+1
+ 448 00d8 DC93      		st X,r29
+ 449 00da CE93      		st -X,r28
+ 450 00dc 1197      		sbiw r26,1
+ 451 00de 8091 0000 		lds r24,acbuf
+ 452 00e2 9091 0000 		lds r25,acbuf+1
+ 453 00e6 9383      		std Z+3,r25
+ 454 00e8 8283      		std Z+2,r24
+ 455 00ea 8091 0000 		lds r24,acbuf+2
+ 456 00ee 9091 0000 		lds r25,acbuf+2+1
+ 457 00f2 9583      		std Z+5,r25
+ 458 00f4 8483      		std Z+4,r24
+ 459 00f6 8091 0000 		lds r24,acbuf+4
+ 460 00fa 9091 0000 		lds r25,acbuf+4+1
+ 461 00fe 9783      		std Z+7,r25
+ 462 0100 8683      		std Z+6,r24
+ 463 0102 8091 0000 		lds r24,gyrobuf
+ 464 0106 9091 0000 		lds r25,gyrobuf+1
+ 465 010a 9187      		std Z+9,r25
+ 466 010c 8087      		std Z+8,r24
+ 467 010e 8091 0000 		lds r24,gyrobuf+2
+ 468 0112 9091 0000 		lds r25,gyrobuf+2+1
+ 469 0116 9387      		std Z+11,r25
+ 470 0118 8287      		std Z+10,r24
+ 471 011a 8091 0000 		lds r24,gyrobuf+4
+ 472 011e 9091 0000 		lds r25,gyrobuf+4+1
+ 473 0122 9587      		std Z+13,r25
+ 474 0124 8487      		std Z+12,r24
+ 475 0126 8091 0000 		lds r24,magbuf
+ 476 012a 9091 0000 		lds r25,magbuf+1
+ 477 012e 9787      		std Z+15,r25
+ 478 0130 8687      		std Z+14,r24
+ 479 0132 8091 0000 		lds r24,magbuf+2
+ 480 0136 9091 0000 		lds r25,magbuf+2+1
+ 481 013a 918B      		std Z+17,r25
+ 482 013c 808B      		std Z+16,r24
+ 483 013e 8091 0000 		lds r24,magbuf+4
+ 484 0142 9091 0000 		lds r25,magbuf+4+1
+ 485 0146 938B      		std Z+19,r25
+ 486 0148 828B      		std Z+18,r24
+ 487 014a 8091 0000 		lds r24,cnt
+ 488 014e 9091 0000 		lds r25,cnt+1
+ 489 0152 958B      		std Z+21,r25
+ 490 0154 848B      		std Z+20,r24
+ 491 0156 0E94 0000 		call printf
+ 170:main.c        **** 												  gyrobuf[0],gyrobuf[1],gyrobuf[2],
+ 171:main.c        **** 												  magbuf[0],magbuf[1],magbuf[2],cnt);
+ 172:main.c        **** 		//nrk_sw_wdt_update(0); 
+ 173:main.c        **** 		nrk_wait_until_next_period();
+ 493               	.LM20:
+ 494 015a EDB7      		in r30,__SP_L__
+ 495 015c FEB7      		in r31,__SP_H__
+ 496 015e 7696      		adiw r30,22
+ 497 0160 0FB6      		in __tmp_reg__,__SREG__
+ 498 0162 F894      		cli
+ 499 0164 FEBF      		out __SP_H__,r31
+ 500 0166 0FBE      		out __SREG__,__tmp_reg__
+ 501 0168 EDBF      		out __SP_L__,r30
+ 502 016a 0E94 0000 		call nrk_wait_until_next_period
+ 174:main.c        **** 	}
+ 504               	.LM21:
+ 505 016e 00C0      		rjmp .L6
+ 507               	.Lscope1:
+ 509               		.stabd	78,0,0
+ 511               	.global	nrk_create_taskset
+ 513               	nrk_create_taskset:
+ 514               		.stabd	46,0,0
+ 175:main.c        **** 	
+ 176:main.c        **** }
+ 177:main.c        **** 
+ 178:main.c        **** 
+ 179:main.c        **** void
+ 180:main.c        **** nrk_create_taskset()
+ 181:main.c        **** {
+ 516               	.LM22:
+ 517               	.LFBB2:
+ 518 0170 CF93      		push r28
+ 519 0172 DF93      		push r29
+ 520               	/* prologue: function */
+ 521               	/* frame size = 0 */
+ 522               	/* stack size = 2 */
+ 523               	.L__stack_usage = 2
+ 182:main.c        ****   TaskOne.task = Task1;
+ 525               	.LM23:
+ 526 0174 80E0      		ldi r24,lo8(gs(Task1))
+ 527 0176 90E0      		ldi r25,hi8(gs(Task1))
+ 528 0178 9093 0000 		sts TaskOne+5+1,r25
+ 529 017c 8093 0000 		sts TaskOne+5,r24
+ 183:main.c        ****   nrk_task_set_stk( &TaskOne, Stack1, NRK_APP_STACKSIZE);
+ 531               	.LM24:
+ 532 0180 C0E0      		ldi r28,lo8(TaskOne)
+ 533 0182 D0E0      		ldi r29,hi8(TaskOne)
+ 534 0184 CE01      		movw r24,r28
+ 535 0186 60E0      		ldi r22,lo8(Stack1)
+ 536 0188 70E0      		ldi r23,hi8(Stack1)
+ 537 018a 40E8      		ldi r20,lo8(128)
+ 538 018c 50E0      		ldi r21,hi8(128)
+ 539 018e 0E94 0000 		call nrk_task_set_stk
+ 184:main.c        ****   TaskOne.prio = 1;
+ 541               	.LM25:
+ 542 0192 81E0      		ldi r24,lo8(1)
+ 543 0194 8887      		std Y+8,r24
+ 185:main.c        ****   TaskOne.FirstActivation = TRUE;
+ 545               	.LM26:
+ 546 0196 8F83      		std Y+7,r24
+ 186:main.c        ****   TaskOne.Type = BASIC_TASK;
+ 548               	.LM27:
+ 549 0198 8987      		std Y+9,r24
+ 187:main.c        ****   TaskOne.SchType = PREEMPTIVE;
+ 551               	.LM28:
+ 552 019a 8A87      		std Y+10,r24
+ 188:main.c        ****   TaskOne.period.secs = 0;
+ 554               	.LM29:
+ 555 019c 1B86      		std Y+11,__zero_reg__
+ 556 019e 1C86      		std Y+12,__zero_reg__
+ 557 01a0 1D86      		std Y+13,__zero_reg__
+ 558 01a2 1E86      		std Y+14,__zero_reg__
+ 189:main.c        ****   TaskOne.period.nano_secs = 5*NANOS_PER_MS; //*NANOS_PER_MS;
+ 560               	.LM30:
+ 561 01a4 80E4      		ldi r24,lo8(5000000)
+ 562 01a6 9BE4      		ldi r25,hi8(5000000)
+ 563 01a8 ACE4      		ldi r26,hlo8(5000000)
+ 564 01aa B0E0      		ldi r27,hhi8(5000000)
+ 565 01ac 8F87      		std Y+15,r24
+ 566 01ae 988B      		std Y+16,r25
+ 567 01b0 A98B      		std Y+17,r26
+ 568 01b2 BA8B      		std Y+18,r27
+ 190:main.c        ****   TaskOne.cpu_reserve.secs = 0;
+ 570               	.LM31:
+ 571 01b4 1B8A      		std Y+19,__zero_reg__
+ 572 01b6 1C8A      		std Y+20,__zero_reg__
+ 573 01b8 1D8A      		std Y+21,__zero_reg__
+ 574 01ba 1E8A      		std Y+22,__zero_reg__
+ 191:main.c        ****   TaskOne.cpu_reserve.nano_secs = 0;//  200*NANOS_PER_MS;
+ 576               	.LM32:
+ 577 01bc 1F8A      		std Y+23,__zero_reg__
+ 578 01be 188E      		std Y+24,__zero_reg__
+ 579 01c0 198E      		std Y+25,__zero_reg__
+ 580 01c2 1A8E      		std Y+26,__zero_reg__
+ 192:main.c        ****   TaskOne.offset.secs = 0;
+ 582               	.LM33:
+ 583 01c4 1B8E      		std Y+27,__zero_reg__
+ 584 01c6 1C8E      		std Y+28,__zero_reg__
+ 585 01c8 1D8E      		std Y+29,__zero_reg__
+ 586 01ca 1E8E      		std Y+30,__zero_reg__
+ 193:main.c        ****   TaskOne.offset.nano_secs= 0;
+ 588               	.LM34:
+ 589 01cc 1F8E      		std Y+31,__zero_reg__
+ 590 01ce 18A2      		std Y+32,__zero_reg__
+ 591 01d0 19A2      		std Y+33,__zero_reg__
+ 592 01d2 1AA2      		std Y+34,__zero_reg__
+ 194:main.c        ****   nrk_activate_task (&TaskOne);
+ 594               	.LM35:
+ 595 01d4 CE01      		movw r24,r28
+ 596 01d6 0E94 0000 		call nrk_activate_task
+ 597               	/* epilogue start */
+ 195:main.c        **** 
+ 196:main.c        **** }
+ 599               	.LM36:
+ 600 01da DF91      		pop r29
+ 601 01dc CF91      		pop r28
+ 602 01de 0895      		ret
+ 604               	.Lscope2:
+ 606               		.stabd	78,0,0
+ 607               		.data
+ 608               	.LC2:
+ 609 0031 7374 6172 		.string	"starting...\r"
+ 609      7469 6E67 
+ 609      2E2E 2E0D 
+ 609      00
+ 610               		.section	.text.startup,"ax",@progbits
+ 612               	.global	main
+ 614               	main:
+ 615               		.stabd	46,0,0
+  61:main.c        **** {
+ 617               	.LM37:
+ 618               	.LFBB3:
+ 619               	/* prologue: function */
+ 620               	/* frame size = 0 */
+ 621               	/* stack size = 0 */
+ 622               	.L__stack_usage = 0
+  63:main.c        ****   nrk_setup_ports();
+ 624               	.LM38:
+ 625 0000 0E94 0000 		call nrk_setup_ports
+  64:main.c        ****   nrk_setup_uart(UART_BAUDRATE_115K2);
+ 627               	.LM39:
+ 628 0004 80E1      		ldi r24,lo8(16)
+ 629 0006 90E0      		ldi r25,hi8(16)
+ 630 0008 0E94 0000 		call nrk_setup_uart
+  65:main.c        ****   begin(); //start I2C bus
+ 632               	.LM40:
+ 633 000c 0E94 0000 		call begin
+  68:main.c        ****   printf( PSTR("starting...\r\n") );
+ 635               	.LM41:
+ 636 0010 80E0      		ldi r24,lo8(.LC2)
+ 637 0012 90E0      		ldi r25,hi8(.LC2)
+ 638 0014 0E94 0000 		call puts
+  70:main.c        ****   nrk_init();
+ 640               	.LM42:
+ 641 0018 0E94 0000 		call nrk_init
+  71:main.c        ****   nrk_led_clr (0);
+ 643               	.LM43:
+ 644 001c 80E0      		ldi r24,lo8(0)
+ 645 001e 90E0      		ldi r25,hi8(0)
+ 646 0020 0E94 0000 		call nrk_led_clr
+  72:main.c        ****   nrk_led_clr (1);
+ 648               	.LM44:
+ 649 0024 81E0      		ldi r24,lo8(1)
+ 650 0026 90E0      		ldi r25,hi8(1)
+ 651 0028 0E94 0000 		call nrk_led_clr
+  73:main.c        ****   nrk_led_clr (2);
+ 653               	.LM45:
+ 654 002c 82E0      		ldi r24,lo8(2)
+ 655 002e 90E0      		ldi r25,hi8(2)
+ 656 0030 0E94 0000 		call nrk_led_clr
+  74:main.c        ****   nrk_led_clr (3);
+ 658               	.LM46:
+ 659 0034 83E0      		ldi r24,lo8(3)
+ 660 0036 90E0      		ldi r25,hi8(3)
+ 661 0038 0E94 0000 		call nrk_led_clr
+  76:main.c        ****   nrk_time_set(0,0);
+ 663               	.LM47:
+ 664 003c 60E0      		ldi r22,lo8(0)
+ 665 003e 70E0      		ldi r23,hi8(0)
+ 666 0040 80E0      		ldi r24,hlo8(0)
+ 667 0042 90E0      		ldi r25,hhi8(0)
+ 668 0044 20E0      		ldi r18,lo8(0)
+ 669 0046 30E0      		ldi r19,hi8(0)
+ 670 0048 40E0      		ldi r20,hlo8(0)
+ 671 004a 50E0      		ldi r21,hhi8(0)
+ 672 004c 0E94 0000 		call nrk_time_set
+  78:main.c        ****   nrk_create_taskset ();
+ 674               	.LM48:
+ 675 0050 0E94 0000 		call nrk_create_taskset
+  79:main.c        ****   nrk_start();
+ 677               	.LM49:
+ 678 0054 0E94 0000 		call nrk_start
+  82:main.c        **** }
+ 680               	.LM50:
+ 681 0058 80E0      		ldi r24,lo8(0)
+ 682 005a 90E0      		ldi r25,hi8(0)
+ 683               	/* epilogue start */
+ 684 005c 0895      		ret
+ 686               	.Lscope3:
+ 688               		.stabd	78,0,0
+ 689               		.comm cnt,2,1
+ 690               		.comm success,2,1
+ 691               		.comm buffer,6,1
+ 692               		.comm magbuf,6,1
+ 693               		.comm gyrobuf,6,1
+ 694               		.comm acbuf,6,1
+ 695               		.comm TaskOne,35,1
+ 696               		.comm Stack1,128,1
+ 697               		.comm _buff,6,1
+ 698               		.comm _dev_address,1,1
+ 699               		.comm offsets,6,1
+ 700               		.comm scalefactor,12,1
+ 701               		.comm gyro_start_wait_time,8,1
+ 702               		.comm IsConnected,1,1
+ 703               		.comm m_Scale,4,1
+ 704               		.comm m_Address,2,1
+ 705               		.comm Mag_m_scale,4,1
+ 706               		.comm app_timer0_prescale,1,1
+ 707               		.comm app_timer0_callback,2,1
+ 708               		.comm _nrk_time_trigger,1,1
+ 709               		.comm _nrk_prev_timer_val,1,1
+ 710               		.comm error_num,1,1
+ 711               		.comm error_task,1,1
+ 712               		.comm nrk_kernel_stk_ptr,2,1
+ 713               		.comm nrk_idle_task_stk,128,1
+ 714               		.comm _nrk_signal_list,4,1
+ 715               		.section	.progmem.data,"a",@progbits
+ 718               	__c.3072:
+ 719 0000 426F 6F74 		.string	"Booting Up ADXL345. . .\r\n"
+ 719      696E 6720 
+ 719      5570 2041 
+ 719      4458 4C33 
+ 719      3435 2E20 
+ 722               	__c.3074:
+ 723 001a 484D 4335 		.string	"HMC5883L(Magnetometer) boot success. Scale +/- 1.3 Ga. . .\r\n"
+ 723      3838 334C 
+ 723      284D 6167 
+ 723      6E65 746F 
+ 723      6D65 7465 
+ 726               	__c.3076:
+ 727 0057 484D 4335 		.string	"HMC5883L measurement mode: continuous . .\r\n"
+ 727      3838 334C 
+ 727      206D 6561 
+ 727      7375 7265 
+ 727      6D65 6E74 
+ 754               		.text
+ 756               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cc0bz6qM.s:2      *ABS*:000000000000003f __SREG__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cc0bz6qM.s:3      *ABS*:000000000000003e __SP_H__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cc0bz6qM.s:4      *ABS*:000000000000003d __SP_L__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cc0bz6qM.s:5      *ABS*:0000000000000000 __tmp_reg__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cc0bz6qM.s:6      *ABS*:0000000000000001 __zero_reg__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cc0bz6qM.s:312    .text:0000000000000000 Task1
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cc0bz6qM.s:718    .progmem.data:0000000000000000 __c.3072
+                            *COM*:0000000000000002 success
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cc0bz6qM.s:722    .progmem.data:000000000000001a __c.3074
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cc0bz6qM.s:726    .progmem.data:0000000000000057 __c.3076
+                            *COM*:0000000000000002 cnt
+                            *COM*:0000000000000006 acbuf
+                            *COM*:0000000000000006 gyrobuf
+                            *COM*:0000000000000006 magbuf
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cc0bz6qM.s:513    .text:0000000000000170 nrk_create_taskset
+                            *COM*:0000000000000023 TaskOne
+                            *COM*:0000000000000080 Stack1
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cc0bz6qM.s:614    .text.startup:0000000000000000 main
+                            *COM*:0000000000000006 buffer
+                            *COM*:0000000000000006 _buff
+                            *COM*:0000000000000001 _dev_address
+                            *COM*:0000000000000006 offsets
+                            *COM*:000000000000000c scalefactor
+                            *COM*:0000000000000008 gyro_start_wait_time
+                            *COM*:0000000000000001 IsConnected
+                            *COM*:0000000000000004 m_Scale
+                            *COM*:0000000000000002 m_Address
+                            *COM*:0000000000000004 Mag_m_scale
+                            *COM*:0000000000000001 app_timer0_prescale
+                            *COM*:0000000000000002 app_timer0_callback
+                            *COM*:0000000000000001 _nrk_time_trigger
+                            *COM*:0000000000000001 _nrk_prev_timer_val
+                            *COM*:0000000000000001 error_num
+                            *COM*:0000000000000001 error_task
+                            *COM*:0000000000000002 nrk_kernel_stk_ptr
+                            *COM*:0000000000000080 nrk_idle_task_stk
+                            *COM*:0000000000000004 _nrk_signal_list
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+nrk_kprintf
+set_up_ADXL345
+set_up_ITG3200
+set_up_HMC5883L
+nrk_get_pid
+printf
+nrk_led_toggle
+get_acc_values
+read_gyro_xyz_one_ptr
+get_Magneto_Values_scaled
+nrk_wait_until_next_period
+nrk_task_set_stk
+nrk_activate_task
+nrk_setup_ports
+nrk_setup_uart
+begin
+puts
+nrk_init
+nrk_led_clr
+nrk_time_set
+nrk_start

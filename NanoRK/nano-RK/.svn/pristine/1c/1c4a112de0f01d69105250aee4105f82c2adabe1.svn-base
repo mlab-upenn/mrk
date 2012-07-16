@@ -1,0 +1,227 @@
+   1               		.file	"adc_driver.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+  15               	.Ltext0:
+  16               	.global	init_adc
+  18               	init_adc:
+  19               	.LFB4:
+  20               	.LM1:
+  21               	/* prologue: function */
+  22               	/* frame size = 0 */
+  23               	.LM2:
+  24 0000 EAE7      		ldi r30,lo8(122)
+  25 0002 F0E0      		ldi r31,hi8(122)
+  26 0004 83E0      		ldi r24,lo8(3)
+  27 0006 8083      		st Z,r24
+  28 0008 ACE7      		ldi r26,lo8(124)
+  29 000a B0E0      		ldi r27,hi8(124)
+  30 000c 80E4      		ldi r24,lo8(64)
+  31 000e 8C93      		st X,r24
+  32               	.LM3:
+  33 0010 8081      		ld r24,Z
+  34 0012 8068      		ori r24,lo8(-128)
+  35 0014 8083      		st Z,r24
+  36               	.LM4:
+  37 0016 1092 0000 		sts channel,__zero_reg__
+  38               	.LM5:
+  39 001a 8C91      		ld r24,X
+  40 001c 807E      		andi r24,lo8(-32)
+  41 001e 8C93      		st X,r24
+  42               	/* epilogue start */
+  43               	.LM6:
+  44 0020 0895      		ret
+  45               	.LFE4:
+  47               	.global	delay
+  49               	delay:
+  50               	.LFB6:
+  51               	.LM7:
+  52               	/* prologue: function */
+  53               	/* frame size = 0 */
+  54               	.LM8:
+  55 0022 84EF      		ldi r24,lo8(500)
+  56 0024 91E0      		ldi r25,hi8(500)
+  57 0026 0E94 0000 		call nrk_spin_wait_us
+  58               	/* epilogue start */
+  59               	.LM9:
+  60 002a 0895      		ret
+  61               	.LFE6:
+  63               	.global	get_adc_val
+  65               	get_adc_val:
+  66               	.LFB5:
+  67               	.LM10:
+  68               	/* prologue: function */
+  69               	/* frame size = 0 */
+  70               	.LM11:
+  71 002c 8091 7A00 		lds r24,122
+  72 0030 8064      		ori r24,lo8(64)
+  73 0032 8093 7A00 		sts 122,r24
+  74               	.L6:
+  75 0036 8091 7A00 		lds r24,122
+  76 003a 84FF      		sbrs r24,4
+  77 003c 00C0      		rjmp .L6
+  78               	.LBB4:
+  79               	.LBB5:
+  80               	.LM12:
+  81 003e 84EF      		ldi r24,lo8(500)
+  82 0040 91E0      		ldi r25,hi8(500)
+  83 0042 0E94 0000 		call nrk_spin_wait_us
+  84               	.LBE5:
+  85               	.LBE4:
+  86               	.LM13:
+  87 0046 2091 7800 		lds r18,120
+  88 004a 30E0      		ldi r19,lo8(0)
+  89 004c 4091 7900 		lds r20,121
+  90 0050 942F      		mov r25,r20
+  91 0052 80E0      		ldi r24,lo8(0)
+  92 0054 282B      		or r18,r24
+  93 0056 392B      		or r19,r25
+  94               	.LM14:
+  95 0058 C901      		movw r24,r18
+  96               	/* epilogue start */
+  97 005a 0895      		ret
+  98               	.LFE5:
+ 100               	.global	dev_manager_adc
+ 102               	dev_manager_adc:
+ 103               	.LFB3:
+ 104               	.LM15:
+ 105               	.LVL0:
+ 106 005c CF93      		push r28
+ 107 005e DF93      		push r29
+ 108               	/* prologue: function */
+ 109               	/* frame size = 0 */
+ 110 0060 EA01      		movw r28,r20
+ 111               	.LM16:
+ 112 0062 8230      		cpi r24,lo8(2)
+ 113 0064 01F0      		breq .L21
+ 114               	.LVL1:
+ 115 0066 8330      		cpi r24,lo8(3)
+ 116 0068 00F4      		brsh .L17
+ 117 006a 8823      		tst r24
+ 118 006c 01F0      		breq .L11
+ 119 006e 8130      		cpi r24,lo8(1)
+ 120 0070 01F4      		brne .L10
+ 121 0072 00C0      		rjmp .L22
+ 122               	.L17:
+ 123 0074 8430      		cpi r24,lo8(4)
+ 124 0076 01F0      		breq .L15
+ 125 0078 8430      		cpi r24,lo8(4)
+ 126 007a 00F0      		brlo .L14
+ 127 007c 8530      		cpi r24,lo8(5)
+ 128 007e 01F4      		brne .L10
+ 129 0080 00C0      		rjmp .L23
+ 130               	.L11:
+ 131               	.LM17:
+ 132 0082 0E94 0000 		call init_adc
+ 133               	.LVL2:
+ 134 0086 00C0      		rjmp .L21
+ 135               	.LVL3:
+ 136               	.L22:
+ 137               	.LM18:
+ 138 0088 60FD      		sbrc r22,0
+ 139 008a 00C0      		rjmp .L21
+ 140               	.LVL4:
+ 141               	.LM19:
+ 142 008c 61FD      		sbrc r22,1
+ 143 008e 00C0      		rjmp .L19
+ 144               	.LM20:
+ 145 0090 62FD      		sbrc r22,2
+ 146 0092 00C0      		rjmp .L19
+ 147 0094 00C0      		rjmp .L21
+ 148               	.LVL5:
+ 149               	.L23:
+ 150               	.LM21:
+ 151 0096 0E94 0000 		call get_adc_val
+ 152               	.LVL6:
+ 153               	.LM22:
+ 154 009a 8883      		st Y,r24
+ 155               	.LM23:
+ 156 009c 9983      		std Y+1,r25
+ 157 009e 82E0      		ldi r24,lo8(2)
+ 158               	.LVL7:
+ 159 00a0 00C0      		rjmp .L18
+ 160               	.LVL8:
+ 161               	.L14:
+ 162               	.LM24:
+ 163 00a2 6130      		cpi r22,lo8(1)
+ 164 00a4 01F4      		brne .L19
+ 165 00a6 8091 0000 		lds r24,channel
+ 166               	.LVL9:
+ 167 00aa 00C0      		rjmp .L18
+ 168               	.LVL10:
+ 169               	.L15:
+ 170               	.LM25:
+ 171 00ac 6130      		cpi r22,lo8(1)
+ 172 00ae 01F4      		brne .L19
+ 173               	.LM26:
+ 174 00b0 2093 0000 		sts channel,r18
+ 175               	.LM27:
+ 176 00b4 8091 7C00 		lds r24,124
+ 177               	.LVL11:
+ 178 00b8 807E      		andi r24,lo8(-32)
+ 179 00ba 822B      		or r24,r18
+ 180 00bc 8093 7C00 		sts 124,r24
+ 181               	.LVL12:
+ 182               	.L21:
+ 183 00c0 81E0      		ldi r24,lo8(1)
+ 184               	.LVL13:
+ 185 00c2 00C0      		rjmp .L18
+ 186               	.LVL14:
+ 187               	.L10:
+ 188               	.LM28:
+ 189 00c4 8CE0      		ldi r24,lo8(12)
+ 190               	.LVL15:
+ 191 00c6 60E0      		ldi r22,lo8(0)
+ 192               	.LVL16:
+ 193 00c8 0E94 0000 		call nrk_kernel_error_add
+ 194               	.LVL17:
+ 195 00cc 80E0      		ldi r24,lo8(0)
+ 196               	.LVL18:
+ 197 00ce 00C0      		rjmp .L18
+ 198               	.LVL19:
+ 199               	.L19:
+ 200               	.LM29:
+ 201 00d0 8FEF      		ldi r24,lo8(-1)
+ 202               	.LVL20:
+ 203               	.L18:
+ 204               	.LVL21:
+ 205               	/* epilogue start */
+ 206               	.LM30:
+ 207 00d2 DF91      		pop r29
+ 208 00d4 CF91      		pop r28
+ 209               	.LVL22:
+ 210 00d6 0895      		ret
+ 211               	.LFE3:
+ 213               		.comm _nrk_signal_list,4,1
+ 214               		.comm error_task,1,1
+ 215               		.comm error_num,1,1
+ 216               		.comm nrk_idle_task_stk,128,1
+ 217               		.comm nrk_kernel_stk_ptr,2,1
+ 218               		.comm channel,1,1
+ 267               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:00000000 adc_driver.c
+C:\cygwin\tmp/ccIYjnfL.s:2      *ABS*:0000003f __SREG__
+C:\cygwin\tmp/ccIYjnfL.s:3      *ABS*:0000003e __SP_H__
+C:\cygwin\tmp/ccIYjnfL.s:4      *ABS*:0000003d __SP_L__
+C:\cygwin\tmp/ccIYjnfL.s:5      *ABS*:00000034 __CCP__
+C:\cygwin\tmp/ccIYjnfL.s:6      *ABS*:00000000 __tmp_reg__
+C:\cygwin\tmp/ccIYjnfL.s:7      *ABS*:00000001 __zero_reg__
+C:\cygwin\tmp/ccIYjnfL.s:18     .text:00000000 init_adc
+                            *COM*:00000001 channel
+C:\cygwin\tmp/ccIYjnfL.s:49     .text:00000022 delay
+C:\cygwin\tmp/ccIYjnfL.s:65     .text:0000002c get_adc_val
+C:\cygwin\tmp/ccIYjnfL.s:102    .text:0000005c dev_manager_adc
+                            *COM*:00000004 _nrk_signal_list
+                            *COM*:00000001 error_task
+                            *COM*:00000001 error_num
+                            *COM*:00000080 nrk_idle_task_stk
+                            *COM*:00000002 nrk_kernel_stk_ptr
+
+UNDEFINED SYMBOLS
+nrk_spin_wait_us
+nrk_kernel_error_add
+__do_clear_bss

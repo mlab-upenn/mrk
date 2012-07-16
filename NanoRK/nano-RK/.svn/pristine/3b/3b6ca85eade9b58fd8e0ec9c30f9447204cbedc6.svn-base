@@ -1,0 +1,1287 @@
+   1               		.file	"twi.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.global __do_copy_data
+   8               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+ 246               	.global	twi_init
+ 248               	twi_init:
+ 249               		.stabd	46,0,0
+   1:../../../../../src/drivers/platform/MARS/source/twi.c **** /*
+   2:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi.c - TWI/I2C library for Wiring & Arduino
+   3:../../../../../src/drivers/platform/MARS/source/twi.c ****   Copyright (c) 2006 Nicholas Zambetti.  All right reserved.
+   4:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+   5:../../../../../src/drivers/platform/MARS/source/twi.c ****   This library is free software; you can redistribute it and/or
+   6:../../../../../src/drivers/platform/MARS/source/twi.c ****   modify it under the terms of the GNU Lesser General Public
+   7:../../../../../src/drivers/platform/MARS/source/twi.c ****   License as published by the Free Software Foundation; either
+   8:../../../../../src/drivers/platform/MARS/source/twi.c ****   version 2.1 of the License, or (at your option) any later version.
+   9:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  10:../../../../../src/drivers/platform/MARS/source/twi.c ****   This library is distributed in the hope that it will be useful,
+  11:../../../../../src/drivers/platform/MARS/source/twi.c ****   but WITHOUT ANY WARRANTY; without even the implied warranty of
+  12:../../../../../src/drivers/platform/MARS/source/twi.c ****   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  13:../../../../../src/drivers/platform/MARS/source/twi.c ****   Lesser General Public License for more details.
+  14:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  15:../../../../../src/drivers/platform/MARS/source/twi.c ****   You should have received a copy of the GNU Lesser General Public
+  16:../../../../../src/drivers/platform/MARS/source/twi.c ****   License along with this library; if not, write to the Free Software
+  17:../../../../../src/drivers/platform/MARS/source/twi.c ****   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  18:../../../../../src/drivers/platform/MARS/source/twi.c **** */
+  19:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  20:../../../../../src/drivers/platform/MARS/source/twi.c **** #include <math.h>
+  21:../../../../../src/drivers/platform/MARS/source/twi.c **** #include <stdlib.h>
+  22:../../../../../src/drivers/platform/MARS/source/twi.c **** #include <inttypes.h>
+  23:../../../../../src/drivers/platform/MARS/source/twi.c **** #include <avr/io.h>
+  24:../../../../../src/drivers/platform/MARS/source/twi.c **** #include <avr/interrupt.h>
+  25:../../../../../src/drivers/platform/MARS/source/twi.c **** #include <compat/twi.h>
+  26:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  27:../../../../../src/drivers/platform/MARS/source/twi.c **** #ifndef cbi
+  28:../../../../../src/drivers/platform/MARS/source/twi.c **** #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+  29:../../../../../src/drivers/platform/MARS/source/twi.c **** #endif
+  30:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  31:../../../../../src/drivers/platform/MARS/source/twi.c **** #ifndef sbi
+  32:../../../../../src/drivers/platform/MARS/source/twi.c **** #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+  33:../../../../../src/drivers/platform/MARS/source/twi.c **** #endif
+  34:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  35:../../../../../src/drivers/platform/MARS/source/twi.c **** #include "twi.h"
+  36:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  37:../../../../../src/drivers/platform/MARS/source/twi.c **** static volatile uint8_t twi_state;
+  38:../../../../../src/drivers/platform/MARS/source/twi.c **** static uint8_t twi_slarw;
+  39:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  40:../../../../../src/drivers/platform/MARS/source/twi.c **** static void (*twi_onSlaveTransmit)(void);
+  41:../../../../../src/drivers/platform/MARS/source/twi.c **** static void (*twi_onSlaveReceive)(uint8_t*, int);
+  42:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  43:../../../../../src/drivers/platform/MARS/source/twi.c **** static uint8_t twi_masterBuffer[TWI_BUFFER_LENGTH];
+  44:../../../../../src/drivers/platform/MARS/source/twi.c **** static volatile uint8_t twi_masterBufferIndex;
+  45:../../../../../src/drivers/platform/MARS/source/twi.c **** static uint8_t twi_masterBufferLength;
+  46:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  47:../../../../../src/drivers/platform/MARS/source/twi.c **** static uint8_t twi_txBuffer[TWI_BUFFER_LENGTH];
+  48:../../../../../src/drivers/platform/MARS/source/twi.c **** static volatile uint8_t twi_txBufferIndex;
+  49:../../../../../src/drivers/platform/MARS/source/twi.c **** static volatile uint8_t twi_txBufferLength;
+  50:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  51:../../../../../src/drivers/platform/MARS/source/twi.c **** static uint8_t twi_rxBuffer[TWI_BUFFER_LENGTH];
+  52:../../../../../src/drivers/platform/MARS/source/twi.c **** static volatile uint8_t twi_rxBufferIndex;
+  53:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  54:../../../../../src/drivers/platform/MARS/source/twi.c **** static volatile uint8_t twi_error;
+  55:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  56:../../../../../src/drivers/platform/MARS/source/twi.c **** /* 
+  57:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Function twi_init
+  58:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Desc     readys twi pins and sets twi bitrate
+  59:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Input    none
+  60:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Output   none
+  61:../../../../../src/drivers/platform/MARS/source/twi.c ****  */
+  62:../../../../../src/drivers/platform/MARS/source/twi.c **** void twi_init(void)
+  63:../../../../../src/drivers/platform/MARS/source/twi.c **** {
+ 251               	.LM0:
+ 252               	.LFBB1:
+ 253               	/* prologue: function */
+ 254               	/* frame size = 0 */
+ 255               	/* stack size = 0 */
+ 256               	.L__stack_usage = 0
+  64:../../../../../src/drivers/platform/MARS/source/twi.c ****   // initialize state
+  65:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_state = TWI_READY;
+ 258               	.LM1:
+ 259 0000 1092 0000 		sts twi_state,__zero_reg__
+  66:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  67:../../../../../src/drivers/platform/MARS/source/twi.c ****   #if defined(__AVR_ATmega168__) || defined(__AVR_ATmega8__) || defined(__AVR_ATmega328P__)
+  68:../../../../../src/drivers/platform/MARS/source/twi.c ****     // activate internal pull-ups for twi
+  69:../../../../../src/drivers/platform/MARS/source/twi.c ****     // as per note from atmega8 manual pg167
+  70:../../../../../src/drivers/platform/MARS/source/twi.c ****     sbi(PORTC, 4);
+  71:../../../../../src/drivers/platform/MARS/source/twi.c ****     sbi(PORTC, 5);
+  72:../../../../../src/drivers/platform/MARS/source/twi.c ****   #else
+  73:../../../../../src/drivers/platform/MARS/source/twi.c ****     // activate internal pull-ups for twi
+  74:../../../../../src/drivers/platform/MARS/source/twi.c ****     // as per note from atmega128 manual pg204
+  75:../../../../../src/drivers/platform/MARS/source/twi.c ****     sbi(PORTD, 0);
+ 261               	.LM2:
+ 262 0004 589A      		sbi 43-0x20,0
+  76:../../../../../src/drivers/platform/MARS/source/twi.c ****     sbi(PORTD, 1);
+ 264               	.LM3:
+ 265 0006 599A      		sbi 43-0x20,1
+  77:../../../../../src/drivers/platform/MARS/source/twi.c ****   #endif
+  78:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  79:../../../../../src/drivers/platform/MARS/source/twi.c ****   // initialize twi prescaler and bit rate
+  80:../../../../../src/drivers/platform/MARS/source/twi.c ****   cbi(TWSR, TWPS0);
+ 267               	.LM4:
+ 268 0008 E9EB      		ldi r30,lo8(185)
+ 269 000a F0E0      		ldi r31,hi8(185)
+ 270 000c 8081      		ld r24,Z
+ 271 000e 8E7F      		andi r24,lo8(-2)
+ 272 0010 8083      		st Z,r24
+  81:../../../../../src/drivers/platform/MARS/source/twi.c ****   cbi(TWSR, TWPS1);
+ 274               	.LM5:
+ 275 0012 8081      		ld r24,Z
+ 276 0014 8D7F      		andi r24,lo8(-3)
+ 277 0016 8083      		st Z,r24
+  82:../../../../../src/drivers/platform/MARS/source/twi.c ****   TWBR = ((CPU_FREQ / TWI_FREQ) - 16) / 2;
+ 279               	.LM6:
+ 280 0018 88E4      		ldi r24,lo8(72)
+ 281 001a 8093 B800 		sts 184,r24
+  83:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  84:../../../../../src/drivers/platform/MARS/source/twi.c ****   /* twi bit rate formula from atmega128 manual pg 204
+  85:../../../../../src/drivers/platform/MARS/source/twi.c ****   SCL Frequency = CPU Clock Frequency / (16 + (2 * TWBR))
+  86:../../../../../src/drivers/platform/MARS/source/twi.c ****   note: TWBR should be 10 or higher for master mode
+  87:../../../../../src/drivers/platform/MARS/source/twi.c ****   It is 72 for a 16mhz Wiring board with 100kHz TWI */
+  88:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  89:../../../../../src/drivers/platform/MARS/source/twi.c ****   // enable twi module, acks, and twi interrupt
+  90:../../../../../src/drivers/platform/MARS/source/twi.c ****   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWEA);
+ 283               	.LM7:
+ 284 001e 85E4      		ldi r24,lo8(69)
+ 285 0020 8093 BC00 		sts 188,r24
+ 286               	/* epilogue start */
+  91:../../../../../src/drivers/platform/MARS/source/twi.c **** }
+ 288               	.LM8:
+ 289 0024 0895      		ret
+ 291               	.Lscope1:
+ 293               		.stabd	78,0,0
+ 296               	.global	twi_setAddress
+ 298               	twi_setAddress:
+ 299               		.stabd	46,0,0
+  92:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+  93:../../../../../src/drivers/platform/MARS/source/twi.c **** /* 
+  94:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Function twi_slaveInit
+  95:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Desc     sets slave address and enables interrupt
+  96:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Input    none
+  97:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Output   none
+  98:../../../../../src/drivers/platform/MARS/source/twi.c ****  */
+  99:../../../../../src/drivers/platform/MARS/source/twi.c **** void twi_setAddress(uint8_t address)
+ 100:../../../../../src/drivers/platform/MARS/source/twi.c **** {
+ 301               	.LM9:
+ 302               	.LFBB2:
+ 303               	/* prologue: function */
+ 304               	/* frame size = 0 */
+ 305               	/* stack size = 0 */
+ 306               	.L__stack_usage = 0
+ 101:../../../../../src/drivers/platform/MARS/source/twi.c ****   // set twi slave address (skip over TWGCE bit)
+ 102:../../../../../src/drivers/platform/MARS/source/twi.c ****   TWAR = address << 1;
+ 308               	.LM10:
+ 309 0026 880F      		lsl r24
+ 310 0028 8093 BA00 		sts 186,r24
+ 311               	/* epilogue start */
+ 103:../../../../../src/drivers/platform/MARS/source/twi.c **** }
+ 313               	.LM11:
+ 314 002c 0895      		ret
+ 316               	.Lscope2:
+ 318               		.stabd	78,0,0
+ 322               	.global	twi_readFrom
+ 324               	twi_readFrom:
+ 325               		.stabd	46,0,0
+ 104:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 105:../../../../../src/drivers/platform/MARS/source/twi.c **** /* 
+ 106:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Function twi_readFrom
+ 107:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Desc     attempts to become twi bus master and read a
+ 108:../../../../../src/drivers/platform/MARS/source/twi.c ****  *          series of bytes from a device on the bus
+ 109:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Input    address: 7bit i2c device address
+ 110:../../../../../src/drivers/platform/MARS/source/twi.c ****  *          data: pointer to byte array
+ 111:../../../../../src/drivers/platform/MARS/source/twi.c ****  *          length: number of bytes to read into array
+ 112:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Output   number of bytes read
+ 113:../../../../../src/drivers/platform/MARS/source/twi.c ****  */
+ 114:../../../../../src/drivers/platform/MARS/source/twi.c **** uint8_t twi_readFrom(uint8_t address, uint8_t* data, uint8_t length)
+ 115:../../../../../src/drivers/platform/MARS/source/twi.c **** {
+ 327               	.LM12:
+ 328               	.LFBB3:
+ 329               	/* prologue: function */
+ 330               	/* frame size = 0 */
+ 331               	/* stack size = 0 */
+ 332               	.L__stack_usage = 0
+ 116:../../../../../src/drivers/platform/MARS/source/twi.c ****   uint8_t i;
+ 117:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 118:../../../../../src/drivers/platform/MARS/source/twi.c ****   // ensure data will fit into buffer
+ 119:../../../../../src/drivers/platform/MARS/source/twi.c ****   if(TWI_BUFFER_LENGTH < length){
+ 334               	.LM13:
+ 335 002e 4132      		cpi r20,lo8(33)
+ 336 0030 00F4      		brsh .L10
+ 337               	.L11:
+ 120:../../../../../src/drivers/platform/MARS/source/twi.c ****     return 0;
+ 121:../../../../../src/drivers/platform/MARS/source/twi.c ****   }
+ 122:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 123:../../../../../src/drivers/platform/MARS/source/twi.c ****   // wait until twi is ready, become master receiver
+ 124:../../../../../src/drivers/platform/MARS/source/twi.c ****   while(TWI_READY != twi_state){
+ 339               	.LM14:
+ 340 0032 9091 0000 		lds r25,twi_state
+ 341 0036 9923      		tst r25
+ 342 0038 01F4      		brne .L11
+ 125:../../../../../src/drivers/platform/MARS/source/twi.c ****     continue;
+ 126:../../../../../src/drivers/platform/MARS/source/twi.c ****   }
+ 127:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_state = TWI_MRX;
+ 344               	.LM15:
+ 345 003a 91E0      		ldi r25,lo8(1)
+ 346 003c 9093 0000 		sts twi_state,r25
+ 128:../../../../../src/drivers/platform/MARS/source/twi.c ****   // reset error state (0xFF.. no error occured)
+ 129:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_error = 0xFF;
+ 348               	.LM16:
+ 349 0040 9FEF      		ldi r25,lo8(-1)
+ 350 0042 9093 0000 		sts twi_error,r25
+ 130:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 131:../../../../../src/drivers/platform/MARS/source/twi.c ****   // initialize buffer iteration vars
+ 132:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_masterBufferIndex = 0;
+ 352               	.LM17:
+ 353 0046 1092 0000 		sts twi_masterBufferIndex,__zero_reg__
+ 133:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_masterBufferLength = length-1;  // This is not intuitive, read on...
+ 355               	.LM18:
+ 356 004a 942F      		mov r25,r20
+ 357 004c 9150      		subi r25,lo8(-(-1))
+ 358 004e 9093 0000 		sts twi_masterBufferLength,r25
+ 134:../../../../../src/drivers/platform/MARS/source/twi.c ****   // On receive, the previously configured ACK/NACK setting is transmitted in
+ 135:../../../../../src/drivers/platform/MARS/source/twi.c ****   // response to the received byte before the interrupt is signalled. 
+ 136:../../../../../src/drivers/platform/MARS/source/twi.c ****   // Therefor we must actually set NACK when the _next_ to last byte is
+ 137:../../../../../src/drivers/platform/MARS/source/twi.c ****   // received, causing that NACK to be sent in response to receiving the last
+ 138:../../../../../src/drivers/platform/MARS/source/twi.c ****   // expected byte of data.
+ 139:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 140:../../../../../src/drivers/platform/MARS/source/twi.c ****   // build sla+w, slave device address + w bit
+ 141:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_slarw = TW_READ;
+ 142:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_slarw |= address << 1;
+ 360               	.LM19:
+ 361 0052 880F      		lsl r24
+ 362 0054 8160      		ori r24,lo8(1)
+ 363 0056 8093 0000 		sts twi_slarw,r24
+ 143:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 144:../../../../../src/drivers/platform/MARS/source/twi.c ****   // send start condition
+ 145:../../../../../src/drivers/platform/MARS/source/twi.c ****   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWEA) | _BV(TWINT) | _BV(TWSTA);
+ 365               	.LM20:
+ 366 005a 85EE      		ldi r24,lo8(-27)
+ 367 005c 8093 BC00 		sts 188,r24
+ 368               	.L6:
+ 146:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 147:../../../../../src/drivers/platform/MARS/source/twi.c ****   // wait for read operation to complete
+ 148:../../../../../src/drivers/platform/MARS/source/twi.c ****   while(TWI_MRX == twi_state){
+ 370               	.LM21:
+ 371 0060 8091 0000 		lds r24,twi_state
+ 372 0064 8130      		cpi r24,lo8(1)
+ 373 0066 01F0      		breq .L6
+ 149:../../../../../src/drivers/platform/MARS/source/twi.c ****     continue;
+ 150:../../../../../src/drivers/platform/MARS/source/twi.c ****   }
+ 151:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 152:../../../../../src/drivers/platform/MARS/source/twi.c ****   if (twi_masterBufferIndex < length)
+ 375               	.LM22:
+ 376 0068 8091 0000 		lds r24,twi_masterBufferIndex
+ 377 006c 8417      		cp r24,r20
+ 378 006e 00F4      		brsh .L7
+ 153:../../../../../src/drivers/platform/MARS/source/twi.c ****     length = twi_masterBufferIndex;
+ 380               	.LM23:
+ 381 0070 4091 0000 		lds r20,twi_masterBufferIndex
+ 382               	.L7:
+ 383 0074 A0E0      		ldi r26,lo8(twi_masterBuffer)
+ 384 0076 B0E0      		ldi r27,hi8(twi_masterBuffer)
+ 154:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 155:../../../../../src/drivers/platform/MARS/source/twi.c ****   // copy twi buffer to data
+ 156:../../../../../src/drivers/platform/MARS/source/twi.c ****   for(i = 0; i < length; ++i){
+ 386               	.LM24:
+ 387 0078 FB01      		movw r30,r22
+ 388 007a 00C0      		rjmp .L8
+ 389               	.L9:
+ 157:../../../../../src/drivers/platform/MARS/source/twi.c ****     data[i] = twi_masterBuffer[i];
+ 391               	.LM25:
+ 392 007c 8D91      		ld r24,X+
+ 393 007e 8193      		st Z+,r24
+ 394               	.L8:
+ 156:../../../../../src/drivers/platform/MARS/source/twi.c ****   for(i = 0; i < length; ++i){
+ 396               	.LM26:
+ 397 0080 8E2F      		mov r24,r30
+ 398 0082 861B      		sub r24,r22
+ 399 0084 8417      		cp r24,r20
+ 400 0086 00F0      		brlo .L9
+ 401 0088 00C0      		rjmp .L4
+ 402               	.L10:
+ 120:../../../../../src/drivers/platform/MARS/source/twi.c ****     return 0;
+ 404               	.LM27:
+ 405 008a 40E0      		ldi r20,lo8(0)
+ 406               	.L4:
+ 158:../../../../../src/drivers/platform/MARS/source/twi.c ****   }
+ 159:../../../../../src/drivers/platform/MARS/source/twi.c **** 	
+ 160:../../../../../src/drivers/platform/MARS/source/twi.c ****   return length;
+ 161:../../../../../src/drivers/platform/MARS/source/twi.c **** }
+ 408               	.LM28:
+ 409 008c 842F      		mov r24,r20
+ 410               	/* epilogue start */
+ 411 008e 0895      		ret
+ 413               	.Lscope3:
+ 415               		.stabd	78,0,0
+ 420               	.global	twi_writeTo
+ 422               	twi_writeTo:
+ 423               		.stabd	46,0,0
+ 162:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 163:../../../../../src/drivers/platform/MARS/source/twi.c **** /* 
+ 164:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Function twi_writeTo
+ 165:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Desc     attempts to become twi bus master and write a
+ 166:../../../../../src/drivers/platform/MARS/source/twi.c ****  *          series of bytes to a device on the bus
+ 167:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Input    address: 7bit i2c device address
+ 168:../../../../../src/drivers/platform/MARS/source/twi.c ****  *          data: pointer to byte array
+ 169:../../../../../src/drivers/platform/MARS/source/twi.c ****  *          length: number of bytes in array
+ 170:../../../../../src/drivers/platform/MARS/source/twi.c ****  *          wait: boolean indicating to wait for write or not
+ 171:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Output   0 .. success
+ 172:../../../../../src/drivers/platform/MARS/source/twi.c ****  *          1 .. length to long for buffer
+ 173:../../../../../src/drivers/platform/MARS/source/twi.c ****  *          2 .. address send, NACK received
+ 174:../../../../../src/drivers/platform/MARS/source/twi.c ****  *          3 .. data send, NACK received
+ 175:../../../../../src/drivers/platform/MARS/source/twi.c ****  *          4 .. other twi error (lost bus arbitration, bus error, ..)
+ 176:../../../../../src/drivers/platform/MARS/source/twi.c ****  */
+ 177:../../../../../src/drivers/platform/MARS/source/twi.c **** uint8_t twi_writeTo(uint8_t address, uint8_t* data, uint8_t length, uint8_t wait)
+ 178:../../../../../src/drivers/platform/MARS/source/twi.c **** {
+ 425               	.LM29:
+ 426               	.LFBB4:
+ 427               	/* prologue: function */
+ 428               	/* frame size = 0 */
+ 429               	/* stack size = 0 */
+ 430               	.L__stack_usage = 0
+ 179:../../../../../src/drivers/platform/MARS/source/twi.c ****   uint8_t i;
+ 180:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 181:../../../../../src/drivers/platform/MARS/source/twi.c ****   // ensure data will fit into buffer
+ 182:../../../../../src/drivers/platform/MARS/source/twi.c ****   if(TWI_BUFFER_LENGTH < length){
+ 432               	.LM30:
+ 433 0090 4132      		cpi r20,lo8(33)
+ 434 0092 00F4      		brsh .L21
+ 435               	.L26:
+ 183:../../../../../src/drivers/platform/MARS/source/twi.c ****     return 1;
+ 184:../../../../../src/drivers/platform/MARS/source/twi.c ****   }
+ 185:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 186:../../../../../src/drivers/platform/MARS/source/twi.c ****   // wait until twi is ready, become master transmitter
+ 187:../../../../../src/drivers/platform/MARS/source/twi.c ****   while(TWI_READY != twi_state){
+ 437               	.LM31:
+ 438 0094 9091 0000 		lds r25,twi_state
+ 439 0098 9923      		tst r25
+ 440 009a 01F4      		brne .L26
+ 188:../../../../../src/drivers/platform/MARS/source/twi.c ****     continue;
+ 189:../../../../../src/drivers/platform/MARS/source/twi.c ****   }
+ 190:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_state = TWI_MTX;
+ 442               	.LM32:
+ 443 009c 92E0      		ldi r25,lo8(2)
+ 444 009e 9093 0000 		sts twi_state,r25
+ 191:../../../../../src/drivers/platform/MARS/source/twi.c ****   // reset error state (0xFF.. no error occured)
+ 192:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_error = 0xFF;
+ 446               	.LM33:
+ 447 00a2 9FEF      		ldi r25,lo8(-1)
+ 448 00a4 9093 0000 		sts twi_error,r25
+ 193:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 194:../../../../../src/drivers/platform/MARS/source/twi.c ****   // initialize buffer iteration vars
+ 195:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_masterBufferIndex = 0;
+ 450               	.LM34:
+ 451 00a8 1092 0000 		sts twi_masterBufferIndex,__zero_reg__
+ 196:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_masterBufferLength = length;
+ 453               	.LM35:
+ 454 00ac 4093 0000 		sts twi_masterBufferLength,r20
+ 455 00b0 A0E0      		ldi r26,lo8(twi_masterBuffer)
+ 456 00b2 B0E0      		ldi r27,hi8(twi_masterBuffer)
+ 197:../../../../../src/drivers/platform/MARS/source/twi.c ****   
+ 198:../../../../../src/drivers/platform/MARS/source/twi.c ****   // copy data to twi buffer
+ 199:../../../../../src/drivers/platform/MARS/source/twi.c ****   for(i = 0; i < length; ++i){
+ 458               	.LM36:
+ 459 00b4 FB01      		movw r30,r22
+ 460 00b6 00C0      		rjmp .L17
+ 461               	.L18:
+ 200:../../../../../src/drivers/platform/MARS/source/twi.c ****     twi_masterBuffer[i] = data[i];
+ 463               	.LM37:
+ 464 00b8 9191      		ld r25,Z+
+ 465 00ba 9D93      		st X+,r25
+ 466               	.L17:
+ 199:../../../../../src/drivers/platform/MARS/source/twi.c ****   for(i = 0; i < length; ++i){
+ 468               	.LM38:
+ 469 00bc 9E2F      		mov r25,r30
+ 470 00be 961B      		sub r25,r22
+ 471 00c0 9417      		cp r25,r20
+ 472 00c2 00F0      		brlo .L18
+ 201:../../../../../src/drivers/platform/MARS/source/twi.c ****   }
+ 202:../../../../../src/drivers/platform/MARS/source/twi.c ****   
+ 203:../../../../../src/drivers/platform/MARS/source/twi.c ****   // build sla+w, slave device address + w bit
+ 204:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_slarw = TW_WRITE;
+ 205:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_slarw |= address << 1;
+ 474               	.LM39:
+ 475 00c4 90E0      		ldi r25,lo8(0)
+ 476 00c6 880F      		lsl r24
+ 477 00c8 991F      		rol r25
+ 478 00ca 8093 0000 		sts twi_slarw,r24
+ 206:../../../../../src/drivers/platform/MARS/source/twi.c ****   
+ 207:../../../../../src/drivers/platform/MARS/source/twi.c ****   // send start condition
+ 208:../../../../../src/drivers/platform/MARS/source/twi.c ****   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWEA) | _BV(TWINT) | _BV(TWSTA);
+ 480               	.LM40:
+ 481 00ce 85EE      		ldi r24,lo8(-27)
+ 482 00d0 8093 BC00 		sts 188,r24
+ 209:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 210:../../../../../src/drivers/platform/MARS/source/twi.c ****   // wait for write operation to complete
+ 211:../../../../../src/drivers/platform/MARS/source/twi.c ****   while(wait && (TWI_MTX == twi_state)){
+ 484               	.LM41:
+ 485 00d4 2223      		tst r18
+ 486 00d6 01F0      		breq .L19
+ 487               	.L25:
+ 489               	.LM42:
+ 490 00d8 8091 0000 		lds r24,twi_state
+ 491 00dc 8230      		cpi r24,lo8(2)
+ 492 00de 01F0      		breq .L25
+ 493               	.L19:
+ 212:../../../../../src/drivers/platform/MARS/source/twi.c ****     continue;
+ 213:../../../../../src/drivers/platform/MARS/source/twi.c ****   }
+ 214:../../../../../src/drivers/platform/MARS/source/twi.c ****   
+ 215:../../../../../src/drivers/platform/MARS/source/twi.c ****   if (twi_error == 0xFF)
+ 495               	.LM43:
+ 496 00e0 8091 0000 		lds r24,twi_error
+ 497 00e4 8F3F      		cpi r24,lo8(-1)
+ 498 00e6 01F0      		breq .L22
+ 216:../../../../../src/drivers/platform/MARS/source/twi.c ****     return 0;	// success
+ 217:../../../../../src/drivers/platform/MARS/source/twi.c ****   else if (twi_error == TW_MT_SLA_NACK)
+ 500               	.LM44:
+ 501 00e8 8091 0000 		lds r24,twi_error
+ 502 00ec 8032      		cpi r24,lo8(32)
+ 503 00ee 01F0      		breq .L23
+ 218:../../../../../src/drivers/platform/MARS/source/twi.c ****     return 2;	// error: address send, nack received
+ 219:../../../../../src/drivers/platform/MARS/source/twi.c ****   else if (twi_error == TW_MT_DATA_NACK)
+ 505               	.LM45:
+ 506 00f0 8091 0000 		lds r24,twi_error
+ 507 00f4 8033      		cpi r24,lo8(48)
+ 508 00f6 01F4      		brne .L24
+ 220:../../../../../src/drivers/platform/MARS/source/twi.c ****     return 3;	// error: data send, nack received
+ 510               	.LM46:
+ 511 00f8 83E0      		ldi r24,lo8(3)
+ 512 00fa 0895      		ret
+ 513               	.L21:
+ 183:../../../../../src/drivers/platform/MARS/source/twi.c ****     return 1;
+ 515               	.LM47:
+ 516 00fc 81E0      		ldi r24,lo8(1)
+ 517 00fe 0895      		ret
+ 518               	.L22:
+ 216:../../../../../src/drivers/platform/MARS/source/twi.c ****     return 0;	// success
+ 520               	.LM48:
+ 521 0100 80E0      		ldi r24,lo8(0)
+ 522 0102 0895      		ret
+ 523               	.L23:
+ 218:../../../../../src/drivers/platform/MARS/source/twi.c ****     return 2;	// error: address send, nack received
+ 525               	.LM49:
+ 526 0104 82E0      		ldi r24,lo8(2)
+ 527 0106 0895      		ret
+ 528               	.L24:
+ 221:../../../../../src/drivers/platform/MARS/source/twi.c ****   else
+ 222:../../../../../src/drivers/platform/MARS/source/twi.c ****     return 4;	// other twi error
+ 530               	.LM50:
+ 531 0108 84E0      		ldi r24,lo8(4)
+ 223:../../../../../src/drivers/platform/MARS/source/twi.c **** }
+ 533               	.LM51:
+ 534 010a 0895      		ret
+ 536               	.Lscope4:
+ 538               		.stabd	78,0,0
+ 541               	.global	twi_transmit
+ 543               	twi_transmit:
+ 544               		.stabd	46,0,0
+ 224:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 225:../../../../../src/drivers/platform/MARS/source/twi.c **** /* 
+ 226:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Function twi_transmit
+ 227:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Desc     fills slave tx buffer with data
+ 228:../../../../../src/drivers/platform/MARS/source/twi.c ****  *          must be called in slave tx event callback
+ 229:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Input    data: pointer to byte array
+ 230:../../../../../src/drivers/platform/MARS/source/twi.c ****  *          length: number of bytes in array
+ 231:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Output   1 length too long for buffer
+ 232:../../../../../src/drivers/platform/MARS/source/twi.c ****  *          2 not slave transmitter
+ 233:../../../../../src/drivers/platform/MARS/source/twi.c ****  *          0 ok
+ 234:../../../../../src/drivers/platform/MARS/source/twi.c ****  */
+ 235:../../../../../src/drivers/platform/MARS/source/twi.c **** uint8_t twi_transmit(uint8_t* data, uint8_t length)
+ 236:../../../../../src/drivers/platform/MARS/source/twi.c **** {
+ 546               	.LM52:
+ 547               	.LFBB5:
+ 548               	/* prologue: function */
+ 549               	/* frame size = 0 */
+ 550               	/* stack size = 0 */
+ 551               	.L__stack_usage = 0
+ 237:../../../../../src/drivers/platform/MARS/source/twi.c ****   uint8_t i;
+ 238:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 239:../../../../../src/drivers/platform/MARS/source/twi.c ****   // ensure data will fit into buffer
+ 240:../../../../../src/drivers/platform/MARS/source/twi.c ****   if(TWI_BUFFER_LENGTH < length){
+ 553               	.LM53:
+ 554 010c 6132      		cpi r22,lo8(33)
+ 555 010e 00F4      		brsh .L33
+ 241:../../../../../src/drivers/platform/MARS/source/twi.c ****     return 1;
+ 242:../../../../../src/drivers/platform/MARS/source/twi.c ****   }
+ 243:../../../../../src/drivers/platform/MARS/source/twi.c ****   
+ 244:../../../../../src/drivers/platform/MARS/source/twi.c ****   // ensure we are currently a slave transmitter
+ 245:../../../../../src/drivers/platform/MARS/source/twi.c ****   if(TWI_STX != twi_state){
+ 557               	.LM54:
+ 558 0110 2091 0000 		lds r18,twi_state
+ 559 0114 2430      		cpi r18,lo8(4)
+ 560 0116 01F4      		brne .L34
+ 246:../../../../../src/drivers/platform/MARS/source/twi.c ****     return 2;
+ 247:../../../../../src/drivers/platform/MARS/source/twi.c ****   }
+ 248:../../../../../src/drivers/platform/MARS/source/twi.c ****   
+ 249:../../../../../src/drivers/platform/MARS/source/twi.c ****   // set length and copy data into tx buffer
+ 250:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_txBufferLength = length;
+ 562               	.LM55:
+ 563 0118 6093 0000 		sts twi_txBufferLength,r22
+ 564 011c A0E0      		ldi r26,lo8(twi_txBuffer)
+ 565 011e B0E0      		ldi r27,hi8(twi_txBuffer)
+ 251:../../../../../src/drivers/platform/MARS/source/twi.c ****   for(i = 0; i < length; ++i){
+ 567               	.LM56:
+ 568 0120 FC01      		movw r30,r24
+ 569 0122 00C0      		rjmp .L31
+ 570               	.L32:
+ 252:../../../../../src/drivers/platform/MARS/source/twi.c ****     twi_txBuffer[i] = data[i];
+ 572               	.LM57:
+ 573 0124 9191      		ld r25,Z+
+ 574 0126 9D93      		st X+,r25
+ 575               	.L31:
+ 251:../../../../../src/drivers/platform/MARS/source/twi.c ****   for(i = 0; i < length; ++i){
+ 577               	.LM58:
+ 578 0128 9E2F      		mov r25,r30
+ 579 012a 981B      		sub r25,r24
+ 580 012c 9617      		cp r25,r22
+ 581 012e 00F0      		brlo .L32
+ 253:../../../../../src/drivers/platform/MARS/source/twi.c ****   }
+ 254:../../../../../src/drivers/platform/MARS/source/twi.c ****   
+ 255:../../../../../src/drivers/platform/MARS/source/twi.c ****   return 0;
+ 583               	.LM59:
+ 584 0130 80E0      		ldi r24,lo8(0)
+ 585 0132 0895      		ret
+ 586               	.L33:
+ 241:../../../../../src/drivers/platform/MARS/source/twi.c ****     return 1;
+ 588               	.LM60:
+ 589 0134 81E0      		ldi r24,lo8(1)
+ 590 0136 0895      		ret
+ 591               	.L34:
+ 246:../../../../../src/drivers/platform/MARS/source/twi.c ****     return 2;
+ 593               	.LM61:
+ 594 0138 82E0      		ldi r24,lo8(2)
+ 256:../../../../../src/drivers/platform/MARS/source/twi.c **** }
+ 596               	.LM62:
+ 597 013a 0895      		ret
+ 599               	.Lscope5:
+ 601               		.stabd	78,0,0
+ 604               	.global	twi_attachSlaveRxEvent
+ 606               	twi_attachSlaveRxEvent:
+ 607               		.stabd	46,0,0
+ 257:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 258:../../../../../src/drivers/platform/MARS/source/twi.c **** /* 
+ 259:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Function twi_attachSlaveRxEvent
+ 260:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Desc     sets function called before a slave read operation
+ 261:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Input    function: callback function to use
+ 262:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Output   none
+ 263:../../../../../src/drivers/platform/MARS/source/twi.c ****  */
+ 264:../../../../../src/drivers/platform/MARS/source/twi.c **** void twi_attachSlaveRxEvent( void (*function)(uint8_t*, int) )
+ 265:../../../../../src/drivers/platform/MARS/source/twi.c **** {
+ 609               	.LM63:
+ 610               	.LFBB6:
+ 611               	/* prologue: function */
+ 612               	/* frame size = 0 */
+ 613               	/* stack size = 0 */
+ 614               	.L__stack_usage = 0
+ 266:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_onSlaveReceive = function;
+ 616               	.LM64:
+ 617 013c 9093 0000 		sts twi_onSlaveReceive+1,r25
+ 618 0140 8093 0000 		sts twi_onSlaveReceive,r24
+ 619               	/* epilogue start */
+ 267:../../../../../src/drivers/platform/MARS/source/twi.c **** }
+ 621               	.LM65:
+ 622 0144 0895      		ret
+ 624               	.Lscope6:
+ 626               		.stabd	78,0,0
+ 629               	.global	twi_attachSlaveTxEvent
+ 631               	twi_attachSlaveTxEvent:
+ 632               		.stabd	46,0,0
+ 268:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 269:../../../../../src/drivers/platform/MARS/source/twi.c **** /* 
+ 270:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Function twi_attachSlaveTxEvent
+ 271:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Desc     sets function called before a slave write operation
+ 272:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Input    function: callback function to use
+ 273:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Output   none
+ 274:../../../../../src/drivers/platform/MARS/source/twi.c ****  */
+ 275:../../../../../src/drivers/platform/MARS/source/twi.c **** void twi_attachSlaveTxEvent( void (*function)(void) )
+ 276:../../../../../src/drivers/platform/MARS/source/twi.c **** {
+ 634               	.LM66:
+ 635               	.LFBB7:
+ 636               	/* prologue: function */
+ 637               	/* frame size = 0 */
+ 638               	/* stack size = 0 */
+ 639               	.L__stack_usage = 0
+ 277:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_onSlaveTransmit = function;
+ 641               	.LM67:
+ 642 0146 9093 0000 		sts twi_onSlaveTransmit+1,r25
+ 643 014a 8093 0000 		sts twi_onSlaveTransmit,r24
+ 644               	/* epilogue start */
+ 278:../../../../../src/drivers/platform/MARS/source/twi.c **** }
+ 646               	.LM68:
+ 647 014e 0895      		ret
+ 649               	.Lscope7:
+ 651               		.stabd	78,0,0
+ 654               	.global	twi_reply
+ 656               	twi_reply:
+ 657               		.stabd	46,0,0
+ 279:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 280:../../../../../src/drivers/platform/MARS/source/twi.c **** /* 
+ 281:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Function twi_reply
+ 282:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Desc     sends byte or readys receive line
+ 283:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Input    ack: byte indicating to ack or to nack
+ 284:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Output   none
+ 285:../../../../../src/drivers/platform/MARS/source/twi.c ****  */
+ 286:../../../../../src/drivers/platform/MARS/source/twi.c **** void twi_reply(uint8_t ack)
+ 287:../../../../../src/drivers/platform/MARS/source/twi.c **** {
+ 659               	.LM69:
+ 660               	.LFBB8:
+ 661               	/* prologue: function */
+ 662               	/* frame size = 0 */
+ 663               	/* stack size = 0 */
+ 664               	.L__stack_usage = 0
+ 288:../../../../../src/drivers/platform/MARS/source/twi.c ****   // transmit master read ready signal, with or without ack
+ 289:../../../../../src/drivers/platform/MARS/source/twi.c ****   if(ack){
+ 666               	.LM70:
+ 667 0150 8823      		tst r24
+ 668 0152 01F0      		breq .L38
+ 290:../../../../../src/drivers/platform/MARS/source/twi.c ****     TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT) | _BV(TWEA);
+ 670               	.LM71:
+ 671 0154 85EC      		ldi r24,lo8(-59)
+ 672 0156 00C0      		rjmp .L40
+ 673               	.L38:
+ 291:../../../../../src/drivers/platform/MARS/source/twi.c ****   }else{
+ 292:../../../../../src/drivers/platform/MARS/source/twi.c **** 	  TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWINT);
+ 675               	.LM72:
+ 676 0158 85E8      		ldi r24,lo8(-123)
+ 677               	.L40:
+ 678 015a 8093 BC00 		sts 188,r24
+ 679 015e 0895      		ret
+ 681               	.Lscope8:
+ 683               		.stabd	78,0,0
+ 685               	.global	twi_stop
+ 687               	twi_stop:
+ 688               		.stabd	46,0,0
+ 293:../../../../../src/drivers/platform/MARS/source/twi.c ****   }
+ 294:../../../../../src/drivers/platform/MARS/source/twi.c **** }
+ 295:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 296:../../../../../src/drivers/platform/MARS/source/twi.c **** /* 
+ 297:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Function twi_stop
+ 298:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Desc     relinquishes bus master status
+ 299:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Input    none
+ 300:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Output   none
+ 301:../../../../../src/drivers/platform/MARS/source/twi.c ****  */
+ 302:../../../../../src/drivers/platform/MARS/source/twi.c **** void twi_stop(void)
+ 303:../../../../../src/drivers/platform/MARS/source/twi.c **** {
+ 690               	.LM73:
+ 691               	.LFBB9:
+ 692               	/* prologue: function */
+ 693               	/* frame size = 0 */
+ 694               	/* stack size = 0 */
+ 695               	.L__stack_usage = 0
+ 304:../../../../../src/drivers/platform/MARS/source/twi.c ****   // send stop condition
+ 305:../../../../../src/drivers/platform/MARS/source/twi.c ****   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWEA) | _BV(TWINT) | _BV(TWSTO);
+ 697               	.LM74:
+ 698 0160 85ED      		ldi r24,lo8(-43)
+ 699 0162 8093 BC00 		sts 188,r24
+ 700               	.L42:
+ 306:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 307:../../../../../src/drivers/platform/MARS/source/twi.c ****   // wait for stop condition to be exectued on bus
+ 308:../../../../../src/drivers/platform/MARS/source/twi.c ****   // TWINT is not set after a stop condition!
+ 309:../../../../../src/drivers/platform/MARS/source/twi.c ****   while(TWCR & _BV(TWSTO)){
+ 702               	.LM75:
+ 703 0166 8091 BC00 		lds r24,188
+ 704 016a 84FD      		sbrc r24,4
+ 705 016c 00C0      		rjmp .L42
+ 310:../../../../../src/drivers/platform/MARS/source/twi.c ****     continue;
+ 311:../../../../../src/drivers/platform/MARS/source/twi.c ****   }
+ 312:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 313:../../../../../src/drivers/platform/MARS/source/twi.c ****   // update twi state
+ 314:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_state = TWI_READY;
+ 707               	.LM76:
+ 708 016e 1092 0000 		sts twi_state,__zero_reg__
+ 709               	/* epilogue start */
+ 315:../../../../../src/drivers/platform/MARS/source/twi.c **** }
+ 711               	.LM77:
+ 712 0172 0895      		ret
+ 714               	.Lscope9:
+ 716               		.stabd	78,0,0
+ 718               	.global	twi_releaseBus
+ 720               	twi_releaseBus:
+ 721               		.stabd	46,0,0
+ 316:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 317:../../../../../src/drivers/platform/MARS/source/twi.c **** /* 
+ 318:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Function twi_releaseBus
+ 319:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Desc     releases bus control
+ 320:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Input    none
+ 321:../../../../../src/drivers/platform/MARS/source/twi.c ****  * Output   none
+ 322:../../../../../src/drivers/platform/MARS/source/twi.c ****  */
+ 323:../../../../../src/drivers/platform/MARS/source/twi.c **** void twi_releaseBus(void)
+ 324:../../../../../src/drivers/platform/MARS/source/twi.c **** {
+ 723               	.LM78:
+ 724               	.LFBB10:
+ 725               	/* prologue: function */
+ 726               	/* frame size = 0 */
+ 727               	/* stack size = 0 */
+ 728               	.L__stack_usage = 0
+ 325:../../../../../src/drivers/platform/MARS/source/twi.c ****   // release bus
+ 326:../../../../../src/drivers/platform/MARS/source/twi.c ****   TWCR = _BV(TWEN) | _BV(TWIE) | _BV(TWEA) | _BV(TWINT);
+ 730               	.LM79:
+ 731 0174 85EC      		ldi r24,lo8(-59)
+ 732 0176 8093 BC00 		sts 188,r24
+ 327:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 328:../../../../../src/drivers/platform/MARS/source/twi.c ****   // update twi state
+ 329:../../../../../src/drivers/platform/MARS/source/twi.c ****   twi_state = TWI_READY;
+ 734               	.LM80:
+ 735 017a 1092 0000 		sts twi_state,__zero_reg__
+ 736               	/* epilogue start */
+ 330:../../../../../src/drivers/platform/MARS/source/twi.c **** }
+ 738               	.LM81:
+ 739 017e 0895      		ret
+ 741               	.Lscope10:
+ 743               		.stabd	78,0,0
+ 745               	.global	__vector_39
+ 747               	__vector_39:
+ 748               		.stabd	46,0,0
+ 331:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 332:../../../../../src/drivers/platform/MARS/source/twi.c **** SIGNAL(TWI_vect)
+ 333:../../../../../src/drivers/platform/MARS/source/twi.c **** {
+ 750               	.LM82:
+ 751               	.LFBB11:
+ 752 0180 1F92      		push r1
+ 753 0182 0F92      		push r0
+ 754 0184 0FB6      		in r0,__SREG__
+ 755 0186 0F92      		push r0
+ 756 0188 0BB6      		in r0,91-0x20
+ 757 018a 0F92      		push r0
+ 758 018c 1124      		clr __zero_reg__
+ 759 018e 2F93      		push r18
+ 760 0190 3F93      		push r19
+ 761 0192 4F93      		push r20
+ 762 0194 5F93      		push r21
+ 763 0196 6F93      		push r22
+ 764 0198 7F93      		push r23
+ 765 019a 8F93      		push r24
+ 766 019c 9F93      		push r25
+ 767 019e AF93      		push r26
+ 768 01a0 BF93      		push r27
+ 769 01a2 EF93      		push r30
+ 770 01a4 FF93      		push r31
+ 771               	/* prologue: Signal */
+ 772               	/* frame size = 0 */
+ 773               	/* stack size = 16 */
+ 774               	.L__stack_usage = 16
+ 334:../../../../../src/drivers/platform/MARS/source/twi.c ****   switch(TW_STATUS){
+ 776               	.LM83:
+ 777 01a6 8091 B900 		lds r24,185
+ 778 01aa 90E0      		ldi r25,lo8(0)
+ 779 01ac 887F      		andi r24,lo8(248)
+ 780 01ae 9070      		andi r25,hi8(248)
+ 781 01b0 8036      		cpi r24,96
+ 782 01b2 9105      		cpc r25,__zero_reg__
+ 783 01b4 01F4      		brne .+2
+ 784 01b6 00C0      		rjmp .L57
+ 785 01b8 8136      		cpi r24,97
+ 786 01ba 9105      		cpc r25,__zero_reg__
+ 787 01bc 04F4      		brge .L64
+ 788 01be 8832      		cpi r24,40
+ 789 01c0 9105      		cpc r25,__zero_reg__
+ 790 01c2 01F4      		brne .+2
+ 791 01c4 00C0      		rjmp .L49
+ 792 01c6 8932      		cpi r24,41
+ 793 01c8 9105      		cpc r25,__zero_reg__
+ 794 01ca 04F4      		brge .L65
+ 795 01cc 8031      		cpi r24,16
+ 796 01ce 9105      		cpc r25,__zero_reg__
+ 797 01d0 01F4      		brne .+2
+ 798 01d2 00C0      		rjmp .L48
+ 799 01d4 8131      		cpi r24,17
+ 800 01d6 9105      		cpc r25,__zero_reg__
+ 801 01d8 04F4      		brge .L66
+ 802 01da 0097      		sbiw r24,0
+ 803 01dc 01F4      		brne .+2
+ 804 01de 00C0      		rjmp .L47
+ 805 01e0 8830      		cpi r24,8
+ 806 01e2 9105      		cpc r25,__zero_reg__
+ 807 01e4 01F0      		breq .+2
+ 808 01e6 00C0      		rjmp .L45
+ 809 01e8 00C0      		rjmp .L48
+ 810               	.L66:
+ 811 01ea 8831      		cpi r24,24
+ 812 01ec 9105      		cpc r25,__zero_reg__
+ 813 01ee 01F4      		brne .+2
+ 814 01f0 00C0      		rjmp .L49
+ 815 01f2 8032      		cpi r24,32
+ 816 01f4 9105      		cpc r25,__zero_reg__
+ 817 01f6 01F0      		breq .+2
+ 818 01f8 00C0      		rjmp .L45
+ 819 01fa 00C0      		rjmp .L83
+ 820               	.L65:
+ 821 01fc 8034      		cpi r24,64
+ 822 01fe 9105      		cpc r25,__zero_reg__
+ 823 0200 01F4      		brne .+2
+ 824 0202 00C0      		rjmp .L53
+ 825 0204 8134      		cpi r24,65
+ 826 0206 9105      		cpc r25,__zero_reg__
+ 827 0208 04F4      		brge .L67
+ 828 020a 8033      		cpi r24,48
+ 829 020c 9105      		cpc r25,__zero_reg__
+ 830 020e 01F4      		brne .+2
+ 831 0210 00C0      		rjmp .L51
+ 832 0212 8833      		cpi r24,56
+ 833 0214 9105      		cpc r25,__zero_reg__
+ 834 0216 01F0      		breq .+2
+ 835 0218 00C0      		rjmp .L45
+ 836 021a 00C0      		rjmp .L84
+ 837               	.L67:
+ 838 021c 8035      		cpi r24,80
+ 839 021e 9105      		cpc r25,__zero_reg__
+ 840 0220 01F4      		brne .+2
+ 841 0222 00C0      		rjmp .L55
+ 842 0224 8835      		cpi r24,88
+ 843 0226 9105      		cpc r25,__zero_reg__
+ 844 0228 01F4      		brne .+2
+ 845 022a 00C0      		rjmp .L56
+ 846 022c 8834      		cpi r24,72
+ 847 022e 9105      		cpc r25,__zero_reg__
+ 848 0230 01F0      		breq .+2
+ 849 0232 00C0      		rjmp .L45
+ 850 0234 00C0      		rjmp .L77
+ 851               	.L64:
+ 852 0236 8839      		cpi r24,152
+ 853 0238 9105      		cpc r25,__zero_reg__
+ 854 023a 01F4      		brne .+2
+ 855 023c 00C0      		rjmp .L75
+ 856 023e 8939      		cpi r24,153
+ 857 0240 9105      		cpc r25,__zero_reg__
+ 858 0242 04F4      		brge .L68
+ 859 0244 8837      		cpi r24,120
+ 860 0246 9105      		cpc r25,__zero_reg__
+ 861 0248 01F4      		brne .+2
+ 862 024a 00C0      		rjmp .L57
+ 863 024c 8937      		cpi r24,121
+ 864 024e 9105      		cpc r25,__zero_reg__
+ 865 0250 04F4      		brge .L69
+ 866 0252 8836      		cpi r24,104
+ 867 0254 9105      		cpc r25,__zero_reg__
+ 868 0256 01F4      		brne .+2
+ 869 0258 00C0      		rjmp .L57
+ 870 025a 8037      		cpi r24,112
+ 871 025c 9105      		cpc r25,__zero_reg__
+ 872 025e 01F0      		breq .+2
+ 873 0260 00C0      		rjmp .L45
+ 874 0262 00C0      		rjmp .L57
+ 875               	.L69:
+ 876 0264 8838      		cpi r24,136
+ 877 0266 9105      		cpc r25,__zero_reg__
+ 878 0268 01F4      		brne .+2
+ 879 026a 00C0      		rjmp .L75
+ 880 026c 8039      		cpi r24,144
+ 881 026e 9105      		cpc r25,__zero_reg__
+ 882 0270 01F4      		brne .+2
+ 883 0272 00C0      		rjmp .L58
+ 884 0274 8038      		cpi r24,128
+ 885 0276 9105      		cpc r25,__zero_reg__
+ 886 0278 01F0      		breq .+2
+ 887 027a 00C0      		rjmp .L45
+ 888 027c 00C0      		rjmp .L58
+ 889               	.L68:
+ 890 027e 803B      		cpi r24,176
+ 891 0280 9105      		cpc r25,__zero_reg__
+ 892 0282 01F4      		brne .+2
+ 893 0284 00C0      		rjmp .L61
+ 894 0286 813B      		cpi r24,177
+ 895 0288 9105      		cpc r25,__zero_reg__
+ 896 028a 04F4      		brge .L70
+ 897 028c 803A      		cpi r24,160
+ 898 028e 9105      		cpc r25,__zero_reg__
+ 899 0290 01F4      		brne .+2
+ 900 0292 00C0      		rjmp .L60
+ 901 0294 883A      		cpi r24,168
+ 902 0296 9105      		cpc r25,__zero_reg__
+ 903 0298 01F0      		breq .+2
+ 904 029a 00C0      		rjmp .L45
+ 905 029c 00C0      		rjmp .L61
+ 906               	.L70:
+ 907 029e 803C      		cpi r24,192
+ 908 02a0 9105      		cpc r25,__zero_reg__
+ 909 02a2 01F4      		brne .+2
+ 910 02a4 00C0      		rjmp .L63
+ 911 02a6 883C      		cpi r24,200
+ 912 02a8 9105      		cpc r25,__zero_reg__
+ 913 02aa 01F4      		brne .+2
+ 914 02ac 00C0      		rjmp .L63
+ 915 02ae 883B      		cpi r24,184
+ 916 02b0 9105      		cpc r25,__zero_reg__
+ 917 02b2 01F0      		breq .+2
+ 918 02b4 00C0      		rjmp .L45
+ 919 02b6 00C0      		rjmp .L62
+ 920               	.L48:
+ 335:../../../../../src/drivers/platform/MARS/source/twi.c ****     // All Master
+ 336:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_START:     // sent start condition
+ 337:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_REP_START: // sent repeated start condition
+ 338:../../../../../src/drivers/platform/MARS/source/twi.c ****       // copy device address and r/w bit to output register and ack
+ 339:../../../../../src/drivers/platform/MARS/source/twi.c ****       TWDR = twi_slarw;
+ 922               	.LM84:
+ 923 02b8 8091 0000 		lds r24,twi_slarw
+ 924 02bc 8093 BB00 		sts 187,r24
+ 925 02c0 00C0      		rjmp .L79
+ 926               	.L49:
+ 340:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_reply(1);
+ 341:../../../../../src/drivers/platform/MARS/source/twi.c ****       break;
+ 342:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 343:../../../../../src/drivers/platform/MARS/source/twi.c ****     // Master Transmitter
+ 344:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_MT_SLA_ACK:  // slave receiver acked address
+ 345:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_MT_DATA_ACK: // slave receiver acked data
+ 346:../../../../../src/drivers/platform/MARS/source/twi.c ****       // if there is data to send, send it, otherwise stop 
+ 347:../../../../../src/drivers/platform/MARS/source/twi.c ****       if(twi_masterBufferIndex < twi_masterBufferLength){
+ 928               	.LM85:
+ 929 02c2 9091 0000 		lds r25,twi_masterBufferIndex
+ 930 02c6 8091 0000 		lds r24,twi_masterBufferLength
+ 931 02ca 9817      		cp r25,r24
+ 932 02cc 00F0      		brlo .+2
+ 933 02ce 00C0      		rjmp .L77
+ 348:../../../../../src/drivers/platform/MARS/source/twi.c ****         // copy data to output register and ack
+ 349:../../../../../src/drivers/platform/MARS/source/twi.c ****         TWDR = twi_masterBuffer[twi_masterBufferIndex++];
+ 935               	.LM86:
+ 936 02d0 8091 0000 		lds r24,twi_masterBufferIndex
+ 937 02d4 E82F      		mov r30,r24
+ 938 02d6 F0E0      		ldi r31,lo8(0)
+ 939 02d8 E050      		subi r30,lo8(-(twi_masterBuffer))
+ 940 02da F040      		sbci r31,hi8(-(twi_masterBuffer))
+ 941 02dc 9081      		ld r25,Z
+ 942 02de 9093 BB00 		sts 187,r25
+ 943 02e2 8F5F      		subi r24,lo8(-(1))
+ 944 02e4 8093 0000 		sts twi_masterBufferIndex,r24
+ 945               	.L79:
+ 350:../../../../../src/drivers/platform/MARS/source/twi.c ****         twi_reply(1);
+ 947               	.LM87:
+ 948 02e8 81E0      		ldi r24,lo8(1)
+ 949 02ea 00C0      		rjmp .L76
+ 950               	.L83:
+ 351:../../../../../src/drivers/platform/MARS/source/twi.c ****       }else{
+ 352:../../../../../src/drivers/platform/MARS/source/twi.c ****         twi_stop();
+ 353:../../../../../src/drivers/platform/MARS/source/twi.c ****       }
+ 354:../../../../../src/drivers/platform/MARS/source/twi.c ****       break;
+ 355:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_MT_SLA_NACK:  // address sent, nack received
+ 356:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_error = TW_MT_SLA_NACK;
+ 952               	.LM88:
+ 953 02ec 80E2      		ldi r24,lo8(32)
+ 954 02ee 00C0      		rjmp .L80
+ 955               	.L51:
+ 357:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_stop();
+ 358:../../../../../src/drivers/platform/MARS/source/twi.c ****       break;
+ 359:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_MT_DATA_NACK: // data sent, nack received
+ 360:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_error = TW_MT_DATA_NACK;
+ 957               	.LM89:
+ 958 02f0 80E3      		ldi r24,lo8(48)
+ 959               	.L80:
+ 960 02f2 8093 0000 		sts twi_error,r24
+ 961 02f6 00C0      		rjmp .L77
+ 962               	.L84:
+ 361:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_stop();
+ 362:../../../../../src/drivers/platform/MARS/source/twi.c ****       break;
+ 363:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_MT_ARB_LOST: // lost bus arbitration
+ 364:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_error = TW_MT_ARB_LOST;
+ 964               	.LM90:
+ 965 02f8 88E3      		ldi r24,lo8(56)
+ 966 02fa 8093 0000 		sts twi_error,r24
+ 967 02fe 00C0      		rjmp .L78
+ 968               	.L55:
+ 365:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_releaseBus();
+ 366:../../../../../src/drivers/platform/MARS/source/twi.c ****       break;
+ 367:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 368:../../../../../src/drivers/platform/MARS/source/twi.c ****     // Master Receiver
+ 369:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_MR_DATA_ACK: // data received, ack sent
+ 370:../../../../../src/drivers/platform/MARS/source/twi.c ****       // put byte into buffer
+ 371:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_masterBuffer[twi_masterBufferIndex++] = TWDR;
+ 970               	.LM91:
+ 971 0300 8091 0000 		lds r24,twi_masterBufferIndex
+ 972 0304 9091 BB00 		lds r25,187
+ 973 0308 E82F      		mov r30,r24
+ 974 030a F0E0      		ldi r31,lo8(0)
+ 975 030c E050      		subi r30,lo8(-(twi_masterBuffer))
+ 976 030e F040      		sbci r31,hi8(-(twi_masterBuffer))
+ 977 0310 9083      		st Z,r25
+ 978 0312 8F5F      		subi r24,lo8(-(1))
+ 979 0314 8093 0000 		sts twi_masterBufferIndex,r24
+ 980               	.L53:
+ 372:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_MR_SLA_ACK:  // address sent, ack received
+ 373:../../../../../src/drivers/platform/MARS/source/twi.c ****       // ack if more bytes are expected, otherwise nack
+ 374:../../../../../src/drivers/platform/MARS/source/twi.c ****       if(twi_masterBufferIndex < twi_masterBufferLength){
+ 982               	.LM92:
+ 983 0318 9091 0000 		lds r25,twi_masterBufferIndex
+ 984 031c 8091 0000 		lds r24,twi_masterBufferLength
+ 985 0320 00C0      		rjmp .L82
+ 986               	.L56:
+ 375:../../../../../src/drivers/platform/MARS/source/twi.c ****         twi_reply(1);
+ 376:../../../../../src/drivers/platform/MARS/source/twi.c ****       }else{
+ 377:../../../../../src/drivers/platform/MARS/source/twi.c ****         twi_reply(0);
+ 378:../../../../../src/drivers/platform/MARS/source/twi.c ****       }
+ 379:../../../../../src/drivers/platform/MARS/source/twi.c ****       break;
+ 380:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_MR_DATA_NACK: // data received, nack sent
+ 381:../../../../../src/drivers/platform/MARS/source/twi.c ****       // put final byte into buffer
+ 382:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_masterBuffer[twi_masterBufferIndex++] = TWDR;
+ 988               	.LM93:
+ 989 0322 8091 0000 		lds r24,twi_masterBufferIndex
+ 990 0326 9091 BB00 		lds r25,187
+ 991 032a E82F      		mov r30,r24
+ 992 032c F0E0      		ldi r31,lo8(0)
+ 993 032e E050      		subi r30,lo8(-(twi_masterBuffer))
+ 994 0330 F040      		sbci r31,hi8(-(twi_masterBuffer))
+ 995 0332 9083      		st Z,r25
+ 996 0334 8F5F      		subi r24,lo8(-(1))
+ 997 0336 8093 0000 		sts twi_masterBufferIndex,r24
+ 998 033a 00C0      		rjmp .L77
+ 999               	.L57:
+ 383:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_MR_SLA_NACK: // address sent, nack received
+ 384:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_stop();
+ 385:../../../../../src/drivers/platform/MARS/source/twi.c ****       break;
+ 386:../../../../../src/drivers/platform/MARS/source/twi.c ****     // TW_MR_ARB_LOST handled by TW_MT_ARB_LOST case
+ 387:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 388:../../../../../src/drivers/platform/MARS/source/twi.c ****     // Slave Receiver
+ 389:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_SR_SLA_ACK:   // addressed, returned ack
+ 390:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_SR_GCALL_ACK: // addressed generally, returned ack
+ 391:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_SR_ARB_LOST_SLA_ACK:   // lost arbitration, returned ack
+ 392:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_SR_ARB_LOST_GCALL_ACK: // lost arbitration, returned ack
+ 393:../../../../../src/drivers/platform/MARS/source/twi.c ****       // enter slave receiver mode
+ 394:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_state = TWI_SRX;
+ 1001               	.LM94:
+ 1002 033c 83E0      		ldi r24,lo8(3)
+ 1003 033e 8093 0000 		sts twi_state,r24
+ 395:../../../../../src/drivers/platform/MARS/source/twi.c ****       // indicate that rx buffer can be overwritten and ack
+ 396:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_rxBufferIndex = 0;
+ 1005               	.LM95:
+ 1006 0342 1092 0000 		sts twi_rxBufferIndex,__zero_reg__
+ 1007 0346 00C0      		rjmp .L79
+ 1008               	.L58:
+ 397:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_reply(1);
+ 398:../../../../../src/drivers/platform/MARS/source/twi.c ****       break;
+ 399:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_SR_DATA_ACK:       // data received, returned ack
+ 400:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_SR_GCALL_DATA_ACK: // data received generally, returned ack
+ 401:../../../../../src/drivers/platform/MARS/source/twi.c ****       // if there is still room in the rx buffer
+ 402:../../../../../src/drivers/platform/MARS/source/twi.c ****       if(twi_rxBufferIndex < TWI_BUFFER_LENGTH){
+ 1010               	.LM96:
+ 1011 0348 8091 0000 		lds r24,twi_rxBufferIndex
+ 1012 034c 8032      		cpi r24,lo8(32)
+ 1013 034e 00F0      		brlo .+2
+ 1014 0350 00C0      		rjmp .L75
+ 403:../../../../../src/drivers/platform/MARS/source/twi.c ****         // put byte in buffer and ack
+ 404:../../../../../src/drivers/platform/MARS/source/twi.c ****         twi_rxBuffer[twi_rxBufferIndex++] = TWDR;
+ 1016               	.LM97:
+ 1017 0352 8091 0000 		lds r24,twi_rxBufferIndex
+ 1018 0356 9091 BB00 		lds r25,187
+ 1019 035a E82F      		mov r30,r24
+ 1020 035c F0E0      		ldi r31,lo8(0)
+ 1021 035e E050      		subi r30,lo8(-(twi_rxBuffer))
+ 1022 0360 F040      		sbci r31,hi8(-(twi_rxBuffer))
+ 1023 0362 9083      		st Z,r25
+ 1024 0364 8F5F      		subi r24,lo8(-(1))
+ 1025 0366 8093 0000 		sts twi_rxBufferIndex,r24
+ 1026 036a 00C0      		rjmp .L79
+ 1027               	.L60:
+ 405:../../../../../src/drivers/platform/MARS/source/twi.c ****         twi_reply(1);
+ 406:../../../../../src/drivers/platform/MARS/source/twi.c ****       }else{
+ 407:../../../../../src/drivers/platform/MARS/source/twi.c ****         // otherwise nack
+ 408:../../../../../src/drivers/platform/MARS/source/twi.c ****         twi_reply(0);
+ 409:../../../../../src/drivers/platform/MARS/source/twi.c ****       }
+ 410:../../../../../src/drivers/platform/MARS/source/twi.c ****       break;
+ 411:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_SR_STOP: // stop or repeated start condition received
+ 412:../../../../../src/drivers/platform/MARS/source/twi.c ****       // put a null char after data if there's room
+ 413:../../../../../src/drivers/platform/MARS/source/twi.c ****       if(twi_rxBufferIndex < TWI_BUFFER_LENGTH){
+ 1029               	.LM98:
+ 1030 036c 8091 0000 		lds r24,twi_rxBufferIndex
+ 1031 0370 8032      		cpi r24,lo8(32)
+ 1032 0372 00F4      		brsh .L74
+ 414:../../../../../src/drivers/platform/MARS/source/twi.c ****         twi_rxBuffer[twi_rxBufferIndex] = '\0';
+ 1034               	.LM99:
+ 1035 0374 E091 0000 		lds r30,twi_rxBufferIndex
+ 1036 0378 F0E0      		ldi r31,lo8(0)
+ 1037 037a E050      		subi r30,lo8(-(twi_rxBuffer))
+ 1038 037c F040      		sbci r31,hi8(-(twi_rxBuffer))
+ 1039 037e 1082      		st Z,__zero_reg__
+ 1040               	.L74:
+ 415:../../../../../src/drivers/platform/MARS/source/twi.c ****       }
+ 416:../../../../../src/drivers/platform/MARS/source/twi.c ****       // sends ack and stops interface for clock stretching
+ 417:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_stop();
+ 1042               	.LM100:
+ 1043 0380 0E94 0000 		call twi_stop
+ 418:../../../../../src/drivers/platform/MARS/source/twi.c ****       // callback to user defined callback
+ 419:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_onSlaveReceive(twi_rxBuffer, twi_rxBufferIndex);
+ 1045               	.LM101:
+ 1046 0384 6091 0000 		lds r22,twi_rxBufferIndex
+ 1047 0388 E091 0000 		lds r30,twi_onSlaveReceive
+ 1048 038c F091 0000 		lds r31,twi_onSlaveReceive+1
+ 1049 0390 80E0      		ldi r24,lo8(twi_rxBuffer)
+ 1050 0392 90E0      		ldi r25,hi8(twi_rxBuffer)
+ 1051 0394 70E0      		ldi r23,lo8(0)
+ 1052 0396 0995      		icall
+ 420:../../../../../src/drivers/platform/MARS/source/twi.c ****       // since we submit rx buffer to "wire" library, we can reset it
+ 421:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_rxBufferIndex = 0;
+ 1054               	.LM102:
+ 1055 0398 1092 0000 		sts twi_rxBufferIndex,__zero_reg__
+ 1056               	.L78:
+ 422:../../../../../src/drivers/platform/MARS/source/twi.c ****       // ack future responses and leave slave receiver state
+ 423:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_releaseBus();
+ 1058               	.LM103:
+ 1059 039c 0E94 0000 		call twi_releaseBus
+ 424:../../../../../src/drivers/platform/MARS/source/twi.c ****       break;
+ 1061               	.LM104:
+ 1062 03a0 00C0      		rjmp .L45
+ 1063               	.L61:
+ 425:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_SR_DATA_NACK:       // data received, returned nack
+ 426:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_SR_GCALL_DATA_NACK: // data received generally, returned nack
+ 427:../../../../../src/drivers/platform/MARS/source/twi.c ****       // nack back at master
+ 428:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_reply(0);
+ 429:../../../../../src/drivers/platform/MARS/source/twi.c ****       break;
+ 430:../../../../../src/drivers/platform/MARS/source/twi.c ****     
+ 431:../../../../../src/drivers/platform/MARS/source/twi.c ****     // Slave Transmitter
+ 432:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_ST_SLA_ACK:          // addressed, returned ack
+ 433:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_ST_ARB_LOST_SLA_ACK: // arbitration lost, returned ack
+ 434:../../../../../src/drivers/platform/MARS/source/twi.c ****       // enter slave transmitter mode
+ 435:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_state = TWI_STX;
+ 1065               	.LM105:
+ 1066 03a2 84E0      		ldi r24,lo8(4)
+ 1067 03a4 8093 0000 		sts twi_state,r24
+ 436:../../../../../src/drivers/platform/MARS/source/twi.c ****       // ready the tx buffer index for iteration
+ 437:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_txBufferIndex = 0;
+ 1069               	.LM106:
+ 1070 03a8 1092 0000 		sts twi_txBufferIndex,__zero_reg__
+ 438:../../../../../src/drivers/platform/MARS/source/twi.c ****       // set tx buffer length to be zero, to verify if user changes it
+ 439:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_txBufferLength = 0;
+ 1072               	.LM107:
+ 1073 03ac 1092 0000 		sts twi_txBufferLength,__zero_reg__
+ 440:../../../../../src/drivers/platform/MARS/source/twi.c ****       // request for txBuffer to be filled and length to be set
+ 441:../../../../../src/drivers/platform/MARS/source/twi.c ****       // note: user must call twi_transmit(bytes, length) to do this
+ 442:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_onSlaveTransmit();
+ 1075               	.LM108:
+ 1076 03b0 E091 0000 		lds r30,twi_onSlaveTransmit
+ 1077 03b4 F091 0000 		lds r31,twi_onSlaveTransmit+1
+ 1078 03b8 0995      		icall
+ 443:../../../../../src/drivers/platform/MARS/source/twi.c ****       // if they didn't change buffer & length, initialize it
+ 444:../../../../../src/drivers/platform/MARS/source/twi.c ****       if(0 == twi_txBufferLength){
+ 1080               	.LM109:
+ 1081 03ba 8091 0000 		lds r24,twi_txBufferLength
+ 1082 03be 8823      		tst r24
+ 1083 03c0 01F4      		brne .L62
+ 445:../../../../../src/drivers/platform/MARS/source/twi.c ****         twi_txBufferLength = 1;
+ 1085               	.LM110:
+ 1086 03c2 81E0      		ldi r24,lo8(1)
+ 1087 03c4 8093 0000 		sts twi_txBufferLength,r24
+ 446:../../../../../src/drivers/platform/MARS/source/twi.c ****         twi_txBuffer[0] = 0x00;
+ 1089               	.LM111:
+ 1090 03c8 1092 0000 		sts twi_txBuffer,__zero_reg__
+ 1091               	.L62:
+ 447:../../../../../src/drivers/platform/MARS/source/twi.c ****       }
+ 448:../../../../../src/drivers/platform/MARS/source/twi.c ****       // transmit first byte from buffer, fall
+ 449:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_ST_DATA_ACK: // byte sent, ack returned
+ 450:../../../../../src/drivers/platform/MARS/source/twi.c ****       // copy data to output register
+ 451:../../../../../src/drivers/platform/MARS/source/twi.c ****       TWDR = twi_txBuffer[twi_txBufferIndex++];
+ 1093               	.LM112:
+ 1094 03cc 8091 0000 		lds r24,twi_txBufferIndex
+ 1095 03d0 E82F      		mov r30,r24
+ 1096 03d2 F0E0      		ldi r31,lo8(0)
+ 1097 03d4 E050      		subi r30,lo8(-(twi_txBuffer))
+ 1098 03d6 F040      		sbci r31,hi8(-(twi_txBuffer))
+ 1099 03d8 9081      		ld r25,Z
+ 1100 03da 9093 BB00 		sts 187,r25
+ 1101 03de 8F5F      		subi r24,lo8(-(1))
+ 1102 03e0 8093 0000 		sts twi_txBufferIndex,r24
+ 452:../../../../../src/drivers/platform/MARS/source/twi.c ****       // if there is more to send, ack, otherwise nack
+ 453:../../../../../src/drivers/platform/MARS/source/twi.c ****       if(twi_txBufferIndex < twi_txBufferLength){
+ 1104               	.LM113:
+ 1105 03e4 9091 0000 		lds r25,twi_txBufferIndex
+ 1106 03e8 8091 0000 		lds r24,twi_txBufferLength
+ 1107               	.L82:
+ 1108 03ec 9817      		cp r25,r24
+ 1109 03ee 00F4      		brsh .+2
+ 1110 03f0 00C0      		rjmp .L79
+ 1111               	.L75:
+ 454:../../../../../src/drivers/platform/MARS/source/twi.c ****         twi_reply(1);
+ 455:../../../../../src/drivers/platform/MARS/source/twi.c ****       }else{
+ 456:../../../../../src/drivers/platform/MARS/source/twi.c ****         twi_reply(0);
+ 1113               	.LM114:
+ 1114 03f2 80E0      		ldi r24,lo8(0)
+ 1115               	.L76:
+ 1116 03f4 0E94 0000 		call twi_reply
+ 1117 03f8 00C0      		rjmp .L45
+ 1118               	.L63:
+ 457:../../../../../src/drivers/platform/MARS/source/twi.c ****       }
+ 458:../../../../../src/drivers/platform/MARS/source/twi.c ****       break;
+ 459:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_ST_DATA_NACK: // received nack, we are done 
+ 460:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_ST_LAST_DATA: // received ack, but we are done already!
+ 461:../../../../../src/drivers/platform/MARS/source/twi.c ****       // ack future responses
+ 462:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_reply(1);
+ 1120               	.LM115:
+ 1121 03fa 81E0      		ldi r24,lo8(1)
+ 1122 03fc 0E94 0000 		call twi_reply
+ 463:../../../../../src/drivers/platform/MARS/source/twi.c ****       // leave slave receiver state
+ 464:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_state = TWI_READY;
+ 1124               	.LM116:
+ 1125 0400 1092 0000 		sts twi_state,__zero_reg__
+ 465:../../../../../src/drivers/platform/MARS/source/twi.c ****       break;
+ 1127               	.LM117:
+ 1128 0404 00C0      		rjmp .L45
+ 1129               	.L47:
+ 466:../../../../../src/drivers/platform/MARS/source/twi.c **** 
+ 467:../../../../../src/drivers/platform/MARS/source/twi.c ****     // All
+ 468:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_NO_INFO:   // no state information
+ 469:../../../../../src/drivers/platform/MARS/source/twi.c ****       break;
+ 470:../../../../../src/drivers/platform/MARS/source/twi.c ****     case TW_BUS_ERROR: // bus error, illegal stop/start
+ 471:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_error = TW_BUS_ERROR;
+ 1131               	.LM118:
+ 1132 0406 1092 0000 		sts twi_error,__zero_reg__
+ 1133               	.L77:
+ 472:../../../../../src/drivers/platform/MARS/source/twi.c ****       twi_stop();
+ 1135               	.LM119:
+ 1136 040a 0E94 0000 		call twi_stop
+ 1137               	.L45:
+ 1138               	/* epilogue start */
+ 473:../../../../../src/drivers/platform/MARS/source/twi.c ****       break;
+ 474:../../../../../src/drivers/platform/MARS/source/twi.c ****   }
+ 475:../../../../../src/drivers/platform/MARS/source/twi.c **** }
+ 1140               	.LM120:
+ 1141 040e FF91      		pop r31
+ 1142 0410 EF91      		pop r30
+ 1143 0412 BF91      		pop r27
+ 1144 0414 AF91      		pop r26
+ 1145 0416 9F91      		pop r25
+ 1146 0418 8F91      		pop r24
+ 1147 041a 7F91      		pop r23
+ 1148 041c 6F91      		pop r22
+ 1149 041e 5F91      		pop r21
+ 1150 0420 4F91      		pop r20
+ 1151 0422 3F91      		pop r19
+ 1152 0424 2F91      		pop r18
+ 1153 0426 0F90      		pop r0
+ 1154 0428 0BBE      		out 91-0x20,r0
+ 1155 042a 0F90      		pop r0
+ 1156 042c 0FBE      		out __SREG__,r0
+ 1157 042e 0F90      		pop r0
+ 1158 0430 1F90      		pop r1
+ 1159 0432 1895      		reti
+ 1161               	.Lscope11:
+ 1163               		.stabd	78,0,0
+ 1164               		.lcomm twi_error,1
+ 1165               		.lcomm twi_rxBufferIndex,1
+ 1166               		.lcomm twi_txBufferLength,1
+ 1167               		.lcomm twi_txBufferIndex,1
+ 1168               		.lcomm twi_masterBufferIndex,1
+ 1169               		.lcomm twi_state,1
+ 1170               		.lcomm twi_masterBufferLength,1
+ 1171               		.lcomm twi_slarw,1
+ 1172               		.lcomm twi_masterBuffer,32
+ 1173               		.lcomm twi_txBuffer,32
+ 1174               		.lcomm twi_onSlaveReceive,2
+ 1175               		.lcomm twi_onSlaveTransmit,2
+ 1176               		.lcomm twi_rxBuffer,32
+ 1191               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 twi.c
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:2      *ABS*:000000000000003f __SREG__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:3      *ABS*:000000000000003e __SP_H__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:4      *ABS*:000000000000003d __SP_L__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:5      *ABS*:0000000000000000 __tmp_reg__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:6      *ABS*:0000000000000001 __zero_reg__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:248    .text:0000000000000000 twi_init
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:1168   .bss:0000000000000005 twi_state
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:298    .text:0000000000000026 twi_setAddress
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:324    .text:000000000000002e twi_readFrom
+                             .bss:0000000000000000 twi_error
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:1167   .bss:0000000000000004 twi_masterBufferIndex
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:1169   .bss:0000000000000006 twi_masterBufferLength
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:1170   .bss:0000000000000007 twi_slarw
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:1171   .bss:0000000000000008 twi_masterBuffer
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:422    .text:0000000000000090 twi_writeTo
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:543    .text:000000000000010c twi_transmit
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:1165   .bss:0000000000000002 twi_txBufferLength
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:1172   .bss:0000000000000028 twi_txBuffer
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:606    .text:000000000000013c twi_attachSlaveRxEvent
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:1173   .bss:0000000000000048 twi_onSlaveReceive
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:631    .text:0000000000000146 twi_attachSlaveTxEvent
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:1174   .bss:000000000000004a twi_onSlaveTransmit
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:656    .text:0000000000000150 twi_reply
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:687    .text:0000000000000160 twi_stop
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:720    .text:0000000000000174 twi_releaseBus
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:747    .text:0000000000000180 __vector_39
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:1164   .bss:0000000000000001 twi_rxBufferIndex
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:1175   .bss:000000000000004c twi_rxBuffer
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cchjt9Bq.s:1166   .bss:0000000000000003 twi_txBufferIndex
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

@@ -1,0 +1,1964 @@
+   1               		.file	"ADXL345.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.global __do_copy_data
+   8               		.global __do_clear_bss
+  11               		.text
+  12               	.Ltext0:
+ 295               	.global	Write
+ 297               	Write:
+ 298               		.stabd	46,0,0
+   1:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** /*
+   2:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** ADXL345.cpp - Header file for the ADXL345 Triple Axis Accelerometer Arduino Library.
+   3:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** Copyright (C) 2011 Love Electronics (loveelectronics.co.uk)
+   4:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+   5:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** This program is free software: you can redistribute it and/or modify
+   6:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** it under the terms of the version 3 GNU General Public License as
+   7:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** published by the Free Software Foundation.
+   8:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+   9:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** This program is distributed in the hope that it will be useful,
+  10:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** but WITHOUT ANY WARRANTY; without even the implied warranty of
+  11:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  12:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** GNU General Public License for more details.
+  13:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+  14:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** You should have received a copy of the GNU General Public License
+  15:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  16:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+  17:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****  Datasheet for ADXL345:
+  18:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****  http://www.analog.com/static/imported-files/data_sheets/ADXL345.pdf
+  19:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+  20:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** */
+  21:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #include <nrk_driver_list.h>
+  22:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #include <ADXL345.h>
+  23:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #include <include.h>
+  24:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #include <stdio.h>
+  25:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #include <ulib.h>
+  26:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #include <nrk_error.h>
+  27:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #include <nrk.h>
+  28:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #include <stdint.h>
+  29:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #include <basic_rf.h>
+  30:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #include <nrk_timer.h>
+  31:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #include <Wire.h>
+  32:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+  33:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+  34:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #include <math.h>
+  35:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+  36:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #define DEVICE (0x53)
+  37:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+  38:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** //#define SerialDebug
+  39:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+  40:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void set_up_ADXL345()
+  41:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+  42:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   m_Address = DefaultADXL345_Address;
+  43:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   acc_power_on();
+  44:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+  45:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   if(EnsureConnected()){
+  46:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	nrk_kprintf( PSTR("ADXL345(Accelerometer) Boot Success.\r\n") );
+  47:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   }else {
+  48:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		printf("Could not connect to ADXL345.\r\n");
+  49:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   }
+  50:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   
+  51:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   // Set the range of the accelerometer to a maximum of 2G.
+  52:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   if(SetRange(2, true)){
+  53:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	nrk_kprintf( PSTR("ADXL345 Range set. . .\r\n") );
+  54:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   }else {
+  55:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	  nrk_kprintf( PSTR("Could not set range.\r\n") );
+  56:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   }
+  57:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+  58:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // Start taking measurements.
+  59:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   if(EnableMeasurements()){
+  60:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	  nrk_kprintf( PSTR("ADXL345 Measurement enabled. . .\r\n") );
+  61:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   }else {
+  62:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	  nrk_kprintf( PSTR("Enable measurement fail.\r\n") );
+  63:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   }	
+  64:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+  65:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+  66:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+  67:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+  68:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** accelerometer_Raw ReadRawAxis()
+  69:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+  70:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #ifdef SerialDebug
+  71:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	printf( PSTR("Reading raw axis.\n") );
+  72:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #endif
+  73:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	accelerometer_Raw raw;
+  74:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+  75:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	uint8_t* buffer = Read(Register_DataX, 6);
+  76:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+  77:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	raw.XAxis = (buffer[1] << 8) | buffer[0];
+  78:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	raw.YAxis = (buffer[3] << 8) | buffer[2];
+  79:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	raw.ZAxis = (buffer[5] << 8) | buffer[4];
+  80:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return raw;
+  81:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+  82:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+  83:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** accelerometer_Scaled ReadScaledAxis()
+  84:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+  85:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	uint16_t  scaler = INT_SCALER;
+  86:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	float xAxis,yAxis,zAxis;
+  87:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+  88:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	accelerometer_Scaled scaled;
+  89:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	accelerometer_Raw raw = ReadRawAxis();
+  90:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+  91:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	xAxis = (float)raw.XAxis * m_Scale * (float)scaler;
+  92:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	yAxis = (float)raw.YAxis * m_Scale * (float)scaler;
+  93:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	zAxis = (float)raw.ZAxis * m_Scale * (float)scaler;
+  94:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+  95:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	scaled.XAxis = (int16_t)xAxis;
+  96:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	scaled.YAxis = (int16_t)yAxis;
+  97:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	scaled.ZAxis = (int16_t)zAxis;
+  98:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return scaled;
+  99:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 100:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void acc_power_on() {
+ 101:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	//Turning on the ADXL345
+ 102:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	Write(Register_PowerControl, 0);      
+ 103:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	Write(Register_PowerControl, 16);
+ 104:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	Write(Register_PowerControl, 8); 
+ 105:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	acc_set_data_rate(SAMPL_RATE_16K);
+ 106:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 107:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** int EnableMeasurements()
+ 108:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+ 109:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 110:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	#ifdef SerialDebug
+ 111:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		printf("Enabling measurements.");
+ 112:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		printf("/n");
+ 113:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	#endif
+ 114:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 115:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		Write(Register_PowerControl, 0x08);
+ 116:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		return 1; //success
+ 117:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return ErrorCode_1_Num_accwr;
+ 118:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 119:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 120:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void get_acc_values(int16_t * result)
+ 121:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+ 122:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	accelerometer_Scaled acc_scaled;
+ 123:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****     acc_scaled = ReadScaledAxis();
+ 124:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****     *result = acc_scaled.XAxis;
+ 125:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****     *(result+1) = acc_scaled.YAxis;
+ 126:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****     *(result+2) = acc_scaled.ZAxis;
+ 127:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 128:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 129:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** int SetRange(int range, bool fullResolution)
+ 130:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+ 131:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+ 132:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	#ifdef SerialDebug
+ 133:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		printf("Setting range to: ");
+ 134:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		printf(range);
+ 135:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		printf("/n");
+ 136:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	#endif
+ 137:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 138:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		// Get current data from this register.
+ 139:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		uint8_t data = Read(Register_DataFormat, 1)[0];
+ 140:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 141:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		// We AND with 0xF4 to clear the bits are going to set.
+ 142:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		// Clearing ----X-XX
+ 143:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		data &= 0xF4;
+ 144:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 145:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		// By default (range 2) or FullResolution = true, scale is 2G.
+ 146:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		m_Scale = ScaleFor2G;
+ 147:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+ 148:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		// Set the range bits.
+ 149:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		switch(range)
+ 150:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		{
+ 151:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			case 2:
+ 152:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				break;
+ 153:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			case 4:
+ 154:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				data |= 0x01;
+ 155:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				if(!fullResolution) { m_Scale = ScaleFor4G; }
+ 156:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				break;
+ 157:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			case 8:
+ 158:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				data |= 0x02;
+ 159:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				if(!fullResolution) { m_Scale = ScaleFor8G; }
+ 160:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				break;
+ 161:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			case 16:
+ 162:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				data |= 0x03;
+ 163:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				if(!fullResolution) { m_Scale = ScaleFor16G; }
+ 164:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				break;
+ 165:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			default:
+ 166:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				return ErrorCode_1_Num;
+ 167:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		}	
+ 168:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 169:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		// Set the full resolution bit.
+ 170:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		if(fullResolution)
+ 171:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			data |= 0x08;
+ 172:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 173:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			Write(Register_DataFormat, data);
+ 174:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return ErrorCode_1_Num;
+ 175:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 176:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 177:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** uint8_t EnsureConnected()
+ 178:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+ 179:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+ 180:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	uint8_t data;
+ 181:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	data = Read(ADXL345_DEVID, 1)[0]; //changed to variable and put in .h file
+ 182:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	if(data == 0xE5)
+ 183:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		IsConnected = true;
+ 184:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	else
+ 185:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		IsConnected = false;
+ 186:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 187:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return IsConnected;
+ 188:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+ 189:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 190:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 191:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void Write(int address, int data)
+ 192:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+ 300               	.LM0:
+ 301               	.LFBB1:
+ 302 0000 0F93      		push r16
+ 303 0002 1F93      		push r17
+ 304 0004 CF93      		push r28
+ 305 0006 DF93      		push r29
+ 306               	/* prologue: function */
+ 307               	/* frame size = 0 */
+ 308               	/* stack size = 4 */
+ 309               	.L__stack_usage = 4
+ 310 0008 8C01      		movw r16,r24
+ 311 000a EB01      		movw r28,r22
+ 193:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #ifdef SerialDebug
+ 194:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	printf("Writing ");
+ 195:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	printf(data, HEX);
+ 196:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	printf(" to register ");
+ 197:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	printf(address, HEX);
+ 198:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	printf("/n");
+ 199:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #endif
+ 200:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+ 201:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	beginTransmission_int(m_Address);//Wire.c
+ 313               	.LM1:
+ 314 000c 8091 0000 		lds r24,m_Address
+ 315 0010 9091 0000 		lds r25,m_Address+1
+ 316 0014 0E94 0000 		call beginTransmission_int
+ 202:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	send_int(address);				 //Wire.c
+ 318               	.LM2:
+ 319 0018 C801      		movw r24,r16
+ 320 001a 0E94 0000 		call send_int
+ 203:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	send_int(data);					 //Wire.c
+ 322               	.LM3:
+ 323 001e CE01      		movw r24,r28
+ 324 0020 0E94 0000 		call send_int
+ 204:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	endTransmission();
+ 326               	.LM4:
+ 327 0024 0E94 0000 		call endTransmission
+ 328               	/* epilogue start */
+ 205:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	//rv = ee24xx_write_bytes(eeaddr,len,buf);	
+ 206:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 330               	.LM5:
+ 331 0028 DF91      		pop r29
+ 332 002a CF91      		pop r28
+ 333 002c 1F91      		pop r17
+ 334 002e 0F91      		pop r16
+ 335 0030 0895      		ret
+ 337               	.Lscope1:
+ 339               		.stabd	78,0,0
+ 341               	.global	EnableMeasurements
+ 343               	EnableMeasurements:
+ 344               		.stabd	46,0,0
+ 108:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+ 346               	.LM6:
+ 347               	.LFBB2:
+ 348               	/* prologue: function */
+ 349               	/* frame size = 0 */
+ 350               	/* stack size = 0 */
+ 351               	.L__stack_usage = 0
+ 115:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		Write(Register_PowerControl, 0x08);
+ 353               	.LM7:
+ 354 0032 8DE2      		ldi r24,lo8(45)
+ 355 0034 90E0      		ldi r25,hi8(45)
+ 356 0036 68E0      		ldi r22,lo8(8)
+ 357 0038 70E0      		ldi r23,hi8(8)
+ 358 003a 0E94 0000 		call Write
+ 118:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 360               	.LM8:
+ 361 003e 81E0      		ldi r24,lo8(1)
+ 362 0040 90E0      		ldi r25,hi8(1)
+ 363               	/* epilogue start */
+ 364 0042 0895      		ret
+ 366               	.Lscope2:
+ 368               		.stabd	78,0,0
+ 372               	.global	Read
+ 374               	Read:
+ 375               		.stabd	46,0,0
+ 207:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 208:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** uint8_t* Read(int address, int length)
+ 209:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+ 377               	.LM9:
+ 378               	.LFBB3:
+ 379 0044 8F92      		push r8
+ 380 0046 9F92      		push r9
+ 381 0048 AF92      		push r10
+ 382 004a BF92      		push r11
+ 383 004c DF92      		push r13
+ 384 004e EF92      		push r14
+ 385 0050 FF92      		push r15
+ 386 0052 0F93      		push r16
+ 387 0054 1F93      		push r17
+ 388 0056 CF93      		push r28
+ 389 0058 DF93      		push r29
+ 390 005a CDB7      		in r28,__SP_L__
+ 391 005c DEB7      		in r29,__SP_H__
+ 392               	/* prologue: function */
+ 393               	/* frame size = 0 */
+ 394               	/* stack size = 11 */
+ 395               	.L__stack_usage = 11
+ 396 005e 7C01      		movw r14,r24
+ 397 0060 8B01      		movw r16,r22
+ 210:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	uint8_t buffer[length];
+ 211:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+ 212:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #ifdef SerialDebug
+ 213:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	printf("The raw values from the Accelerometer are: \r\n");
+ 214:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+ 215:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	for(j = 0; j<length; j++)
+ 216:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****         printf("%02x ", buffer[j]);
+ 217:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	printf("\r\n");
+ 218:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** #endif
+ 219:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 220:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	beginTransmission_int(m_Address);//Wire.c
+ 221:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	send_int(address);			     //Wire.c
+ 222:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	endTransmission();           //Wire.c
+ 223:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   
+ 224:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	beginTransmission_int(m_Address);
+ 225:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	requestFrom_2int(m_Address, length);
+ 226:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 227:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+ 228:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	if(available() == length)
+ 229:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	{
+ 230:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		for(uint8_t i = 0; i < length; i++)
+ 231:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		{
+ 232:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			buffer[i] = receive();
+ 233:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		}
+ 234:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	}
+ 235:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	endTransmission();
+ 236:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+ 237:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 238:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return buffer;
+ 239:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 399               	.LM10:
+ 400 0062 8DB6      		in r8,__SP_L__
+ 401 0064 9EB6      		in r9,__SP_H__
+ 210:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	uint8_t buffer[length];
+ 403               	.LM11:
+ 404 0066 8DB7      		in r24,__SP_L__
+ 405 0068 9EB7      		in r25,__SP_H__
+ 406 006a 861B      		sub r24,r22
+ 407 006c 970B      		sbc r25,r23
+ 408 006e 0FB6      		in __tmp_reg__,__SREG__
+ 409 0070 F894      		cli
+ 410 0072 9EBF      		out __SP_H__,r25
+ 411 0074 0FBE      		out __SREG__,__tmp_reg__
+ 412 0076 8DBF      		out __SP_L__,r24
+ 413 0078 ADB6      		in r10,__SP_L__
+ 414 007a BEB6      		in r11,__SP_H__
+ 415 007c 0894      		sec
+ 416 007e A11C      		adc r10,__zero_reg__
+ 417 0080 B11C      		adc r11,__zero_reg__
+ 220:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	beginTransmission_int(m_Address);//Wire.c
+ 419               	.LM12:
+ 420 0082 8091 0000 		lds r24,m_Address
+ 421 0086 9091 0000 		lds r25,m_Address+1
+ 422 008a 0E94 0000 		call beginTransmission_int
+ 221:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	send_int(address);			     //Wire.c
+ 424               	.LM13:
+ 425 008e C701      		movw r24,r14
+ 426 0090 0E94 0000 		call send_int
+ 222:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	endTransmission();           //Wire.c
+ 428               	.LM14:
+ 429 0094 0E94 0000 		call endTransmission
+ 224:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	beginTransmission_int(m_Address);
+ 431               	.LM15:
+ 432 0098 8091 0000 		lds r24,m_Address
+ 433 009c 9091 0000 		lds r25,m_Address+1
+ 434 00a0 0E94 0000 		call beginTransmission_int
+ 225:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	requestFrom_2int(m_Address, length);
+ 436               	.LM16:
+ 437 00a4 8091 0000 		lds r24,m_Address
+ 438 00a8 9091 0000 		lds r25,m_Address+1
+ 439 00ac B801      		movw r22,r16
+ 440 00ae 0E94 0000 		call requestFrom_2int
+ 228:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	if(available() == length)
+ 442               	.LM17:
+ 443 00b2 0E94 0000 		call available
+ 444 00b6 E82E      		mov r14,r24
+ 445 00b8 FF24      		clr r15
+ 446 00ba E016      		cp r14,r16
+ 447 00bc F106      		cpc r15,r17
+ 448 00be 01F4      		brne .L5
+ 449 00c0 00C0      		rjmp .L8
+ 450               	.L6:
+ 451               	.LBB2:
+ 232:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			buffer[i] = receive();
+ 453               	.LM18:
+ 454 00c2 0E94 0000 		call receive
+ 455 00c6 F501      		movw r30,r10
+ 456 00c8 E00F      		add r30,r16
+ 457 00ca F11F      		adc r31,r17
+ 458 00cc 8083      		st Z,r24
+ 230:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		for(uint8_t i = 0; i < length; i++)
+ 460               	.LM19:
+ 461 00ce D394      		inc r13
+ 462 00d0 00C0      		rjmp .L4
+ 463               	.L8:
+ 464               	.LBE2:
+ 228:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	if(available() == length)
+ 466               	.LM20:
+ 467 00d2 DD24      		clr r13
+ 468               	.L4:
+ 469               	.LBB3:
+ 230:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		for(uint8_t i = 0; i < length; i++)
+ 471               	.LM21:
+ 472 00d4 0D2D      		mov r16,r13
+ 473 00d6 10E0      		ldi r17,lo8(0)
+ 474 00d8 0E15      		cp r16,r14
+ 475 00da 1F05      		cpc r17,r15
+ 476 00dc 04F0      		brlt .L6
+ 477               	.L5:
+ 478               	.LBE3:
+ 235:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	endTransmission();
+ 480               	.LM22:
+ 481 00de 0E94 0000 		call endTransmission
+ 483               	.LM23:
+ 484 00e2 C501      		movw r24,r10
+ 485 00e4 0FB6      		in __tmp_reg__,__SREG__
+ 486 00e6 F894      		cli
+ 487 00e8 9EBE      		out __SP_H__,r9
+ 488 00ea 0FBE      		out __SREG__,__tmp_reg__
+ 489 00ec 8DBE      		out __SP_L__,r8
+ 490               	/* epilogue start */
+ 491 00ee DF91      		pop r29
+ 492 00f0 CF91      		pop r28
+ 493 00f2 1F91      		pop r17
+ 494 00f4 0F91      		pop r16
+ 495 00f6 FF90      		pop r15
+ 496 00f8 EF90      		pop r14
+ 497 00fa DF90      		pop r13
+ 498 00fc BF90      		pop r11
+ 499 00fe AF90      		pop r10
+ 500 0100 9F90      		pop r9
+ 501 0102 8F90      		pop r8
+ 502 0104 0895      		ret
+ 510               	.Lscope3:
+ 512               		.stabd	78,0,0
+ 514               	.global	EnsureConnected
+ 516               	EnsureConnected:
+ 517               		.stabd	46,0,0
+ 178:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+ 519               	.LM24:
+ 520               	.LFBB4:
+ 521               	/* prologue: function */
+ 522               	/* frame size = 0 */
+ 523               	/* stack size = 0 */
+ 524               	.L__stack_usage = 0
+ 181:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	data = Read(ADXL345_DEVID, 1)[0]; //changed to variable and put in .h file
+ 526               	.LM25:
+ 527 0106 80E0      		ldi r24,lo8(0)
+ 528 0108 90E0      		ldi r25,hi8(0)
+ 529 010a 61E0      		ldi r22,lo8(1)
+ 530 010c 70E0      		ldi r23,hi8(1)
+ 531 010e 0E94 0000 		call Read
+ 182:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	if(data == 0xE5)
+ 533               	.LM26:
+ 534 0112 FC01      		movw r30,r24
+ 535 0114 8081      		ld r24,Z
+ 536 0116 853E      		cpi r24,lo8(-27)
+ 537 0118 01F4      		brne .L10
+ 183:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		IsConnected = true;
+ 539               	.LM27:
+ 540 011a 81E0      		ldi r24,lo8(1)
+ 541 011c 8093 0000 		sts IsConnected,r24
+ 542 0120 00C0      		rjmp .L11
+ 543               	.L10:
+ 185:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		IsConnected = false;
+ 545               	.LM28:
+ 546 0122 1092 0000 		sts IsConnected,__zero_reg__
+ 547               	.L11:
+ 189:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 549               	.LM29:
+ 550 0126 8091 0000 		lds r24,IsConnected
+ 551               	/* epilogue start */
+ 552 012a 0895      		ret
+ 554               	.Lscope4:
+ 556               		.stabd	78,0,0
+ 560               	.global	SetRange
+ 562               	SetRange:
+ 563               		.stabd	46,0,0
+ 130:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+ 565               	.LM30:
+ 566               	.LFBB5:
+ 567 012c 1F93      		push r17
+ 568 012e CF93      		push r28
+ 569 0130 DF93      		push r29
+ 570               	/* prologue: function */
+ 571               	/* frame size = 0 */
+ 572               	/* stack size = 3 */
+ 573               	.L__stack_usage = 3
+ 574 0132 EC01      		movw r28,r24
+ 575 0134 162F      		mov r17,r22
+ 139:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		uint8_t data = Read(Register_DataFormat, 1)[0];
+ 577               	.LM31:
+ 578 0136 81E3      		ldi r24,lo8(49)
+ 579 0138 90E0      		ldi r25,hi8(49)
+ 580 013a 61E0      		ldi r22,lo8(1)
+ 581 013c 70E0      		ldi r23,hi8(1)
+ 582 013e 0E94 0000 		call Read
+ 583 0142 FC01      		movw r30,r24
+ 584 0144 6081      		ld r22,Z
+ 143:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		data &= 0xF4;
+ 586               	.LM32:
+ 587 0146 647F      		andi r22,lo8(-12)
+ 146:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		m_Scale = ScaleFor2G;
+ 589               	.LM33:
+ 590 0148 84E2      		ldi r24,lo8(0x3b7f9724)
+ 591 014a 97E9      		ldi r25,hi8(0x3b7f9724)
+ 592 014c AFE7      		ldi r26,hlo8(0x3b7f9724)
+ 593 014e BBE3      		ldi r27,hhi8(0x3b7f9724)
+ 594 0150 8093 0000 		sts m_Scale,r24
+ 595 0154 9093 0000 		sts m_Scale+1,r25
+ 596 0158 A093 0000 		sts m_Scale+2,r26
+ 597 015c B093 0000 		sts m_Scale+3,r27
+ 149:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		switch(range)
+ 599               	.LM34:
+ 600 0160 C430      		cpi r28,4
+ 601 0162 D105      		cpc r29,__zero_reg__
+ 602 0164 01F0      		breq .L15
+ 603 0166 C530      		cpi r28,5
+ 604 0168 D105      		cpc r29,__zero_reg__
+ 605 016a 04F4      		brge .L18
+ 606 016c C230      		cpi r28,2
+ 607 016e D105      		cpc r29,__zero_reg__
+ 608 0170 01F4      		brne .L13
+ 609 0172 00C0      		rjmp .L24
+ 610               	.L18:
+ 611 0174 C830      		cpi r28,8
+ 612 0176 D105      		cpc r29,__zero_reg__
+ 613 0178 01F0      		breq .L16
+ 614 017a C031      		cpi r28,16
+ 615 017c D105      		cpc r29,__zero_reg__
+ 616 017e 01F4      		brne .L13
+ 617 0180 00C0      		rjmp .L25
+ 618               	.L15:
+ 154:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				data |= 0x01;
+ 620               	.LM35:
+ 621 0182 6160      		ori r22,lo8(1)
+ 155:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				if(!fullResolution) { m_Scale = ScaleFor4G; }
+ 623               	.LM36:
+ 624 0184 1123      		tst r17
+ 625 0186 01F4      		brne .L22
+ 155:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				if(!fullResolution) { m_Scale = ScaleFor4G; }
+ 627               	.LM37:
+ 628 0188 84E2      		ldi r24,lo8(0x3bff9724)
+ 629 018a 97E9      		ldi r25,hi8(0x3bff9724)
+ 630 018c AFEF      		ldi r26,hlo8(0x3bff9724)
+ 631 018e BBE3      		ldi r27,hhi8(0x3bff9724)
+ 632 0190 00C0      		rjmp .L23
+ 633               	.L16:
+ 158:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				data |= 0x02;
+ 635               	.LM38:
+ 636 0192 6260      		ori r22,lo8(2)
+ 159:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				if(!fullResolution) { m_Scale = ScaleFor8G; }
+ 638               	.LM39:
+ 639 0194 1123      		tst r17
+ 640 0196 01F4      		brne .L22
+ 159:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				if(!fullResolution) { m_Scale = ScaleFor8G; }
+ 642               	.LM40:
+ 643 0198 84E2      		ldi r24,lo8(0x3c7f9724)
+ 644 019a 97E9      		ldi r25,hi8(0x3c7f9724)
+ 645 019c AFE7      		ldi r26,hlo8(0x3c7f9724)
+ 646 019e BCE3      		ldi r27,hhi8(0x3c7f9724)
+ 647 01a0 00C0      		rjmp .L23
+ 648               	.L25:
+ 162:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				data |= 0x03;
+ 650               	.LM41:
+ 651 01a2 6360      		ori r22,lo8(3)
+ 163:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				if(!fullResolution) { m_Scale = ScaleFor16G; }
+ 653               	.LM42:
+ 654 01a4 1123      		tst r17
+ 655 01a6 01F4      		brne .L22
+ 163:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 				if(!fullResolution) { m_Scale = ScaleFor16G; }
+ 657               	.LM43:
+ 658 01a8 84E2      		ldi r24,lo8(0x3cff9724)
+ 659 01aa 97E9      		ldi r25,hi8(0x3cff9724)
+ 660 01ac AFEF      		ldi r26,hlo8(0x3cff9724)
+ 661 01ae BCE3      		ldi r27,hhi8(0x3cff9724)
+ 662               	.L23:
+ 663 01b0 8093 0000 		sts m_Scale,r24
+ 664 01b4 9093 0000 		sts m_Scale+1,r25
+ 665 01b8 A093 0000 		sts m_Scale+2,r26
+ 666 01bc B093 0000 		sts m_Scale+3,r27
+ 667 01c0 00C0      		rjmp .L21
+ 668               	.L24:
+ 170:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		if(fullResolution)
+ 670               	.LM44:
+ 671 01c2 1111      		cpse r17,__zero_reg__
+ 672               	.L22:
+ 171:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			data |= 0x08;
+ 674               	.LM45:
+ 675 01c4 6860      		ori r22,lo8(8)
+ 676               	.L21:
+ 173:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			Write(Register_DataFormat, data);
+ 678               	.LM46:
+ 679 01c6 81E3      		ldi r24,lo8(49)
+ 680 01c8 90E0      		ldi r25,hi8(49)
+ 681 01ca 70E0      		ldi r23,lo8(0)
+ 682 01cc 0E94 0000 		call Write
+ 683               	.L13:
+ 175:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 685               	.LM47:
+ 686 01d0 81E0      		ldi r24,lo8(1)
+ 687 01d2 90E0      		ldi r25,hi8(1)
+ 688               	/* epilogue start */
+ 689 01d4 DF91      		pop r29
+ 690 01d6 CF91      		pop r28
+ 691 01d8 1F91      		pop r17
+ 692 01da 0895      		ret
+ 694               	.Lscope5:
+ 696               		.stabd	78,0,0
+ 698               	.global	ReadRawAxis
+ 700               	ReadRawAxis:
+ 701               		.stabd	46,0,0
+  69:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+ 703               	.LM48:
+ 704               	.LFBB6:
+ 705 01dc CF93      		push r28
+ 706 01de DF93      		push r29
+ 707 01e0 00D0      		rcall .
+ 708 01e2 00D0      		rcall .
+ 709 01e4 00D0      		rcall .
+ 710 01e6 CDB7      		in r28,__SP_L__
+ 711 01e8 DEB7      		in r29,__SP_H__
+ 712               	/* prologue: function */
+ 713               	/* frame size = 6 */
+ 714               	/* stack size = 8 */
+ 715               	.L__stack_usage = 8
+  75:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	uint8_t* buffer = Read(Register_DataX, 6);
+ 717               	.LM49:
+ 718 01ea 82E3      		ldi r24,lo8(50)
+ 719 01ec 90E0      		ldi r25,hi8(50)
+ 720 01ee 66E0      		ldi r22,lo8(6)
+ 721 01f0 70E0      		ldi r23,hi8(6)
+ 722 01f2 0E94 0000 		call Read
+ 723 01f6 FC01      		movw r30,r24
+  78:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	raw.YAxis = (buffer[3] << 8) | buffer[2];
+ 725               	.LM50:
+ 726 01f8 9381      		ldd r25,Z+3
+ 727 01fa 80E0      		ldi r24,lo8(0)
+ 728 01fc 4281      		ldd r20,Z+2
+ 729 01fe 50E0      		ldi r21,lo8(0)
+ 730 0200 482B      		or r20,r24
+ 731 0202 592B      		or r21,r25
+  79:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	raw.ZAxis = (buffer[5] << 8) | buffer[4];
+ 733               	.LM51:
+ 734 0204 9581      		ldd r25,Z+5
+ 735 0206 80E0      		ldi r24,lo8(0)
+ 736 0208 6481      		ldd r22,Z+4
+ 737 020a 70E0      		ldi r23,lo8(0)
+ 738 020c 682B      		or r22,r24
+ 739 020e 792B      		or r23,r25
+  77:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	raw.XAxis = (buffer[1] << 8) | buffer[0];
+ 741               	.LM52:
+ 742 0210 9181      		ldd r25,Z+1
+ 743 0212 80E0      		ldi r24,lo8(0)
+ 744 0214 2081      		ld r18,Z
+ 745 0216 30E0      		ldi r19,lo8(0)
+ 746 0218 282B      		or r18,r24
+ 747 021a 392B      		or r19,r25
+  80:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return raw;
+ 749               	.LM53:
+ 750 021c 3A83      		std Y+2,r19
+ 751 021e 2983      		std Y+1,r18
+ 752 0220 5C83      		std Y+4,r21
+ 753 0222 4B83      		std Y+3,r20
+ 754 0224 7E83      		std Y+6,r23
+ 755 0226 6D83      		std Y+5,r22
+ 756 0228 3A81      		ldd r19,Y+2
+ 757 022a 5C81      		ldd r21,Y+4
+ 758 022c 7E81      		ldd r23,Y+6
+  81:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 760               	.LM54:
+ 761 022e 90E0      		ldi r25,lo8(0)
+ 762               	/* epilogue start */
+ 763 0230 2696      		adiw r28,6
+ 764 0232 0FB6      		in __tmp_reg__,__SREG__
+ 765 0234 F894      		cli
+ 766 0236 DEBF      		out __SP_H__,r29
+ 767 0238 0FBE      		out __SREG__,__tmp_reg__
+ 768 023a CDBF      		out __SP_L__,r28
+ 769 023c DF91      		pop r29
+ 770 023e CF91      		pop r28
+ 771 0240 0895      		ret
+ 776               	.Lscope6:
+ 778               		.stabd	78,0,0
+ 780               	.global	ReadScaledAxis
+ 782               	ReadScaledAxis:
+ 783               		.stabd	46,0,0
+  84:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+ 785               	.LM55:
+ 786               	.LFBB7:
+ 787 0242 AF92      		push r10
+ 788 0244 BF92      		push r11
+ 789 0246 CF92      		push r12
+ 790 0248 DF92      		push r13
+ 791 024a EF92      		push r14
+ 792 024c FF92      		push r15
+ 793 024e 0F93      		push r16
+ 794 0250 1F93      		push r17
+ 795 0252 CF93      		push r28
+ 796 0254 DF93      		push r29
+ 797 0256 CDB7      		in r28,__SP_L__
+ 798 0258 DEB7      		in r29,__SP_H__
+ 799 025a 6297      		sbiw r28,18
+ 800 025c 0FB6      		in __tmp_reg__,__SREG__
+ 801 025e F894      		cli
+ 802 0260 DEBF      		out __SP_H__,r29
+ 803 0262 0FBE      		out __SREG__,__tmp_reg__
+ 804 0264 CDBF      		out __SP_L__,r28
+ 805               	/* prologue: function */
+ 806               	/* frame size = 18 */
+ 807               	/* stack size = 28 */
+ 808               	.L__stack_usage = 28
+  89:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	accelerometer_Raw raw = ReadRawAxis();
+ 810               	.LM56:
+ 811 0266 0E94 0000 		call ReadRawAxis
+ 812 026a 2D87      		std Y+13,r18
+ 813 026c 3E87      		std Y+14,r19
+ 814 026e 4F87      		std Y+15,r20
+ 815 0270 588B      		std Y+16,r21
+ 816 0272 698B      		std Y+17,r22
+ 817 0274 7A8B      		std Y+18,r23
+ 818 0276 DE01      		movw r26,r28
+ 819 0278 1796      		adiw r26,7
+ 820 027a FE01      		movw r30,r28
+ 821 027c 3D96      		adiw r30,13
+ 822 027e 86E0      		ldi r24,lo8(6)
+ 823               	.L28:
+ 824 0280 0190      		ld r0,Z+
+ 825 0282 0D92      		st X+,r0
+ 826 0284 8150      		subi r24,lo8(-(-1))
+ 827 0286 01F4      		brne .L28
+  91:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	xAxis = (float)raw.XAxis * m_Scale * (float)scaler;
+ 829               	.LM57:
+ 830 0288 C090 0000 		lds r12,m_Scale
+ 831 028c D090 0000 		lds r13,m_Scale+1
+ 832 0290 E090 0000 		lds r14,m_Scale+2
+ 833 0294 F090 0000 		lds r15,m_Scale+3
+  92:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	yAxis = (float)raw.YAxis * m_Scale * (float)scaler;
+ 835               	.LM58:
+ 836 0298 6985      		ldd r22,Y+9
+ 837 029a 7A85      		ldd r23,Y+10
+ 838 029c 8827      		clr r24
+ 839 029e 77FD      		sbrc r23,7
+ 840 02a0 8095      		com r24
+ 841 02a2 982F      		mov r25,r24
+ 842 02a4 0E94 0000 		call __floatsisf
+ 843 02a8 A701      		movw r20,r14
+ 844 02aa 9601      		movw r18,r12
+ 845 02ac 0E94 0000 		call __mulsf3
+ 846 02b0 20E0      		ldi r18,lo8(0x461c4000)
+ 847 02b2 30E4      		ldi r19,hi8(0x461c4000)
+ 848 02b4 4CE1      		ldi r20,hlo8(0x461c4000)
+ 849 02b6 56E4      		ldi r21,hhi8(0x461c4000)
+ 850 02b8 0E94 0000 		call __mulsf3
+  96:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	scaled.YAxis = (int16_t)yAxis;
+ 852               	.LM59:
+ 853 02bc 0E94 0000 		call __fixsfsi
+ 854 02c0 062F      		mov r16,r22
+ 855 02c2 B72E      		mov r11,r23
+  93:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	zAxis = (float)raw.ZAxis * m_Scale * (float)scaler;
+ 857               	.LM60:
+ 858 02c4 6B85      		ldd r22,Y+11
+ 859 02c6 7C85      		ldd r23,Y+12
+ 860 02c8 8827      		clr r24
+ 861 02ca 77FD      		sbrc r23,7
+ 862 02cc 8095      		com r24
+ 863 02ce 982F      		mov r25,r24
+ 864 02d0 0E94 0000 		call __floatsisf
+ 865 02d4 A701      		movw r20,r14
+ 866 02d6 9601      		movw r18,r12
+ 867 02d8 0E94 0000 		call __mulsf3
+ 868 02dc 20E0      		ldi r18,lo8(0x461c4000)
+ 869 02de 30E4      		ldi r19,hi8(0x461c4000)
+ 870 02e0 4CE1      		ldi r20,hlo8(0x461c4000)
+ 871 02e2 56E4      		ldi r21,hhi8(0x461c4000)
+ 872 02e4 0E94 0000 		call __mulsf3
+  97:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	scaled.ZAxis = (int16_t)zAxis;
+ 874               	.LM61:
+ 875 02e8 0E94 0000 		call __fixsfsi
+ 876 02ec 162F      		mov r17,r22
+ 877 02ee A72E      		mov r10,r23
+  91:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	xAxis = (float)raw.XAxis * m_Scale * (float)scaler;
+ 879               	.LM62:
+ 880 02f0 6F81      		ldd r22,Y+7
+ 881 02f2 7885      		ldd r23,Y+8
+ 882 02f4 8827      		clr r24
+ 883 02f6 77FD      		sbrc r23,7
+ 884 02f8 8095      		com r24
+ 885 02fa 982F      		mov r25,r24
+ 886 02fc 0E94 0000 		call __floatsisf
+ 887 0300 A701      		movw r20,r14
+ 888 0302 9601      		movw r18,r12
+ 889 0304 0E94 0000 		call __mulsf3
+ 890 0308 20E0      		ldi r18,lo8(0x461c4000)
+ 891 030a 30E4      		ldi r19,hi8(0x461c4000)
+ 892 030c 4CE1      		ldi r20,hlo8(0x461c4000)
+ 893 030e 56E4      		ldi r21,hhi8(0x461c4000)
+ 894 0310 0E94 0000 		call __mulsf3
+  95:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	scaled.XAxis = (int16_t)xAxis;
+ 896               	.LM63:
+ 897 0314 0E94 0000 		call __fixsfsi
+ 898 0318 7A83      		std Y+2,r23
+ 899 031a 6983      		std Y+1,r22
+  98:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return scaled;
+ 901               	.LM64:
+ 902 031c 802F      		mov r24,r16
+ 903 031e 9B2D      		mov r25,r11
+ 904 0320 9C83      		std Y+4,r25
+ 905 0322 8B83      		std Y+3,r24
+ 906 0324 812F      		mov r24,r17
+ 907 0326 9A2D      		mov r25,r10
+ 908 0328 9E83      		std Y+6,r25
+ 909 032a 8D83      		std Y+5,r24
+ 910 032c 262F      		mov r18,r22
+ 911 032e 3A81      		ldd r19,Y+2
+ 912 0330 402F      		mov r20,r16
+ 913 0332 5C81      		ldd r21,Y+4
+ 914 0334 612F      		mov r22,r17
+ 915 0336 7E81      		ldd r23,Y+6
+  99:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 917               	.LM65:
+ 918 0338 80E0      		ldi r24,lo8(0)
+ 919 033a 90E0      		ldi r25,lo8(0)
+ 920               	/* epilogue start */
+ 921 033c 6296      		adiw r28,18
+ 922 033e 0FB6      		in __tmp_reg__,__SREG__
+ 923 0340 F894      		cli
+ 924 0342 DEBF      		out __SP_H__,r29
+ 925 0344 0FBE      		out __SREG__,__tmp_reg__
+ 926 0346 CDBF      		out __SP_L__,r28
+ 927 0348 DF91      		pop r29
+ 928 034a CF91      		pop r28
+ 929 034c 1F91      		pop r17
+ 930 034e 0F91      		pop r16
+ 931 0350 FF90      		pop r15
+ 932 0352 EF90      		pop r14
+ 933 0354 DF90      		pop r13
+ 934 0356 CF90      		pop r12
+ 935 0358 BF90      		pop r11
+ 936 035a AF90      		pop r10
+ 937 035c 0895      		ret
+ 942               	.Lscope7:
+ 944               		.stabd	78,0,0
+ 947               	.global	get_acc_values
+ 949               	get_acc_values:
+ 950               		.stabd	46,0,0
+ 121:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+ 952               	.LM66:
+ 953               	.LFBB8:
+ 954 035e 0F93      		push r16
+ 955 0360 1F93      		push r17
+ 956 0362 CF93      		push r28
+ 957 0364 DF93      		push r29
+ 958 0366 CDB7      		in r28,__SP_L__
+ 959 0368 DEB7      		in r29,__SP_H__
+ 960 036a 2C97      		sbiw r28,12
+ 961 036c 0FB6      		in __tmp_reg__,__SREG__
+ 962 036e F894      		cli
+ 963 0370 DEBF      		out __SP_H__,r29
+ 964 0372 0FBE      		out __SREG__,__tmp_reg__
+ 965 0374 CDBF      		out __SP_L__,r28
+ 966               	/* prologue: function */
+ 967               	/* frame size = 12 */
+ 968               	/* stack size = 16 */
+ 969               	.L__stack_usage = 16
+ 970 0376 8C01      		movw r16,r24
+ 123:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****     acc_scaled = ReadScaledAxis();
+ 972               	.LM67:
+ 973 0378 0E94 0000 		call ReadScaledAxis
+ 974 037c 2F83      		std Y+7,r18
+ 975 037e 3887      		std Y+8,r19
+ 976 0380 4987      		std Y+9,r20
+ 977 0382 5A87      		std Y+10,r21
+ 978 0384 6B87      		std Y+11,r22
+ 979 0386 7C87      		std Y+12,r23
+ 980 0388 DE01      		movw r26,r28
+ 981 038a 1196      		adiw r26,1
+ 982 038c FE01      		movw r30,r28
+ 983 038e 3796      		adiw r30,7
+ 984 0390 86E0      		ldi r24,lo8(6)
+ 985               	.L31:
+ 986 0392 0190      		ld r0,Z+
+ 987 0394 0D92      		st X+,r0
+ 988 0396 8150      		subi r24,lo8(-(-1))
+ 989 0398 01F4      		brne .L31
+ 124:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****     *result = acc_scaled.XAxis;
+ 991               	.LM68:
+ 992 039a 8981      		ldd r24,Y+1
+ 993 039c 9A81      		ldd r25,Y+2
+ 994 039e F801      		movw r30,r16
+ 995 03a0 9183      		std Z+1,r25
+ 996 03a2 8083      		st Z,r24
+ 125:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****     *(result+1) = acc_scaled.YAxis;
+ 998               	.LM69:
+ 999 03a4 8B81      		ldd r24,Y+3
+ 1000 03a6 9C81      		ldd r25,Y+4
+ 1001 03a8 9383      		std Z+3,r25
+ 1002 03aa 8283      		std Z+2,r24
+ 126:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****     *(result+2) = acc_scaled.ZAxis;
+ 1004               	.LM70:
+ 1005 03ac 8D81      		ldd r24,Y+5
+ 1006 03ae 9E81      		ldd r25,Y+6
+ 1007 03b0 9583      		std Z+5,r25
+ 1008 03b2 8483      		std Z+4,r24
+ 1009               	/* epilogue start */
+ 127:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1011               	.LM71:
+ 1012 03b4 2C96      		adiw r28,12
+ 1013 03b6 0FB6      		in __tmp_reg__,__SREG__
+ 1014 03b8 F894      		cli
+ 1015 03ba DEBF      		out __SP_H__,r29
+ 1016 03bc 0FBE      		out __SREG__,__tmp_reg__
+ 1017 03be CDBF      		out __SP_L__,r28
+ 1018 03c0 DF91      		pop r29
+ 1019 03c2 CF91      		pop r28
+ 1020 03c4 1F91      		pop r17
+ 1021 03c6 0F91      		pop r16
+ 1022 03c8 0895      		ret
+ 1027               	.Lscope8:
+ 1029               		.stabd	78,0,0
+ 1030               		.data
+ 1031               	.LC0:
+ 1032 0000 456E 7465 		.string	"Entered range was invalid. Should be 2, 4, 8 or 16g."
+ 1032      7265 6420 
+ 1032      7261 6E67 
+ 1032      6520 7761 
+ 1032      7320 696E 
+ 1033               		.text
+ 1036               	.global	GetErrorText
+ 1038               	GetErrorText:
+ 1039               		.stabd	46,0,0
+ 240:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 241:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** char* GetErrorText(int errorCode)
+ 242:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+ 1041               	.LM72:
+ 1042               	.LFBB9:
+ 1043               	/* prologue: function */
+ 1044               	/* frame size = 0 */
+ 1045               	/* stack size = 0 */
+ 1046               	.L__stack_usage = 0
+ 243:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	if(ErrorCode_1_Num == 1)
+ 244:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		return ErrorCode_1;
+ 245:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+ 246:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return "Error not defined.";
+ 247:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1048               	.LM73:
+ 1049 03ca 80E0      		ldi r24,lo8(.LC0)
+ 1050 03cc 90E0      		ldi r25,hi8(.LC0)
+ 1051               	/* epilogue start */
+ 1052 03ce 0895      		ret
+ 1054               	.Lscope9:
+ 1056               		.stabd	78,0,0
+ 1059               	.global	setTapThreshold
+ 1061               	setTapThreshold:
+ 1062               		.stabd	46,0,0
+ 248:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 249:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** ///----- Frank Addition --------------///
+ 250:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // Sets the THRESH_TAP byte value
+ 251:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // it should be between 0 and 255
+ 252:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // the scale factor is 62.5 mg/LSB
+ 253:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // A value of 0 may result in undesirable behavior
+ 254:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 255:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void setTapThreshold(int tapThreshold) {
+ 1064               	.LM74:
+ 1065               	.LFBB10:
+ 1066               	/* prologue: function */
+ 1067               	/* frame size = 0 */
+ 1068               	/* stack size = 0 */
+ 1069               	.L__stack_usage = 0
+ 256:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	tapThreshold = min(max(tapThreshold,0),255);
+ 257:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	byte _b = (byte)(tapThreshold);
+ 258:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	Write(ADXL345_THRESH_TAP, _b);  
+ 1071               	.LM75:
+ 1072 03d0 8DE1      		ldi r24,lo8(29)
+ 1073 03d2 90E0      		ldi r25,hi8(29)
+ 1074 03d4 6FEF      		ldi r22,lo8(255)
+ 1075 03d6 70E0      		ldi r23,hi8(255)
+ 1076 03d8 0E94 0000 		call Write
+ 1077               	/* epilogue start */
+ 259:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1079               	.LM76:
+ 1080 03dc 0895      		ret
+ 1082               	.Lscope10:
+ 1084               		.stabd	78,0,0
+ 1086               	.global	getTapThreshold
+ 1088               	getTapThreshold:
+ 1089               		.stabd	46,0,0
+ 260:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 261:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // Gets the THRESH_TAP byte value
+ 262:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // return value is comprised between 0 and 255
+ 263:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // the scale factor is 62.5 mg/LSB
+ 264:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** int getTapThreshold() {
+ 1091               	.LM77:
+ 1092               	.LFBB11:
+ 1093               	/* prologue: function */
+ 1094               	/* frame size = 0 */
+ 1095               	/* stack size = 0 */
+ 1096               	.L__stack_usage = 0
+ 265:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	byte _b;
+ 266:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	_b = *Read(ADXL345_THRESH_TAP, 1);  
+ 1098               	.LM78:
+ 1099 03de 8DE1      		ldi r24,lo8(29)
+ 1100 03e0 90E0      		ldi r25,hi8(29)
+ 1101 03e2 61E0      		ldi r22,lo8(1)
+ 1102 03e4 70E0      		ldi r23,hi8(1)
+ 1103 03e6 0E94 0000 		call Read
+ 267:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return (int)(_b);
+ 268:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1105               	.LM79:
+ 1106 03ea FC01      		movw r30,r24
+ 1107 03ec 8081      		ld r24,Z
+ 1108 03ee 90E0      		ldi r25,lo8(0)
+ 1109               	/* epilogue start */
+ 1110 03f0 0895      		ret
+ 1112               	.Lscope11:
+ 1114               		.stabd	78,0,0
+ 1117               	.global	setTapDuration
+ 1119               	setTapDuration:
+ 1120               		.stabd	46,0,0
+ 269:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // Sets the DUR byte
+ 270:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // The DUR byte contains an unsigned time value representing the maximum time
+ 271:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // that an event must be above THRESH_TAP threshold to qualify as a tap event
+ 272:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // The scale factor is 625µs/LSB
+ 273:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // A value of 0 disables the tap/double tap funcitons. Max value is 255.
+ 274:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void setTapDuration(int tapDuration) {
+ 1122               	.LM80:
+ 1123               	.LFBB12:
+ 1124               	/* prologue: function */
+ 1125               	/* frame size = 0 */
+ 1126               	/* stack size = 0 */
+ 1127               	.L__stack_usage = 0
+ 275:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	tapDuration = min(max(tapDuration,0),255);
+ 276:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	byte _b = (byte)(tapDuration);
+ 277:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	Write(ADXL345_DUR, _b);  
+ 1129               	.LM81:
+ 1130 03f2 81E2      		ldi r24,lo8(33)
+ 1131 03f4 90E0      		ldi r25,hi8(33)
+ 1132 03f6 6FEF      		ldi r22,lo8(255)
+ 1133 03f8 70E0      		ldi r23,hi8(255)
+ 1134 03fa 0E94 0000 		call Write
+ 1135               	/* epilogue start */
+ 278:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1137               	.LM82:
+ 1138 03fe 0895      		ret
+ 1140               	.Lscope12:
+ 1142               		.stabd	78,0,0
+ 1144               	.global	getTapDuration
+ 1146               	getTapDuration:
+ 1147               		.stabd	46,0,0
+ 279:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 280:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // Gets the DUR byte
+ 281:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** int getTapDuration() {
+ 1149               	.LM83:
+ 1150               	.LFBB13:
+ 1151               	/* prologue: function */
+ 1152               	/* frame size = 0 */
+ 1153               	/* stack size = 0 */
+ 1154               	.L__stack_usage = 0
+ 282:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	byte _b;
+ 283:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	_b =  *Read(ADXL345_DUR, 1);  
+ 1156               	.LM84:
+ 1157 0400 81E2      		ldi r24,lo8(33)
+ 1158 0402 90E0      		ldi r25,hi8(33)
+ 1159 0404 61E0      		ldi r22,lo8(1)
+ 1160 0406 70E0      		ldi r23,hi8(1)
+ 1161 0408 0E94 0000 		call Read
+ 284:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return (int)(_b);
+ 285:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1163               	.LM85:
+ 1164 040c FC01      		movw r30,r24
+ 1165 040e 8081      		ld r24,Z
+ 1166 0410 90E0      		ldi r25,lo8(0)
+ 1167               	/* epilogue start */
+ 1168 0412 0895      		ret
+ 1170               	.Lscope13:
+ 1172               		.stabd	78,0,0
+ 1174               	.global	setDoubleTapLatency
+ 1176               	setDoubleTapLatency:
+ 1177               		.stabd	46,0,0
+ 286:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 287:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // Sets the latency (latent register) which contains an unsigned time value
+ 288:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // representing the wait time from the detection of a tap event to the start
+ 289:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // of the time window, during which a possible second tap can be detected.
+ 290:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // The scale factor is 1.25ms/LSB. A value of 0 disables the double tap function.
+ 291:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // It accepts a maximum value of 255.
+ 292:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void setDoubleTapLatency(int doubleTapLatency) {
+ 1179               	.LM86:
+ 1180               	.LFBB14:
+ 1181               	/* prologue: function */
+ 1182               	/* frame size = 0 */
+ 1183               	/* stack size = 0 */
+ 1184               	.L__stack_usage = 0
+ 1185 0414 682F      		mov r22,r24
+ 293:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	byte _b = (byte)(doubleTapLatency);
+ 294:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	Write(ADXL345_LATENT, _b);  
+ 1187               	.LM87:
+ 1188 0416 82E2      		ldi r24,lo8(34)
+ 1189 0418 90E0      		ldi r25,hi8(34)
+ 1190 041a 70E0      		ldi r23,lo8(0)
+ 1191 041c 0E94 0000 		call Write
+ 1192               	/* epilogue start */
+ 295:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1194               	.LM88:
+ 1195 0420 0895      		ret
+ 1197               	.Lscope14:
+ 1199               		.stabd	78,0,0
+ 1201               	.global	getDoubleTapLatency
+ 1203               	getDoubleTapLatency:
+ 1204               		.stabd	46,0,0
+ 296:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 297:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // Gets the Latent value
+ 298:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** int getDoubleTapLatency() {
+ 1206               	.LM89:
+ 1207               	.LFBB15:
+ 1208               	/* prologue: function */
+ 1209               	/* frame size = 0 */
+ 1210               	/* stack size = 0 */
+ 1211               	.L__stack_usage = 0
+ 299:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	byte _b;
+ 300:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	_b =  *Read(ADXL345_LATENT, 1);  
+ 1213               	.LM90:
+ 1214 0422 82E2      		ldi r24,lo8(34)
+ 1215 0424 90E0      		ldi r25,hi8(34)
+ 1216 0426 61E0      		ldi r22,lo8(1)
+ 1217 0428 70E0      		ldi r23,hi8(1)
+ 1218 042a 0E94 0000 		call Read
+ 301:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return (int)(_b);
+ 302:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1220               	.LM91:
+ 1221 042e FC01      		movw r30,r24
+ 1222 0430 8081      		ld r24,Z
+ 1223 0432 90E0      		ldi r25,lo8(0)
+ 1224               	/* epilogue start */
+ 1225 0434 0895      		ret
+ 1227               	.Lscope15:
+ 1229               		.stabd	78,0,0
+ 1232               	.global	setDoubleTapWindow
+ 1234               	setDoubleTapWindow:
+ 1235               		.stabd	46,0,0
+ 303:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 304:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // Sets the Window register, which contains an unsigned time value representing
+ 305:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // the amount of time after the expiration of the latency time (Latent register)
+ 306:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // during which a second valud tap can begin. The scale factor is 1.25ms/LSB. A
+ 307:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // value of 0 disables the double tap function. The maximum value is 255.
+ 308:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void setDoubleTapWindow(int doubleTapWindow) {
+ 1237               	.LM92:
+ 1238               	.LFBB16:
+ 1239               	/* prologue: function */
+ 1240               	/* frame size = 0 */
+ 1241               	/* stack size = 0 */
+ 1242               	.L__stack_usage = 0
+ 309:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	doubleTapWindow = min(max(doubleTapWindow,0),255);
+ 310:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	byte _b = (byte) (doubleTapWindow);
+ 311:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	Write(ADXL345_WINDOW, _b);  
+ 1244               	.LM93:
+ 1245 0436 83E2      		ldi r24,lo8(35)
+ 1246 0438 90E0      		ldi r25,hi8(35)
+ 1247 043a 6FEF      		ldi r22,lo8(255)
+ 1248 043c 70E0      		ldi r23,hi8(255)
+ 1249 043e 0E94 0000 		call Write
+ 1250               	/* epilogue start */
+ 312:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1252               	.LM94:
+ 1253 0442 0895      		ret
+ 1255               	.Lscope16:
+ 1257               		.stabd	78,0,0
+ 1259               	.global	getDoubleTapWindow
+ 1261               	getDoubleTapWindow:
+ 1262               		.stabd	46,0,0
+ 313:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** // Gets the Window register
+ 314:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** int getDoubleTapWindow() {
+ 1264               	.LM95:
+ 1265               	.LFBB17:
+ 1266               	/* prologue: function */
+ 1267               	/* frame size = 0 */
+ 1268               	/* stack size = 0 */
+ 1269               	.L__stack_usage = 0
+ 315:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	byte _b;
+ 316:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	_b = *Read(ADXL345_WINDOW, 1);  
+ 1271               	.LM96:
+ 1272 0444 83E2      		ldi r24,lo8(35)
+ 1273 0446 90E0      		ldi r25,hi8(35)
+ 1274 0448 61E0      		ldi r22,lo8(1)
+ 1275 044a 70E0      		ldi r23,hi8(1)
+ 1276 044c 0E94 0000 		call Read
+ 317:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   return (int)(_b);
+ 318:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1278               	.LM97:
+ 1279 0450 FC01      		movw r30,r24
+ 1280 0452 8081      		ld r24,Z
+ 1281 0454 90E0      		ldi r25,lo8(0)
+ 1282               	/* epilogue start */
+ 1283 0456 0895      		ret
+ 1285               	.Lscope17:
+ 1287               		.stabd	78,0,0
+ 1289               	.global	getInterruptSourceVoid
+ 1291               	getInterruptSourceVoid:
+ 1292               		.stabd	46,0,0
+ 319:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** byte getInterruptSourceVoid() {
+ 1294               	.LM98:
+ 1295               	.LFBB18:
+ 1296               	/* prologue: function */
+ 1297               	/* frame size = 0 */
+ 1298               	/* stack size = 0 */
+ 1299               	.L__stack_usage = 0
+ 320:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	uint8_t _b;
+ 321:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	_b = *Read(ADXL345_INT_SOURCE, 1);
+ 1301               	.LM99:
+ 1302 0458 80E3      		ldi r24,lo8(48)
+ 1303 045a 90E0      		ldi r25,hi8(48)
+ 1304 045c 61E0      		ldi r22,lo8(1)
+ 1305 045e 70E0      		ldi r23,hi8(1)
+ 1306 0460 0E94 0000 		call Read
+ 322:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return _b;
+ 323:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1308               	.LM100:
+ 1309 0464 FC01      		movw r30,r24
+ 1310 0466 8081      		ld r24,Z
+ 1311               	/* epilogue start */
+ 1312 0468 0895      		ret
+ 1314               	.Lscope18:
+ 1316               		.stabd	78,0,0
+ 1320               	.global	setRegisterBit
+ 1322               	setRegisterBit:
+ 1323               		.stabd	46,0,0
+ 324:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** bool getInterruptSource(byte interruptBit) {
+ 325:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return getRegisterBit(ADXL345_INT_SOURCE,interruptBit);
+ 326:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 327:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 328:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** bool getInterruptMapping(byte interruptBit) {
+ 329:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return getRegisterBit(ADXL345_INT_MAP,interruptBit);
+ 330:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 331:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void setInterruptMapping(byte interruptBit, bool interruptPin) {
+ 332:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	setRegisterBit(ADXL345_INT_MAP, interruptBit, interruptPin);
+ 333:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 334:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 335:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** bool isInterruptEnabled(byte interruptBit) {
+ 336:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return getRegisterBit(ADXL345_INT_ENABLE,interruptBit);
+ 337:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 338:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 339:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void setInterrupt(byte interruptBit, bool state) {
+ 340:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	setRegisterBit(ADXL345_INT_ENABLE, interruptBit, state);
+ 341:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 342:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 343:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void setRegisterBit(byte regAdress, int bitPos, bool state) {
+ 1325               	.LM101:
+ 1326               	.LFBB19:
+ 1327 046a 0F93      		push r16
+ 1328 046c 1F93      		push r17
+ 1329 046e CF93      		push r28
+ 1330 0470 DF93      		push r29
+ 1331 0472 0F92      		push __tmp_reg__
+ 1332 0474 CDB7      		in r28,__SP_L__
+ 1333 0476 DEB7      		in r29,__SP_H__
+ 1334               	/* prologue: function */
+ 1335               	/* frame size = 1 */
+ 1336               	/* stack size = 5 */
+ 1337               	.L__stack_usage = 5
+ 1338 0478 182F      		mov r17,r24
+ 1339 047a 062F      		mov r16,r22
+ 344:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	byte _b;
+ 345:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	_b = *Read(regAdress, 1);
+ 1341               	.LM102:
+ 1342 047c 90E0      		ldi r25,lo8(0)
+ 1343 047e 61E0      		ldi r22,lo8(1)
+ 1344 0480 70E0      		ldi r23,hi8(1)
+ 1345 0482 4983      		std Y+1,r20
+ 1346 0484 0E94 0000 		call Read
+ 1347 0488 FC01      		movw r30,r24
+ 1348 048a 8081      		ld r24,Z
+ 346:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	if (state) {
+ 1350               	.LM103:
+ 1351 048c 4981      		ldd r20,Y+1
+ 347:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		_b |= (1 << bitPos);  // forces nth bit of _b to be 1.  all other bits left alone.
+ 1353               	.LM104:
+ 1354 048e 21E0      		ldi r18,lo8(1)
+ 1355 0490 30E0      		ldi r19,hi8(1)
+ 1356 0492 00C0      		rjmp 2f
+ 1357 0494 220F      	1:	lsl r18
+ 1358 0496 331F      		rol r19
+ 1359 0498 0A95      	2:	dec r16
+ 1360 049a 02F4      		brpl 1b
+ 346:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	if (state) {
+ 1362               	.LM105:
+ 1363 049c 4423      		tst r20
+ 1364 049e 01F0      		breq .L44
+ 1366               	.LM106:
+ 1367 04a0 282B      		or r18,r24
+ 1368 04a2 00C0      		rjmp .L45
+ 1369               	.L44:
+ 348:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	} 
+ 349:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	else {
+ 350:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		_b &= ~(1 << bitPos); // forces nth bit of _b to be 0.  all other bits left alone.
+ 1371               	.LM107:
+ 1372 04a4 2095      		com r18
+ 1373 04a6 2823      		and r18,r24
+ 1374               	.L45:
+ 351:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	}
+ 352:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	Write(regAdress, _b);  
+ 1376               	.LM108:
+ 1377 04a8 812F      		mov r24,r17
+ 1378 04aa 90E0      		ldi r25,lo8(0)
+ 1379 04ac 622F      		mov r22,r18
+ 1380 04ae 70E0      		ldi r23,lo8(0)
+ 1381 04b0 0E94 0000 		call Write
+ 1382               	/* epilogue start */
+ 353:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1384               	.LM109:
+ 1385 04b4 0F90      		pop __tmp_reg__
+ 1386 04b6 DF91      		pop r29
+ 1387 04b8 CF91      		pop r28
+ 1388 04ba 1F91      		pop r17
+ 1389 04bc 0F91      		pop r16
+ 1390 04be 0895      		ret
+ 1392               	.Lscope19:
+ 1394               		.stabd	78,0,0
+ 1398               	.global	setInterrupt
+ 1400               	setInterrupt:
+ 1401               		.stabd	46,0,0
+ 339:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void setInterrupt(byte interruptBit, bool state) {
+ 1403               	.LM110:
+ 1404               	.LFBB20:
+ 1405               	/* prologue: function */
+ 1406               	/* frame size = 0 */
+ 1407               	/* stack size = 0 */
+ 1408               	.L__stack_usage = 0
+ 1409 04c0 982F      		mov r25,r24
+ 1410 04c2 462F      		mov r20,r22
+ 340:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	setRegisterBit(ADXL345_INT_ENABLE, interruptBit, state);
+ 1412               	.LM111:
+ 1413 04c4 8EE2      		ldi r24,lo8(46)
+ 1414 04c6 692F      		mov r22,r25
+ 1415 04c8 70E0      		ldi r23,lo8(0)
+ 1416 04ca 0E94 0000 		call setRegisterBit
+ 1417               	/* epilogue start */
+ 341:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1419               	.LM112:
+ 1420 04ce 0895      		ret
+ 1422               	.Lscope20:
+ 1424               		.stabd	78,0,0
+ 1428               	.global	setInterruptMapping
+ 1430               	setInterruptMapping:
+ 1431               		.stabd	46,0,0
+ 331:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void setInterruptMapping(byte interruptBit, bool interruptPin) {
+ 1433               	.LM113:
+ 1434               	.LFBB21:
+ 1435               	/* prologue: function */
+ 1436               	/* frame size = 0 */
+ 1437               	/* stack size = 0 */
+ 1438               	.L__stack_usage = 0
+ 1439 04d0 982F      		mov r25,r24
+ 1440 04d2 462F      		mov r20,r22
+ 332:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	setRegisterBit(ADXL345_INT_MAP, interruptBit, interruptPin);
+ 1442               	.LM114:
+ 1443 04d4 8FE2      		ldi r24,lo8(47)
+ 1444 04d6 692F      		mov r22,r25
+ 1445 04d8 70E0      		ldi r23,lo8(0)
+ 1446 04da 0E94 0000 		call setRegisterBit
+ 1447               	/* epilogue start */
+ 333:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1449               	.LM115:
+ 1450 04de 0895      		ret
+ 1452               	.Lscope21:
+ 1454               		.stabd	78,0,0
+ 1457               	.global	getRegisterBit
+ 1459               	getRegisterBit:
+ 1460               		.stabd	46,0,0
+ 354:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 355:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** bool getRegisterBit(byte regAdress, int bitPos) {
+ 1462               	.LM116:
+ 1463               	.LFBB22:
+ 1464 04e0 CF93      		push r28
+ 1465               	/* prologue: function */
+ 1466               	/* frame size = 0 */
+ 1467               	/* stack size = 1 */
+ 1468               	.L__stack_usage = 1
+ 1469 04e2 C62F      		mov r28,r22
+ 356:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	byte _b;
+ 357:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	_b = *Read(regAdress, 1);
+ 1471               	.LM117:
+ 1472 04e4 90E0      		ldi r25,lo8(0)
+ 1473 04e6 61E0      		ldi r22,lo8(1)
+ 1474 04e8 70E0      		ldi r23,hi8(1)
+ 1475 04ea 0E94 0000 		call Read
+ 358:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return ((_b >> bitPos) & 1);
+ 1477               	.LM118:
+ 1478 04ee FC01      		movw r30,r24
+ 1479 04f0 8081      		ld r24,Z
+ 1480 04f2 90E0      		ldi r25,lo8(0)
+ 1481 04f4 00C0      		rjmp 2f
+ 1482 04f6 9595      	1:	asr r25
+ 1483 04f8 8795      		ror r24
+ 1484 04fa CA95      	2:	dec r28
+ 1485 04fc 02F4      		brpl 1b
+ 359:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1487               	.LM119:
+ 1488 04fe 8170      		andi r24,lo8(1)
+ 1489               	/* epilogue start */
+ 1490 0500 CF91      		pop r28
+ 1491 0502 0895      		ret
+ 1493               	.Lscope22:
+ 1495               		.stabd	78,0,0
+ 1498               	.global	isInterruptEnabled
+ 1500               	isInterruptEnabled:
+ 1501               		.stabd	46,0,0
+ 335:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** bool isInterruptEnabled(byte interruptBit) {
+ 1503               	.LM120:
+ 1504               	.LFBB23:
+ 1505               	/* prologue: function */
+ 1506               	/* frame size = 0 */
+ 1507               	/* stack size = 0 */
+ 1508               	.L__stack_usage = 0
+ 1509 0504 682F      		mov r22,r24
+ 336:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return getRegisterBit(ADXL345_INT_ENABLE,interruptBit);
+ 1511               	.LM121:
+ 1512 0506 8EE2      		ldi r24,lo8(46)
+ 1513 0508 70E0      		ldi r23,lo8(0)
+ 1514 050a 0E94 0000 		call getRegisterBit
+ 1515               	/* epilogue start */
+ 337:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1517               	.LM122:
+ 1518 050e 0895      		ret
+ 1520               	.Lscope23:
+ 1522               		.stabd	78,0,0
+ 1525               	.global	getInterruptMapping
+ 1527               	getInterruptMapping:
+ 1528               		.stabd	46,0,0
+ 328:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** bool getInterruptMapping(byte interruptBit) {
+ 1530               	.LM123:
+ 1531               	.LFBB24:
+ 1532               	/* prologue: function */
+ 1533               	/* frame size = 0 */
+ 1534               	/* stack size = 0 */
+ 1535               	.L__stack_usage = 0
+ 1536 0510 682F      		mov r22,r24
+ 329:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return getRegisterBit(ADXL345_INT_MAP,interruptBit);
+ 1538               	.LM124:
+ 1539 0512 8FE2      		ldi r24,lo8(47)
+ 1540 0514 70E0      		ldi r23,lo8(0)
+ 1541 0516 0E94 0000 		call getRegisterBit
+ 1542               	/* epilogue start */
+ 330:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1544               	.LM125:
+ 1545 051a 0895      		ret
+ 1547               	.Lscope24:
+ 1549               		.stabd	78,0,0
+ 1552               	.global	getInterruptSource
+ 1554               	getInterruptSource:
+ 1555               		.stabd	46,0,0
+ 324:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** bool getInterruptSource(byte interruptBit) {
+ 1557               	.LM126:
+ 1558               	.LFBB25:
+ 1559               	/* prologue: function */
+ 1560               	/* frame size = 0 */
+ 1561               	/* stack size = 0 */
+ 1562               	.L__stack_usage = 0
+ 1563 051c 682F      		mov r22,r24
+ 325:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return getRegisterBit(ADXL345_INT_SOURCE,interruptBit);
+ 1565               	.LM127:
+ 1566 051e 80E3      		ldi r24,lo8(48)
+ 1567 0520 70E0      		ldi r23,lo8(0)
+ 1568 0522 0E94 0000 		call getRegisterBit
+ 1569               	/* epilogue start */
+ 326:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1571               	.LM128:
+ 1572 0526 0895      		ret
+ 1574               	.Lscope25:
+ 1576               		.stabd	78,0,0
+ 1578               	.global	isTapDetectionOnX
+ 1580               	isTapDetectionOnX:
+ 1581               		.stabd	46,0,0
+ 360:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 361:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** bool isTapDetectionOnX(){ 
+ 1583               	.LM129:
+ 1584               	.LFBB26:
+ 1585               	/* prologue: function */
+ 1586               	/* frame size = 0 */
+ 1587               	/* stack size = 0 */
+ 1588               	.L__stack_usage = 0
+ 362:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return getRegisterBit(ADXL345_TAP_AXES, 2); 
+ 1590               	.LM130:
+ 1591 0528 8AE2      		ldi r24,lo8(42)
+ 1592 052a 62E0      		ldi r22,lo8(2)
+ 1593 052c 70E0      		ldi r23,hi8(2)
+ 1594 052e 0E94 0000 		call getRegisterBit
+ 1595               	/* epilogue start */
+ 363:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1597               	.LM131:
+ 1598 0532 0895      		ret
+ 1600               	.Lscope26:
+ 1602               		.stabd	78,0,0
+ 1605               	.global	setTapDetectionOnX
+ 1607               	setTapDetectionOnX:
+ 1608               		.stabd	46,0,0
+ 364:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void setTapDetectionOnX(bool state) {  
+ 1610               	.LM132:
+ 1611               	.LFBB27:
+ 1612               	/* prologue: function */
+ 1613               	/* frame size = 0 */
+ 1614               	/* stack size = 0 */
+ 1615               	.L__stack_usage = 0
+ 1616 0534 482F      		mov r20,r24
+ 365:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	setRegisterBit(ADXL345_TAP_AXES, 2, state); 
+ 1618               	.LM133:
+ 1619 0536 8AE2      		ldi r24,lo8(42)
+ 1620 0538 62E0      		ldi r22,lo8(2)
+ 1621 053a 70E0      		ldi r23,hi8(2)
+ 1622 053c 0E94 0000 		call setRegisterBit
+ 1623               	/* epilogue start */
+ 366:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1625               	.LM134:
+ 1626 0540 0895      		ret
+ 1628               	.Lscope27:
+ 1630               		.stabd	78,0,0
+ 1632               	.global	isTapDetectionOnY
+ 1634               	isTapDetectionOnY:
+ 1635               		.stabd	46,0,0
+ 367:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** bool isTapDetectionOnY(){ 
+ 1637               	.LM135:
+ 1638               	.LFBB28:
+ 1639               	/* prologue: function */
+ 1640               	/* frame size = 0 */
+ 1641               	/* stack size = 0 */
+ 1642               	.L__stack_usage = 0
+ 368:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return getRegisterBit(ADXL345_TAP_AXES, 1); 
+ 1644               	.LM136:
+ 1645 0542 8AE2      		ldi r24,lo8(42)
+ 1646 0544 61E0      		ldi r22,lo8(1)
+ 1647 0546 70E0      		ldi r23,hi8(1)
+ 1648 0548 0E94 0000 		call getRegisterBit
+ 1649               	/* epilogue start */
+ 369:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1651               	.LM137:
+ 1652 054c 0895      		ret
+ 1654               	.Lscope28:
+ 1656               		.stabd	78,0,0
+ 1659               	.global	setTapDetectionOnY
+ 1661               	setTapDetectionOnY:
+ 1662               		.stabd	46,0,0
+ 370:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void setTapDetectionOnY(bool state) {  
+ 1664               	.LM138:
+ 1665               	.LFBB29:
+ 1666               	/* prologue: function */
+ 1667               	/* frame size = 0 */
+ 1668               	/* stack size = 0 */
+ 1669               	.L__stack_usage = 0
+ 1670 054e 482F      		mov r20,r24
+ 371:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	setRegisterBit(ADXL345_TAP_AXES, 1, state); 
+ 1672               	.LM139:
+ 1673 0550 8AE2      		ldi r24,lo8(42)
+ 1674 0552 61E0      		ldi r22,lo8(1)
+ 1675 0554 70E0      		ldi r23,hi8(1)
+ 1676 0556 0E94 0000 		call setRegisterBit
+ 1677               	/* epilogue start */
+ 372:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1679               	.LM140:
+ 1680 055a 0895      		ret
+ 1682               	.Lscope29:
+ 1684               		.stabd	78,0,0
+ 1686               	.global	isTapDetectionOnZ
+ 1688               	isTapDetectionOnZ:
+ 1689               		.stabd	46,0,0
+ 373:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** bool isTapDetectionOnZ(){ 
+ 1691               	.LM141:
+ 1692               	.LFBB30:
+ 1693               	/* prologue: function */
+ 1694               	/* frame size = 0 */
+ 1695               	/* stack size = 0 */
+ 1696               	.L__stack_usage = 0
+ 374:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return getRegisterBit(ADXL345_TAP_AXES, 0); 
+ 1698               	.LM142:
+ 1699 055c 8AE2      		ldi r24,lo8(42)
+ 1700 055e 60E0      		ldi r22,lo8(0)
+ 1701 0560 70E0      		ldi r23,hi8(0)
+ 1702 0562 0E94 0000 		call getRegisterBit
+ 1703               	/* epilogue start */
+ 375:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1705               	.LM143:
+ 1706 0566 0895      		ret
+ 1708               	.Lscope30:
+ 1710               		.stabd	78,0,0
+ 1713               	.global	setTapDetectionOnZ
+ 1715               	setTapDetectionOnZ:
+ 1716               		.stabd	46,0,0
+ 376:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void setTapDetectionOnZ(bool state) {  
+ 1718               	.LM144:
+ 1719               	.LFBB31:
+ 1720               	/* prologue: function */
+ 1721               	/* frame size = 0 */
+ 1722               	/* stack size = 0 */
+ 1723               	.L__stack_usage = 0
+ 1724 0568 482F      		mov r20,r24
+ 377:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	setRegisterBit(ADXL345_TAP_AXES, 0, state);
+ 1726               	.LM145:
+ 1727 056a 8AE2      		ldi r24,lo8(42)
+ 1728 056c 60E0      		ldi r22,lo8(0)
+ 1729 056e 70E0      		ldi r23,hi8(0)
+ 1730 0570 0E94 0000 		call setRegisterBit
+ 1731               	/* epilogue start */
+ 378:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1733               	.LM146:
+ 1734 0574 0895      		ret
+ 1736               	.Lscope31:
+ 1738               		.stabd	78,0,0
+ 1741               	.global	triggered
+ 1743               	triggered:
+ 1744               		.stabd	46,0,0
+ 379:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** //Used to check if action was triggered in interrupts
+ 380:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** //Example triggered(interrupts, ADXL345_SINGLE_TAP);
+ 381:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** bool triggered(byte interrupts, int mask){
+ 1746               	.LM147:
+ 1747               	.LFBB32:
+ 1748               	/* prologue: function */
+ 1749               	/* frame size = 0 */
+ 1750               	/* stack size = 0 */
+ 1751               	.L__stack_usage = 0
+ 382:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	return ((interrupts >> mask) & 1);
+ 1753               	.LM148:
+ 1754 0576 90E0      		ldi r25,lo8(0)
+ 1755 0578 00C0      		rjmp 2f
+ 1756 057a 9595      	1:	asr r25
+ 1757 057c 8795      		ror r24
+ 1758 057e 6A95      	2:	dec r22
+ 1759 0580 02F4      		brpl 1b
+ 383:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1761               	.LM149:
+ 1762 0582 8170      		andi r24,lo8(1)
+ 1763               	/* epilogue start */
+ 1764 0584 0895      		ret
+ 1766               	.Lscope32:
+ 1768               		.stabd	78,0,0
+ 1771               	.global	acc_set_data_rate
+ 1773               	acc_set_data_rate:
+ 1774               		.stabd	46,0,0
+ 384:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 
+ 385:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** /* sets the data rate by writing to the BW_RATE register.
+ 386:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****  * Defaults to 800Hz
+ 387:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****  * @param rate_selector - number defining the rate to select. see ADXL345.h
+ 388:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****  */
+ 389:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void acc_set_data_rate(byte rate_selector){
+ 1776               	.LM150:
+ 1777               	.LFBB33:
+ 1778               	/* prologue: function */
+ 1779               	/* frame size = 0 */
+ 1780               	/* stack size = 0 */
+ 1781               	.L__stack_usage = 0
+ 1783               	.LM151:
+ 1784 0586 8350      		subi r24,lo8(-(-3))
+ 1785 0588 8830      		cpi r24,lo8(8)
+ 1786 058a 00F4      		brsh .L61
+ 1787 058c E82F      		mov r30,r24
+ 1788 058e F0E0      		ldi r31,lo8(0)
+ 1789 0590 E050      		subi r30,lo8(-(CSWTCH.16))
+ 1790 0592 F040      		sbci r31,hi8(-(CSWTCH.16))
+ 1791 0594 6081      		ld r22,Z
+ 1792 0596 00C0      		rjmp .L60
+ 1793               	.L61:
+ 1794 0598 6DE0      		ldi r22,lo8(13)
+ 1795               	.L60:
+ 390:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+ 391:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	byte _s;
+ 392:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	switch (rate_selector) {
+ 393:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		case 10:
+ 394:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			_s = 0x0f;
+ 395:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			break;
+ 396:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		case 9:
+ 397:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			_s = 0x0e;
+ 398:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			break;
+ 399:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		case 8:
+ 400:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			_s = 0x0d;
+ 401:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			break;
+ 402:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		case 7:
+ 403:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			_s = 0x0c;
+ 404:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			break;
+ 405:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		case 6:
+ 406:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			_s = 0x0b;
+ 407:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			break;
+ 408:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		case 5:
+ 409:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			_s = 0x0a;
+ 410:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			break;
+ 411:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		case 4:
+ 412:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			_s = 0x09;
+ 413:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			break;
+ 414:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		case 3:
+ 415:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			_s = 0x08;
+ 416:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			break;
+ 417:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		default:
+ 418:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			_s = 0x0d;
+ 419:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 			break;
+ 420:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	}
+ 421:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	
+ 422:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	//int v = (int) (rate / 6.25);
+ 423:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	Write(ADXL345_BW_RATE, _s);
+ 1797               	.LM152:
+ 1798 059a 8CE2      		ldi r24,lo8(44)
+ 1799 059c 90E0      		ldi r25,hi8(44)
+ 1800 059e 70E0      		ldi r23,lo8(0)
+ 1801 05a0 0E94 0000 		call Write
+ 1802               	/* epilogue start */
+ 424:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1804               	.LM153:
+ 1805 05a4 0895      		ret
+ 1810               	.Lscope33:
+ 1812               		.stabd	78,0,0
+ 1814               	.global	acc_power_on
+ 1816               	acc_power_on:
+ 1817               		.stabd	46,0,0
+ 100:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** void acc_power_on() {
+ 1819               	.LM154:
+ 1820               	.LFBB34:
+ 1821               	/* prologue: function */
+ 1822               	/* frame size = 0 */
+ 1823               	/* stack size = 0 */
+ 1824               	.L__stack_usage = 0
+ 102:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	Write(Register_PowerControl, 0);      
+ 1826               	.LM155:
+ 1827 05a6 8DE2      		ldi r24,lo8(45)
+ 1828 05a8 90E0      		ldi r25,hi8(45)
+ 1829 05aa 60E0      		ldi r22,lo8(0)
+ 1830 05ac 70E0      		ldi r23,hi8(0)
+ 1831 05ae 0E94 0000 		call Write
+ 103:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	Write(Register_PowerControl, 16);
+ 1833               	.LM156:
+ 1834 05b2 8DE2      		ldi r24,lo8(45)
+ 1835 05b4 90E0      		ldi r25,hi8(45)
+ 1836 05b6 60E1      		ldi r22,lo8(16)
+ 1837 05b8 70E0      		ldi r23,hi8(16)
+ 1838 05ba 0E94 0000 		call Write
+ 104:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	Write(Register_PowerControl, 8); 
+ 1840               	.LM157:
+ 1841 05be 8DE2      		ldi r24,lo8(45)
+ 1842 05c0 90E0      		ldi r25,hi8(45)
+ 1843 05c2 68E0      		ldi r22,lo8(8)
+ 1844 05c4 70E0      		ldi r23,hi8(8)
+ 1845 05c6 0E94 0000 		call Write
+ 105:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	acc_set_data_rate(SAMPL_RATE_16K);
+ 1847               	.LM158:
+ 1848 05ca 89E0      		ldi r24,lo8(9)
+ 1849 05cc 0E94 0000 		call acc_set_data_rate
+ 1850               	/* epilogue start */
+ 106:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** }
+ 1852               	.LM159:
+ 1853 05d0 0895      		ret
+ 1855               	.Lscope34:
+ 1857               		.stabd	78,0,0
+ 1858               		.data
+ 1859               	.LC1:
+ 1860 0035 436F 756C 		.string	"Could not connect to ADXL345.\r"
+ 1860      6420 6E6F 
+ 1860      7420 636F 
+ 1860      6E6E 6563 
+ 1860      7420 746F 
+ 1861               		.text
+ 1863               	.global	set_up_ADXL345
+ 1865               	set_up_ADXL345:
+ 1866               		.stabd	46,0,0
+  41:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** {
+ 1868               	.LM160:
+ 1869               	.LFBB35:
+ 1870               	/* prologue: function */
+ 1871               	/* frame size = 0 */
+ 1872               	/* stack size = 0 */
+ 1873               	.L__stack_usage = 0
+  42:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   m_Address = DefaultADXL345_Address;
+ 1875               	.LM161:
+ 1876 05d2 83E5      		ldi r24,lo8(83)
+ 1877 05d4 90E0      		ldi r25,hi8(83)
+ 1878 05d6 9093 0000 		sts m_Address+1,r25
+ 1879 05da 8093 0000 		sts m_Address,r24
+  43:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   acc_power_on();
+ 1881               	.LM162:
+ 1882 05de 0E94 0000 		call acc_power_on
+  45:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   if(EnsureConnected()){
+ 1884               	.LM163:
+ 1885 05e2 0E94 0000 		call EnsureConnected
+ 1886 05e6 8823      		tst r24
+ 1887 05e8 01F0      		breq .L64
+  46:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	nrk_kprintf( PSTR("ADXL345(Accelerometer) Boot Success.\r\n") );
+ 1889               	.LM164:
+ 1890 05ea 80E0      		ldi r24,lo8(__c.3022)
+ 1891 05ec 90E0      		ldi r25,hi8(__c.3022)
+ 1892 05ee 0E94 0000 		call nrk_kprintf
+ 1893 05f2 00C0      		rjmp .L65
+ 1894               	.L64:
+  48:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 		printf("Could not connect to ADXL345.\r\n");
+ 1896               	.LM165:
+ 1897 05f4 80E0      		ldi r24,lo8(.LC1)
+ 1898 05f6 90E0      		ldi r25,hi8(.LC1)
+ 1899 05f8 0E94 0000 		call puts
+ 1900               	.L65:
+  52:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   if(SetRange(2, true)){
+ 1902               	.LM166:
+ 1903 05fc 82E0      		ldi r24,lo8(2)
+ 1904 05fe 90E0      		ldi r25,hi8(2)
+ 1905 0600 61E0      		ldi r22,lo8(1)
+ 1906 0602 0E94 0000 		call SetRange
+ 1907 0606 0097      		sbiw r24,0
+ 1908 0608 01F0      		breq .L66
+  53:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	nrk_kprintf( PSTR("ADXL345 Range set. . .\r\n") );
+ 1910               	.LM167:
+ 1911 060a 80E0      		ldi r24,lo8(__c.3024)
+ 1912 060c 90E0      		ldi r25,hi8(__c.3024)
+ 1913 060e 00C0      		rjmp .L70
+ 1914               	.L66:
+  55:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	  nrk_kprintf( PSTR("Could not set range.\r\n") );
+ 1916               	.LM168:
+ 1917 0610 80E0      		ldi r24,lo8(__c.3026)
+ 1918 0612 90E0      		ldi r25,hi8(__c.3026)
+ 1919               	.L70:
+ 1920 0614 0E94 0000 		call nrk_kprintf
+  59:../../../../../src/drivers/platform/MARS/source/ADXL345.c ****   if(EnableMeasurements()){
+ 1922               	.LM169:
+ 1923 0618 0E94 0000 		call EnableMeasurements
+ 1924 061c 0097      		sbiw r24,0
+ 1925 061e 01F0      		breq .L68
+  60:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	  nrk_kprintf( PSTR("ADXL345 Measurement enabled. . .\r\n") );
+ 1927               	.LM170:
+ 1928 0620 80E0      		ldi r24,lo8(__c.3028)
+ 1929 0622 90E0      		ldi r25,hi8(__c.3028)
+ 1930 0624 00C0      		rjmp .L71
+ 1931               	.L68:
+  62:../../../../../src/drivers/platform/MARS/source/ADXL345.c **** 	  nrk_kprintf( PSTR("Enable measurement fail.\r\n") );
+ 1933               	.LM171:
+ 1934 0626 80E0      		ldi r24,lo8(__c.3030)
+ 1935 0628 90E0      		ldi r25,hi8(__c.3030)
+ 1936               	.L71:
+ 1937 062a 0E94 0000 		call nrk_kprintf
+ 1938 062e 0895      		ret
+ 1940               	.Lscope35:
+ 1942               		.stabd	78,0,0
+ 1943               		.comm app_timer0_prescale,1,1
+ 1944               		.comm app_timer0_callback,2,1
+ 1945               		.comm _nrk_time_trigger,1,1
+ 1946               		.comm _nrk_prev_timer_val,1,1
+ 1947               		.comm nrk_kernel_stk_ptr,2,1
+ 1948               		.comm nrk_idle_task_stk,256,1
+ 1949               		.comm error_num,1,1
+ 1950               		.comm error_task,1,1
+ 1951               		.comm _nrk_signal_list,4,1
+ 1952               		.comm IsConnected,1,1
+ 1953               		.comm m_Scale,4,1
+ 1954               		.comm m_Address,2,1
+ 1955               		.section	.progmem.data,"a",@progbits
+ 1958               	__c.3022:
+ 1959 0000 4144 584C 		.string	"ADXL345(Accelerometer) Boot Success.\r\n"
+ 1959      3334 3528 
+ 1959      4163 6365 
+ 1959      6C65 726F 
+ 1959      6D65 7465 
+ 1962               	__c.3024:
+ 1963 0027 4144 584C 		.string	"ADXL345 Range set. . .\r\n"
+ 1963      3334 3520 
+ 1963      5261 6E67 
+ 1963      6520 7365 
+ 1963      742E 202E 
+ 1966               	__c.3026:
+ 1967 0040 436F 756C 		.string	"Could not set range.\r\n"
+ 1967      6420 6E6F 
+ 1967      7420 7365 
+ 1967      7420 7261 
+ 1967      6E67 652E 
+ 1970               	__c.3028:
+ 1971 0057 4144 584C 		.string	"ADXL345 Measurement enabled. . .\r\n"
+ 1971      3334 3520 
+ 1971      4D65 6173 
+ 1971      7572 656D 
+ 1971      656E 7420 
+ 1974               	__c.3030:
+ 1975 007a 456E 6162 		.string	"Enable measurement fail.\r\n"
+ 1975      6C65 206D 
+ 1975      6561 7375 
+ 1975      7265 6D65 
+ 1975      6E74 2066 
+ 1976               		.data
+ 1979               	CSWTCH.16:
+ 1980 0054 08        		.byte	8
+ 1981 0055 09        		.byte	9
+ 1982 0056 0A        		.byte	10
+ 1983 0057 0B        		.byte	11
+ 1984 0058 0C        		.byte	12
+ 1985 0059 0D        		.byte	13
+ 1986 005a 0E        		.byte	14
+ 1987 005b 0F        		.byte	15
+ 2000               		.text
+ 2002               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 ADXL345.c
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:2      *ABS*:000000000000003f __SREG__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:3      *ABS*:000000000000003e __SP_H__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:4      *ABS*:000000000000003d __SP_L__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:5      *ABS*:0000000000000000 __tmp_reg__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:6      *ABS*:0000000000000001 __zero_reg__
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:297    .text:0000000000000000 Write
+                            *COM*:0000000000000002 m_Address
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:343    .text:0000000000000032 EnableMeasurements
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:374    .text:0000000000000044 Read
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:516    .text:0000000000000106 EnsureConnected
+                            *COM*:0000000000000001 IsConnected
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:562    .text:000000000000012c SetRange
+                            *COM*:0000000000000004 m_Scale
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:700    .text:00000000000001dc ReadRawAxis
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:782    .text:0000000000000242 ReadScaledAxis
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:949    .text:000000000000035e get_acc_values
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1038   .text:00000000000003ca GetErrorText
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1061   .text:00000000000003d0 setTapThreshold
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1088   .text:00000000000003de getTapThreshold
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1119   .text:00000000000003f2 setTapDuration
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1146   .text:0000000000000400 getTapDuration
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1176   .text:0000000000000414 setDoubleTapLatency
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1203   .text:0000000000000422 getDoubleTapLatency
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1234   .text:0000000000000436 setDoubleTapWindow
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1261   .text:0000000000000444 getDoubleTapWindow
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1291   .text:0000000000000458 getInterruptSourceVoid
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1322   .text:000000000000046a setRegisterBit
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1400   .text:00000000000004c0 setInterrupt
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1430   .text:00000000000004d0 setInterruptMapping
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1459   .text:00000000000004e0 getRegisterBit
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1500   .text:0000000000000504 isInterruptEnabled
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1527   .text:0000000000000510 getInterruptMapping
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1554   .text:000000000000051c getInterruptSource
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1580   .text:0000000000000528 isTapDetectionOnX
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1607   .text:0000000000000534 setTapDetectionOnX
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1634   .text:0000000000000542 isTapDetectionOnY
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1661   .text:000000000000054e setTapDetectionOnY
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1688   .text:000000000000055c isTapDetectionOnZ
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1715   .text:0000000000000568 setTapDetectionOnZ
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1743   .text:0000000000000576 triggered
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1773   .text:0000000000000586 acc_set_data_rate
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1979   .data:0000000000000054 CSWTCH.16
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1816   .text:00000000000005a6 acc_power_on
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1865   .text:00000000000005d2 set_up_ADXL345
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1958   .progmem.data:0000000000000000 __c.3022
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1962   .progmem.data:0000000000000027 __c.3024
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1966   .progmem.data:0000000000000040 __c.3026
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1970   .progmem.data:0000000000000057 __c.3028
+/var/folders/Qj/Qj++YvHuG9eedM4lQ3VY3++++TI/-Tmp-//cch4QDzM.s:1974   .progmem.data:000000000000007a __c.3030
+                            *COM*:0000000000000001 app_timer0_prescale
+                            *COM*:0000000000000002 app_timer0_callback
+                            *COM*:0000000000000001 _nrk_time_trigger
+                            *COM*:0000000000000001 _nrk_prev_timer_val
+                            *COM*:0000000000000002 nrk_kernel_stk_ptr
+                            *COM*:0000000000000100 nrk_idle_task_stk
+                            *COM*:0000000000000001 error_num
+                            *COM*:0000000000000001 error_task
+                            *COM*:0000000000000004 _nrk_signal_list
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss
+beginTransmission_int
+send_int
+endTransmission
+requestFrom_2int
+available
+receive
+__floatsisf
+__mulsf3
+__fixsfsi
+nrk_kprintf
+puts

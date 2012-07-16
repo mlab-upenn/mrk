@@ -1,0 +1,819 @@
+GNU Make 3.81
+Copyright (C) 2006  Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.
+There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.
+
+This program built for i386-apple-darwin10.0
+Reading makefiles...
+Updating goal targets....
+ File `all' does not exist.
+   File `LEDBlink.hex' does not exist.
+     File `LEDBlink.elf' does not exist.
+       File `/Users/dbanks/mbed_offline/src/gcc4mbed.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/src/gcc4mbed.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/src/gcc4mbed.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/src/gcc4mbed.c -o /Users/dbanks/mbed_offline/src/gcc4mbed.o
+      Successfully remade target file `/Users/dbanks/mbed_offline/src/gcc4mbed.o'.
+       File `/Users/dbanks/mbed_offline/src/syscalls.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/src/syscalls.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/src/syscalls.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/src/syscalls.c -o /Users/dbanks/mbed_offline/src/syscalls.o
+      Successfully remade target file `/Users/dbanks/mbed_offline/src/syscalls.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:43:6: warning: unused parameter 'channel'
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_wait_for_crystal_oscillator.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_wait_for_crystal_oscillator.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_wait_for_crystal_oscillator.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_wait_for_crystal_oscillator.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_wait_for_crystal_oscillator.o
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_wait_for_crystal_oscillator.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:654:54: warning: "/*" within comment
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:100:6: warning: unused parameter 'counter'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:115:6: warning: unused parameter 'key'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:145:6: warning: unused parameter 'key'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:175:6: warning: unused parameter 'pwr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:191:6: warning: unused parameter 'channel'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:241:6: warning: unused parameter 'my_mac'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:254:6: warning: unused parameter 'pRRI'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:254:6: warning: unused parameter 'channel'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:294:6: warning: unused parameter 'pRRI'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:294:6: warning: unused parameter 'channel'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:294:6: warning: unused parameter 'panId'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:294:6: warning: unused parameter 'myAddr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c: In function 'uint8_t rf_tx_tdma_packet(RF_TX_INFO*, uint16_t, uint16_t)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:496:14: warning: unused variable 'frameControlField'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:497:13: warning: unused variable 'packetLength'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c: At global scope:
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:494:9: warning: unused parameter 'pRTI'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:494:9: warning: unused parameter 'slot_start_time'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:494:9: warning: unused parameter 'tx_guard_time'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c: In function 'uint8_t rf_tx_packet(RF_TX_INFO*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:704:14: warning: unused variable 'frameControlField'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:705:13: warning: unused variable 'packetLength'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:705:27: warning: unused variable 'length'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c: At global scope:
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:701:9: warning: unused parameter 'pRTI'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c: In function 'uint8_t rf_busy()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:887:1: warning: no return statement in function returning non-void
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c: In function 'uint8_t rf_rx_check_fifop()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:894:1: warning: no return statement in function returning non-void
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c: In function 'uint8_t rf_rx_check_sfd()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:902:1: warning: no return statement in function returning non-void
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c: At global scope:
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:1095:6: warning: unused parameter 't'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:1198:6: warning: unused parameter 'length'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:1211:6: warning: unused parameter 'mode'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c: In function 'uint8_t rf_tx_tdma_packet(RF_TX_INFO*, uint16_t, uint16_t)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:679:12: warning: 'success' is used uninitialized in this function
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c: In function 'uint8_t rf_tx_packet(RF_TX_INFO*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:878:12: warning: 'success' is used uninitialized in this function
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:120:9: warning: unused parameter 'uart_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:145:6: warning: unused parameter 'addr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:245:8: warning: unused parameter 'pin'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:268:8: warning: unused parameter 'pin'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:291:8: warning: unused parameter 'pin'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:314:8: warning: unused parameter 'pin'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:367:8: warning: unused parameter 'pin'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:367:8: warning: unused parameter 'pin_direction'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:420:8: warning: unused parameter 'b'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:430:8: warning: unused parameter 'led'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:441:8: warning: unused parameter 'led'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:452:8: warning: unused parameter 'led'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:463:8: warning: unused parameter 'enable'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:495:6: warning: unused parameter 'x'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:502:6: warning: unused parameter 'x'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:509:6: warning: unused parameter 'baudrate'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:518:6: warning: unused parameter 'baudrate'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:538:6: warning: unused parameter 'baudrate'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c: In function 'char getc1()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:140:12: warning: 'tmp' is used uninitialized in this function
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c: In function 'char getc0()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:567:9: warning: 'tmp' is used uninitialized in this function
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/hal_wait.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/hal_wait.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/hal_wait.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/hal_wait.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/hal_wait.o
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/hal_wait.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.o
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:5:9: warning: unused parameter 'addr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:14:8: warning: unused parameter 'addr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:14:8: warning: unused parameter 'value'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:23:8: warning: unused parameter 'mac_addr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:45:8: warning: unused parameter 'channel'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:53:8: warning: unused parameter 'load_pages'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:61:8: warning: unused parameter 'load_pages'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:69:8: warning: unused parameter 'aes_key'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:79:8: warning: unused parameter 'aes_key'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:89:8: warning: unused parameter 'image_checksum'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:97:8: warning: unused parameter 'image_checksum'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c: In function 'uint8_t nrk_eeprom_read_byte(uint16_t)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:11:12: warning: 'v' is used uninitialized in this function
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:277:8: warning: unused parameter 'stk_size'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:277:8: warning: unused parameter 'pext'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:277:8: warning: unused parameter 'opt'
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c: In function 'void _nrk_log_error(uint8_t, uint8_t)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:55:58: warning: declaration of 'error_task' shadows a global declaration
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include/nrk_error.h:63:9: warning: shadowed declaration is here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:55:58: warning: declaration of 'error_num' shadows a global declaration
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include/nrk_error.h:64:9: warning: shadowed declaration is here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c: In function 'int8_t nrk_error_print()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:161:16: warning: unused variable 'i'
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c: In function 'void dump_stack_info()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:43:44: warning: format '%x' expects type 'unsigned int', but argument 2 has type 'uint32_t'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:43:44: warning: format '%x' expects type 'unsigned int', but argument 2 has type 'uint32_t'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:47:40: warning: format '%x' expects type 'unsigned int', but argument 2 has type 'uint32_t'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:47:40: warning: format '%x' expects type 'unsigned int', but argument 2 has type 'uint32_t'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:48:59: warning: format '%x' expects type 'unsigned int', but argument 2 has type 'uint32_t'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:48:59: warning: format '%x' expects type 'unsigned int', but argument 2 has type 'uint32_t'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:54:53: warning: format '%x' expects type 'unsigned int', but argument 3 has type 'uint32_t'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:54:53: warning: format '%x' expects type 'unsigned int', but argument 3 has type 'uint32_t'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:58:44: warning: format '%x' expects type 'unsigned int', but argument 2 has type 'uint32_t'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:58:44: warning: format '%x' expects type 'unsigned int', but argument 2 has type 'uint32_t'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:59:63: warning: format '%x' expects type 'unsigned int', but argument 2 has type 'uint32_t'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:59:63: warning: format '%x' expects type 'unsigned int', but argument 2 has type 'uint32_t'
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c: In function 'int8_t nrk_sem_post(nrk_sem_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:260:53: warning: comparison between signed and unsigned integer expressions
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c: In function 'int8_t nrk_sem_delete(nrk_sem_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:278:9: warning: unused variable 'task_ID'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c: In function 'nrk_sem_t* nrk_sem_create(uint8_t, uint8_t)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:292:47: warning: comparison is always true due to limited range of data type
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_driver.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_driver.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_driver.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_driver.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_driver.o
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_driver.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_reserve.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_reserve.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_reserve.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_reserve.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_reserve.o
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_reserve.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:182:6: warning: unused parameter 'v'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:199:8: warning: unused parameter 'timer'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:210:8: warning: unused parameter 'timer'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:222:10: warning: unused parameter 'timer'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:234:9: warning: unused parameter 'timer'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:246:9: warning: unused parameter 'timer'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:246:9: warning: unused parameter 'prescaler'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:246:9: warning: unused parameter 'compare_value'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:246:9: warning: unused parameter 'callback_func'
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.o
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o'.
+
+Compiling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o'.
+       File `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/LPC1768_hw_specific.o' does not exist.
+      Must remake target `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/LPC1768_hw_specific.o'.
+
+Assembling:  /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/LPC1768_hw_specific.S
+arm-none-eabi-gcc  -mcpu=cortex-m3 -mthumb -x assembler-with-cpp -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -c /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/LPC1768_hw_specific.S -o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/LPC1768_hw_specific.o
+      Successfully remade target file `/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/LPC1768_hw_specific.o'.
+       File `main.o' does not exist.
+      Must remake target `main.o'.
+
+Compiling:  main.cpp
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I/Users/dbanks/mbed_offline/external/mbed -I/Users/dbanks/mbed_offline/external/mbed/LPC1768 -I/Users/dbanks/mbed_offline/external/FATFileSystem -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/hal/LPC1768 -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/platform/mbed -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/drivers/platform/mbed/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/include -I/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c main.cpp -o main.o
+main.cpp: In function 'void Task1()':
+main.cpp:69:12: warning: unused variable 't'
+      Successfully remade target file `main.o'.
+    Must remake target `LEDBlink.elf'.
+arm-none-eabi-g++ -mcpu=cortex-m3 -mthumb -O2 -Wl,-Map=LEDBlink.map,--cref,--gc-sections,--no-wchar-size-warning -T/Users/dbanks/mbed_offline/build/mbed.ld -L /Users/dbanks/mbed_offline/external/gcc/LPC1768 /Users/dbanks/mbed_offline/src/gcc4mbed.o /Users/dbanks/mbed_offline/src/syscalls.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_wait_for_crystal_oscillator.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/hal_wait.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_driver.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_reserve.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o /Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/LPC1768_hw_specific.o ./main.o  /Users/dbanks/mbed_offline/external/mbed/LPC1768/mbed.ar /Users/dbanks/mbed_offline/external/mbed/LPC1768/capi.ar /Users/dbanks/mbed_offline/external/FATFileSystem/LPC1768/FATFileSystem.ar  -o LEDBlink.elf
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_wait_for_crystal_oscillator.o: In function `halRfWaitForCrystalOscillator()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_wait_for_crystal_oscillator.c:54: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o: In function `cc259x_rx()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o: In function `nrk_uart_rx_signal_get()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o: In function `nrk_uart_rx_signal_get()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.o: In function `nrk_uart_rx_signal_get()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/ulib.c:117: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/hal_wait.o: In function `halWait(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/hal_wait.c:40: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.o: In function `nrk_eeprom_read_byte(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:12: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.o: In function `nrk_eeprom_read_byte(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:12: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.o: In function `nrk_eeprom_read_byte(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/platform/mbed/source/nrk_eeprom.c:12: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o: In function `nrk_int_disable':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o: In function `nrk_int_disable':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o: In function `nrk_int_disable':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o: In function `nrk_int_disable':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o: In function `nrk_int_disable':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o: In function `nrk_int_disable':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o: In function `nrk_int_disable':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o: In function `nrk_int_disable':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o: In function `nrk_int_disable':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `cur_task_stats'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `_nrk_stats_sleep_time'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `_nrk_readyQ'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `_free_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `_head_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_wakeup_signal'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_cur_task_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_cur_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_high_ready_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_high_ready_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `_nrk_resource_cnt'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_sem_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `nrk_system_time'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.o: In function `nrk_stats_reset()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stats.c:17: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.o: In function `_nrk_errno_set(unsigned char)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_error.c:46: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o: In function `dump_stack_info()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:33: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o: In function `dump_stack_info()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:33: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o: In function `dump_stack_info()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:33: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o: In function `dump_stack_info()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:33: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.o: In function `dump_stack_info()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_stack_check.c:33: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_nrk_cpu_state'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `next_next_wakeup'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_nrk_readyQ'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_free_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_head_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_wakeup_signal'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_cur_task_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_cur_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_high_ready_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_high_ready_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `_nrk_resource_cnt'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_sem_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.o: In function `nrk_signal_create()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_events.c:41: multiple definition of `nrk_system_time'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `_nrk_cpu_state'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `next_next_wakeup'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.o: In function `nrk_get_high_ready_task_ID()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_task.c:43: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.o: In function `nrk_time_get(nrk_time_t*)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_time.c:45: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `_nrk_cpu_state'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.o: In function `nrk_idle_task()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_idle_task.c:38: multiple definition of `next_next_wakeup'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_nrk_readyQ'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_free_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_head_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_wakeup_signal'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_cur_task_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_cur_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_high_ready_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_high_ready_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_nrk_resource_cnt'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_sem_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `nrk_system_time'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_nrk_cpu_state'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `next_next_wakeup'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `cur_task_stats'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.o: In function `_nrk_scheduler()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk_scheduler.c:55: multiple definition of `_nrk_stats_sleep_time'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.o: In function `nrk_spin_wait_us(unsigned short)':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_timer.c:42: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.o: In function `_nrk_startup_error()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.c:19: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.o: In function `_nrk_startup_error()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.c:19: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.o: In function `_nrk_startup_error()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_status.c:19: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o: In function `nrk_watchdog_disable()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.c:103: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o: In function `nrk_watchdog_disable()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.c:103: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o: In function `nrk_watchdog_disable()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.c:103: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o: In function `nrk_watchdog_disable()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.c:103: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.o: In function `nrk_watchdog_disable()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_watchdog.c:103: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `_nrk_readyQ'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `_free_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `_head_node'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_wakeup_signal'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_cur_task_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_cur_task_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_high_ready_prio'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_high_ready_TCB'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `_nrk_resource_cnt'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_sem_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `nrk_system_time'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.o: In function `nrk_battery_save()':
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/hal/LPC1768/nrk_cpu.c:84: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+./main.o: In function `~DigitalOut':
+/Users/dbanks/mbed_offline/external/mbed/DigitalOut.h:32: multiple definition of `_nrk_signal_list'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/hal_rf_set_channel.c:59: first defined here
+./main.o: In function `~DigitalOut':
+/Users/dbanks/mbed_offline/external/mbed/DigitalOut.h:32: multiple definition of `nrk_idle_task_stk'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+./main.o: In function `~DigitalOut':
+/Users/dbanks/mbed_offline/external/mbed/DigitalOut.h:32: multiple definition of `nrk_kernel_stk_ptr'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+./main.o: In function `~DigitalOut':
+/Users/dbanks/mbed_offline/external/mbed/DigitalOut.h:32: multiple definition of `error_task'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+./main.o: In function `~DigitalOut':
+/Users/dbanks/mbed_offline/external/mbed/DigitalOut.h:32: multiple definition of `error_num'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+./main.o: In function `~DigitalOut':
+/Users/dbanks/mbed_offline/external/mbed/DigitalOut.h:32: multiple definition of `_nrk_prev_timer_val'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+./main.o: In function `~DigitalOut':
+/Users/dbanks/mbed_offline/external/mbed/DigitalOut.h:32: multiple definition of `_nrk_time_trigger'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+./main.o: In function `~DigitalOut':
+/Users/dbanks/mbed_offline/external/mbed/DigitalOut.h:32: multiple definition of `app_timer0_callback'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+./main.o: In function `~DigitalOut':
+/Users/dbanks/mbed_offline/external/mbed/DigitalOut.h:32: multiple definition of `app_timer0_prescale'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/radio/cc2420/source/basic_rf.c:46: first defined here
+./main.o: In function `~DigitalOut':
+/Users/dbanks/mbed_offline/external/mbed/DigitalOut.h:32: multiple definition of `cur_task_stats'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+./main.o: In function `~DigitalOut':
+/Users/dbanks/mbed_offline/external/mbed/DigitalOut.h:32: multiple definition of `_nrk_stats_sleep_time'
+/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.o:/Users/dbanks/mbed_offline/NanoRK/nano-RK/src/kernel/source/nrk.c:51: first defined here
+collect2: ld returned 1 exit status
+make: *** [LEDBlink.elf] Error 1

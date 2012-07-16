@@ -1,0 +1,10 @@
+#!/bin/bash
+
+cp main.c main_temp.c
+
+sed -e s/"\#define\ TDMA_MODE\ TDMA_SLAVE"/"\#define\ TDMA_MODE\ TDMA_MASTER/" main_temp.c > main.c
+
+make clean
+make program
+
+../../../tools/EEPROM_mac_set/config-eeprom /dev/ttyUSB1 0000000$1 15

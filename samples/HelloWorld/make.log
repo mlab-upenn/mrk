@@ -1,0 +1,55 @@
+GNU Make 3.81
+Copyright (C) 2006  Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.
+There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE.
+
+This program built for i386-apple-darwin10.0
+Reading makefiles...
+Updating goal targets....
+ File `all' does not exist.
+   File `HelloWorld.hex' does not exist.
+     File `HelloWorld.elf' does not exist.
+       File `foo.o' does not exist.
+      Must remake target `foo.o'.
+
+Compiling:  foo.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I../../external/mbed -I../../external/mbed/LPC1768 -I../../external/FATFileSystem -I/src/platform/include -I/src/platform//include -I/src/radio//include -I/src/radio//hal/ -I/src/radio//platform/ -I/src/drivers/include -I/src/drivers/platform//include -I/src/kernel/include -I/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c foo.c -o foo.o
+      Successfully remade target file `foo.o'.
+       File `../../src/gcc4mbed.o' does not exist.
+      Must remake target `../../src/gcc4mbed.o'.
+
+Compiling:  ../../src/gcc4mbed.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I../../external/mbed -I../../external/mbed/LPC1768 -I../../external/FATFileSystem -I/src/platform/include -I/src/platform//include -I/src/radio//include -I/src/radio//hal/ -I/src/radio//platform/ -I/src/drivers/include -I/src/drivers/platform//include -I/src/kernel/include -I/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c ../../src/gcc4mbed.c -o ../../src/gcc4mbed.o
+      Successfully remade target file `../../src/gcc4mbed.o'.
+       File `../../src/syscalls.o' does not exist.
+      Must remake target `../../src/syscalls.o'.
+
+Compiling:  ../../src/syscalls.c
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I../../external/mbed -I../../external/mbed/LPC1768 -I../../external/FATFileSystem -I/src/platform/include -I/src/platform//include -I/src/radio//include -I/src/radio//hal/ -I/src/radio//platform/ -I/src/drivers/include -I/src/drivers/platform//include -I/src/kernel/include -I/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c ../../src/syscalls.c -o ../../src/syscalls.o
+      Successfully remade target file `../../src/syscalls.o'.
+       File `main.o' does not exist.
+      Must remake target `main.o'.
+
+Compiling:  main.cpp
+arm-none-eabi-g++ -O2 -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions -I./ -I../../external/mbed -I../../external/mbed/LPC1768 -I../../external/FATFileSystem -I/src/platform/include -I/src/platform//include -I/src/radio//include -I/src/radio//hal/ -I/src/radio//platform/ -I/src/drivers/include -I/src/drivers/platform//include -I/src/kernel/include -I/src/kernel/hal/include -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=1 -DNANORK -DNODE_ADDR=0 -MD -c main.cpp -o main.o
+      Successfully remade target file `main.o'.
+    Must remake target `HelloWorld.elf'.
+arm-none-eabi-g++ -mcpu=cortex-m3 -mthumb -O2 -Wl,-Map=HelloWorld.map,--cref,--gc-sections,--no-wchar-size-warning -T../../build/mbed.ld -L ../../external/gcc/LPC1768 ./foo.o ../../src/gcc4mbed.o ../../src/syscalls.o  ./main.o  ../../external/mbed/LPC1768/mbed.ar ../../external/mbed/LPC1768/capi.ar ../../external/FATFileSystem/LPC1768/FATFileSystem.ar  -o HelloWorld.elf
+arm-none-eabi-size HelloWorld.elf
+   text	   data	    bss	    dec	    hex	filename
+  23176	   1380	    132	  24688	   6070	HelloWorld.elf
+    Successfully remade target file `HelloWorld.elf'.
+  Must remake target `HelloWorld.hex'.
+arm-none-eabi-objcopy -R .stack -O ihex HelloWorld.elf HelloWorld.hex
+  Successfully remade target file `HelloWorld.hex'.
+   File `HelloWorld.bin' does not exist.
+  Must remake target `HelloWorld.bin'.
+arm-none-eabi-objcopy -O binary HelloWorld.elf HelloWorld.bin
+  Successfully remade target file `HelloWorld.bin'.
+   File `HelloWorld.disasm' does not exist.
+  Must remake target `HelloWorld.disasm'.
+arm-none-eabi-objdump -d HelloWorld.elf >HelloWorld.disasm
+  Successfully remade target file `HelloWorld.disasm'.
+Must remake target `all'.
+Successfully remade target file `all'.
