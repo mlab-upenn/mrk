@@ -1,6 +1,5 @@
 # mbed offline compilation-specific parameters
 PROJECT=LEDBlink
-GCC4MBED_DIR=/Users/Abhijeet/Workspace/mrk/mrk/
 LIBS_PREFIX=
 LIBS_SUFFIX=
 GCC4MBED_DELAYED_STDIO_INIT=1
