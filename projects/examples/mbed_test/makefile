@@ -14,7 +14,7 @@ TARGET = main
 PROGRAMMING_PORT = /Volumes/MBED
 
 # Set this such that the nano-RK directory is the base path
-NANORK_DIR = $(GCC4MBED_DIR)/NanoRK/nano-RK
+NANORK_DIR = $(GCC4MBED_DIR)/mrk
 
 # Set platform specific defines 
 # The following will be defined based on the PLATFORM variable:
@@ -36,4 +36,4 @@ EXTRAINCDIRS =
 
 
 #  This is where the final compile and download happens
-include ~/mbed_offline/build/gcc4mbed.mk
+include $(NANORK_DIR)/include/platform/mbed/common.mk

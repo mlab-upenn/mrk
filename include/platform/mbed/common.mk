@@ -1,435 +1,232 @@
-#-------------------------------------------------------------------------------
-# Based on the WinAVR sample makefile written by Eric B. Weddington, 
-# Jörg Wunsch, et al.
+#Copyright (C) 2011 by Sagar G V
 #
-# Additional material for this makefile was submitted by:
-#  Tim Henigan
-#  Peter Fleury
-#  Reiner Patommel
-#  Sander Pool
-#  Frederik Rouleau
-#  Markus Pfaff
-#  Anthony Rowe
+#Permission is hereby granted, free of charge, to any person obtaining a copy
+#of this software and associated documentation files (the "Software"), to deal
+#in the Software without restriction, including without limitation the rights
+#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#copies of the Software, and to permit persons to whom the Software is
+#furnished to do so, subject to the following conditions:
 #
-# On command line:
-#    make all = Make software.
-#    make clean = Clean out built project files.
-#    make coff = Convert ELF to AVR COFF (for use with AVR Studio 3.x or VMLAB).
-#    make extcoff = Convert ELF to AVR Extended COFF (for use with AVR 
-#                   Studio 4.07 or greater).
-#    make program = Download the hex file to the device, using avrdude. 
-#                   Please customize the avrdude
-#                    settings below first!
-#    make filename.s = Just compile filename.c into the assembler code only
+#The above copyright notice and this permission notice shall be included in
+#all copies or substantial portions of the Software.
 #
-# To rebuild project do "make clean" then "make all".
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+#THE SOFTWARE.
 #
-#-------------------------------------------------------------------------------
+# Updates: 
+#    Arthur Wolf & Adam Green in 2011 - Updated to work with mbed.
+#    Dalton Banks in 2012 - Updated to work with Nano-RK.
+###############################################################################
+# USAGE:
+# Variables that must be defined in including makefile.
+#   PROJECT: Name to be given to the output binary for this project.
+#   SRC: The root directory for the sources of your project.
+#   GCC4MED_DIR: The root directory for where the gcc4mbed sources are located
+#                in your project.  This should point to the parent directory
+#                of the build directory which contains this gcc4mbed.mk file.
+#   LIBS_PREFIX: List of library/object files to prepend to mbed.ar capi.ar libs.
+#   LIBS_SUFFIX: List of library/object files to append to mbed.ar capi.ar libs.
+#   GCC4MBED_DELAYED_STDIO_INIT: Set to non-zero value to have intialization of
+#                                stdin/stdout/stderr delayed which will
+#                                shrink the size of the resulting binary if
+#                                APIs like printf(), scanf(), etc. aren't used.
+# Example makefile:
+#       PROJECT=HelloWorld
+#       SRC=.
+#       GCC4MBED_DIR=../..
+#       LIBS_PREFIX=../agutil/agutil.ar
+#       LIBS_SUFFIX=
+#
+#       include ../../build/gcc4mbed.mk
+#      
+###############################################################################
 
+ifndef PROGRAMMING_PORT
+    PROGRAMMING_PORT=/Volumes/MBED
+endif
 
+# Default project source to be located in current directory.
+ifndef SRC
+    SRC=.
+endif
 
-# Output format. (can be srec, ihex, binary)
-FORMAT = binary
+# Default the init of stdio/stdout/stderr to occur before global constructors.
+ifndef GCC4MBED_DELAYED_STDIO_INIT
+    GCC4MBED_DELAYED_STDIO_INIT=0
+endif
 
+# List of sources to be compiled/assembled
+CSRCS += $(wildcard $(SRC)/*.c $(SRC)/*/*.c $(SRC)/*/*/*.c $(SRC)/*/*/*/*.c $(SRC)/*/*/*/*/*.c)
+ASRCS =  $(wildcard $(SRC)/*.S $(SRC)/*/*.S $(SRC)/*/*/*.S $(SRC)/*/*/*/*.S $(SRC)/*/*/*/*/*.S)
+CPPSRCS = $(wildcard $(SRC)/*.cpp $(SRC)/*/*.cpp $(SRC)/*/*/*.cpp $(SRC)/*/*/*/*.cpp $(SRC)/*/*/*/*/*.cpp)
 
-# Optimization level, can be [0, 1, 2, 3, s]. 0 turns off optimization.
-# (Note: 3 is not always the best optimization level. See avr-libc FAQ.)
-OPT = s
+# Add in the gcc4mbed shim sources that allow mbed code build under GCC
+CSRCS += $(GCC4MBED_DIR)/src/gcc4mbed.c $(GCC4MBED_DIR)/src/syscalls.c
 
-# By default the NODE_ADDR is 0
+#> Nano-RK Node Addr # By default the NODE_ADDR is 0
 ifndef NODE_ADDR 
 NODE_ADDR = 0
 endif
 
-
+#> Nano-RK Radio
 RADIO_TYPE = $(strip $(RADIO))
 
 ifdef PLATFORM_FOUND
 
-SRC += $(ROOT_DIR)/src/radio/$(RADIO_TYPE)/source/hal_rf_set_channel.c
-SRC += $(ROOT_DIR)/src/radio/$(RADIO_TYPE)/source/hal_rf_wait_for_crystal_oscillator.c
-SRC += $(ROOT_DIR)/src/radio/$(RADIO_TYPE)/source/basic_rf.c 
+#> Nano-RK C Sources
+CSRCS += $(NANORK_DIR)/src/radio/$(RADIO_TYPE)/source/hal_rf_set_channel.c
+CSRCS += $(NANORK_DIR)/src/radio/$(RADIO_TYPE)/source/hal_rf_wait_for_crystal_oscillator.c
+CSRCS += $(NANORK_DIR)/src/radio/$(RADIO_TYPE)/source/basic_rf.c 
 
+CSRCS += $(NANORK_DIR)/src/platform/$(PLATFORM_TYPE)/source/ulib.c 
+CSRCS += $(NANORK_DIR)/src/platform/$(PLATFORM_TYPE)/source/hal_wait.c
+CSRCS += $(NANORK_DIR)/src/platform/$(PLATFORM_TYPE)/source/nrk_eeprom.c
 
+CSRCS += $(NANORK_DIR)/src/kernel/source/nrk.c
+CSRCS += $(NANORK_DIR)/src/kernel/source/nrk_stats.c
+CSRCS += $(NANORK_DIR)/src/kernel/source/nrk_error.c
+CSRCS += $(NANORK_DIR)/src/kernel/source/nrk_stack_check.c
+CSRCS += $(NANORK_DIR)/src/kernel/source/nrk_events.c
+CSRCS += $(NANORK_DIR)/src/kernel/source/nrk_task.c
+CSRCS += $(NANORK_DIR)/src/kernel/source/nrk_time.c
+CSRCS += $(NANORK_DIR)/src/kernel/source/nrk_idle_task.c
+CSRCS += $(NANORK_DIR)/src/kernel/source/nrk_scheduler.c
+CSRCS += $(NANORK_DIR)/src/kernel/source/nrk_driver.c
+CSRCS += $(NANORK_DIR)/src/kernel/source/nrk_reserve.c
+CSRCS += $(NANORK_DIR)/src/kernel/hal/$(MCU)/nrk_timer.c
+CSRCS += $(NANORK_DIR)/src/kernel/hal/$(MCU)/nrk_status.c
+CSRCS += $(NANORK_DIR)/src/kernel/hal/$(MCU)/nrk_watchdog.c
+CSRCS += $(NANORK_DIR)/src/kernel/hal/$(MCU)/nrk_cpu.c
 
-SRC += $(ROOT_DIR)/src/platform/$(PLATFORM_TYPE)/source/ulib.c 
-SRC += $(ROOT_DIR)/src/platform/$(PLATFORM_TYPE)/source/hal_wait.c
-SRC += $(ROOT_DIR)/src/platform/$(PLATFORM_TYPE)/source/nrk_eeprom.c
-
-
-
-SRC += $(ROOT_DIR)/src/kernel/source/nrk.c
-SRC += $(ROOT_DIR)/src/kernel/source/nrk_stats.c
-SRC += $(ROOT_DIR)/src/kernel/source/nrk_error.c
-SRC += $(ROOT_DIR)/src/kernel/source/nrk_stack_check.c
-SRC += $(ROOT_DIR)/src/kernel/source/nrk_events.c
-SRC += $(ROOT_DIR)/src/kernel/source/nrk_task.c
-SRC += $(ROOT_DIR)/src/kernel/source/nrk_time.c
-SRC += $(ROOT_DIR)/src/kernel/source/nrk_idle_task.c
-SRC += $(ROOT_DIR)/src/kernel/source/nrk_scheduler.c
-SRC += $(ROOT_DIR)/src/kernel/source/nrk_driver.c
-SRC += $(ROOT_DIR)/src/kernel/source/nrk_reserve.c
-SRC += $(ROOT_DIR)/src/kernel/hal/$(MCU)/nrk_timer.c
-SRC += $(ROOT_DIR)/src/kernel/hal/$(MCU)/nrk_status.c
-SRC += $(ROOT_DIR)/src/kernel/hal/$(MCU)/nrk_watchdog.c
-SRC += $(ROOT_DIR)/src/kernel/hal/$(MCU)/nrk_cpu.c
-
-
-# List any extra directories to look for include files here.
-#     Each directory must be separated by a space.
-ifdef EXTRAINCDIRS 
-EXTRAINCDIRS += $(ROOT_DIR)/src/platform/include
-else
-EXTRAINCDIRS = $(ROOT_DIR)/src/platform/include
-endif
-EXTRAINCDIRS += $(ROOT_DIR)/src/platform/$(PLATFORM_TYPE)/include
-EXTRAINCDIRS += $(ROOT_DIR)/src/radio/$(RADIO_TYPE)/include
-EXTRAINCDIRS += $(ROOT_DIR)/src/radio/$(RADIO_TYPE)/hal/$(MCU)
-EXTRAINCDIRS += $(ROOT_DIR)/src/radio/$(RADIO_TYPE)/platform/$(PLATFORM_TYPE)
-EXTRAINCDIRS += $(ROOT_DIR)/src/drivers/include
-EXTRAINCDIRS += $(ROOT_DIR)/src/drivers/platform/$(PLATFORM_TYPE)/include
-EXTRAINCDIRS += $(ROOT_DIR)/src/kernel/include
-EXTRAINCDIRS += $(ROOT_DIR)/src/kernel/hal/include
-
-
-# List Assembler source files here.
-# Make them always end in a capital .S.  Files ending in a lowercase .s
-# will not be considered source files but generated files (assembler
-# output from the compiler), and will be deleted upon "make clean"!
-# Even though the DOS/Win* filesystem matches both .s and .S the same,
-# it will preserve the spelling of the filenames, and gcc itself does
-# care about how the name is spelled on its command-line.
-ASRC = $(ROOT_DIR)/src/kernel/hal/$(MCU)/LPC1768_hw_specific.S
+#> Nano-RK ASM Sources
+ASRCS += $(NANORK_DIR)/src/kernel/hal/$(MCU)/LPC1768_hw_specific.S
 
 else
 
 PLATFORM_ERROR="ERROR Unknown platform:"
 endif
 
-# Optional compiler flags.
-#  -g:        generate debugging information (for GDB, or for COFF conversion)
-#  -O*:       optimization level
-#  -f...:     tuning, see gcc manual and avr-libc documentation
-#  -Wall...:  warning level
-#  -Wa,...:   tell GCC to pass this to the assembler.
-#    -ahlms:  create assembler listing
-CFLAGS = -g -D NANORK -D NODE_ADDR=$(NODE_ADDR) -O$(OPT) \
--funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums \
--Wall \
--Wa,-adhlns=$(<:.c=.lst) \
-$(patsubst %,-I%,$(EXTRAINCDIRS))
+# List of the objects files to be compiled/assembled
+OBJECTS= $(CSRCS:.c=.o) $(ASRCS:.S=.o) $(CPPSRCS:.cpp=.o)
+LSCRIPT=$(GCC4MBED_DIR)/build/mbed.ld
 
+# Location of external library and header dependencies.
+EXTERNAL_DIR = $(GCC4MBED_DIR)/external
 
-# Set a "language standard" compiler flag.
-#   Unremark just one line below to set the language standard to use.
-#   gnu99 = C99 + GNU extensions. See GCC manual for more information.
-#CFLAGS += -std=c89
-#CFLAGS += -std=gnu89
-#CFLAGS += -std=c99
-CFLAGS += -std=gnu99
+# Include path which points to external library headers and to subdirectories of this project which contain headers.
+SUBDIRS = $(wildcard $(SRC)/* $(SRC)/*/* $(SRC)/*/*/* $(SRC)/*/*/*/* $(SRC)/*/*/*/*/*)
+PROJINCS = $(sort $(dir $(SUBDIRS)))
+INCDIRS += $(PROJINCS) $(EXTERNAL_DIR)/mbed $(EXTERNAL_DIR)/mbed/LPC1768 $(EXTERNAL_DIR)/FATFileSystem
 
+#> Nano-RK Extra Include Dirs
+#> List any extra directories to look for include files here.
+#> Each directory must be separated by a space.
+ifdef EXTRAINCDIRS
+INCDIRS += EXTRAINCDIRS
+endif
+INCDIRS += $(NANORK_DIR)/src/platform/include
+INCDIRS += $(NANORK_DIR)/src/platform/$(PLATFORM_TYPE)/include
+INCDIRS += $(NANORK_DIR)/src/radio/$(RADIO_TYPE)/include
+INCDIRS += $(NANORK_DIR)/src/radio/$(RADIO_TYPE)/hal/$(MCU)
+INCDIRS += $(NANORK_DIR)/src/radio/$(RADIO_TYPE)/platform/$(PLATFORM_TYPE)
+INCDIRS += $(NANORK_DIR)/src/drivers/include
+INCDIRS += $(NANORK_DIR)/src/drivers/platform/$(PLATFORM_TYPE)/include
+INCDIRS += $(NANORK_DIR)/src/kernel/include
+INCDIRS += $(NANORK_DIR)/src/kernel/hal/include
 
-# Optional assembler flags.
-#  -Wa,...:   tell GCC to pass this to the assembler.
-#  -ahlms:    create listing
-#  -gstabs:   have the assembler create line number information; note that
-#             for use in COFF files, additional information about filenames
-#             and function names needs to be present in the assembler source
-#             files -- see avr-libc docs [FIXME: not yet described there]
-ASFLAGS = -Wa,-adhlns=$(<:.S=.lst),-gstabs 
+# DEFINEs to be used when building C/C++ code
+DEFINES = -DTARGET_LPC1768 -DGCC4MBED_DELAYED_STDIO_INIT=$(GCC4MBED_DELAYED_STDIO_INIT)
+#> Nano-RK DEFINEs
+DEFINES += -DNANORK -DNODE_ADDR=$(NODE_ADDR)
 
+# Libraries to be linked into final binary
+LIBS = $(LIBS_PREFIX) $(EXTERNAL_DIR)/mbed/LPC1768/mbed.ar $(EXTERNAL_DIR)/mbed/LPC1768/capi.ar $(EXTERNAL_DIR)/FATFileSystem/LPC1768/FATFileSystem.ar $(LIBS_SUFFIX)
 
-# Optional linker flags.
-#  -Wl,...:   tell GCC to pass this to linker.
-#  -Map:      create map file
-#  --cref:    add cross reference to  map file
-LDFLAGS = -Wl,-Map=$(TARGET).map,--cref
+# Optimization level
+OPTIMIZATION = 2
 
+#  Compiler Options
+GPFLAGS = -O$(OPTIMIZATION) -gdwarf-2 -mcpu=cortex-m3 -mthumb -mthumb-interwork -fshort-wchar -ffunction-sections -fdata-sections -fpromote-loop-indices -Wall -Wextra -Wimplicit -Wcast-align -Wpointer-arith -Wredundant-decls -Wshadow -Wcast-qual -Wcast-align -fno-exceptions
+GPFLAGS += $(patsubst %,-I%,$(INCDIRS))
+GPFLAGS += $(DEFINES)
+GPFLAGS += -MD
 
-# Additional libraries
+LDFLAGS = -mcpu=cortex-m3 -mthumb -O$(OPTIMIZATION) -Wl,-Map=$(PROJECT).map,--cref,--gc-sections,--no-wchar-size-warning -T$(LSCRIPT) -L $(EXTERNAL_DIR)/gcc/LPC1768
 
-# Minimalistic printf version
-LDFLAGS += -Wl,-u,vfprintf -lprintf_min
+ASFLAGS = $(LISTING) -mcpu=cortex-m3 -mthumb -x assembler-with-cpp
+ASFLAGS += $(patsubst %,-I%,$(INCDIRS))
 
-# Floating point printf version (requires -lm below)
-#LDFLAGS += -Wl,-u,vfprintf -lprintf_flt
+#  Compiler/Assembler/Linker Paths
+GPP = arm-none-eabi-g++
+AS = arm-none-eabi-gcc
+LD = arm-none-eabi-g++
+OBJCOPY = arm-none-eabi-objcopy
+OBJDUMP = arm-none-eabi-objdump
+SIZE = arm-none-eabi-size
+REMOVE = rm
 
-# -lm = math library
-LDFLAGS += -lm
-
-
-
-#################################  UISP  #####################################
-# Set these parameters for the micaZ
-UISP = uisp
-UISP_FLAGS = -dprog=mib510 -dserial=$(PROGRAMMING_PORT) --wr_fuse_h=0xd8 -dpart=ATmega128 --wr_fuse_e=ff  --erase --upload if=$(TARGET).srec
-
-################################# AVR DUDE SETTINGS ##########################
-# Use this for FireFly Platforms
-#
-# Programming support using avrdude. Settings and variables.
-# Programming hardware: alf avr910 avrisp bascom bsd 
-# dt006 pavr picoweb pony-stk200 sp12 stk200 stk500
-#
-# Type: avrdude -c ?
-# to get a full listing.
-#
-AVRDUDE = avrdude
-AVRDUDE_PROGRAMMER = avr109
-
-
-
-AVRDUDE_WRITE_FLASH = -U flash:w:$(TARGET).hex
-#AVRDUDE_WRITE_EEPROM = -U eeprom:w:$(TARGET).eep
-
-
-ifeq ($(PLATFORM_TYPE),firefly2_2)
-AVRDUDE_FLAGS = -b115200 -F -p atmega128 -P $(PROGRAMMING_PORT) -c $(AVRDUDE_PROGRAMMER)
-else
-AVRDUDE_FLAGS = -b115200 -p $(MCU) -P $(PROGRAMMING_PORT) -c $(AVRDUDE_PROGRAMMER)
+# Switch to cs-rm on Windows and make sure that cmd.exe is used as shell.
+ifeq "$(MAKE)" "cs-make"
+REMOVE = cs-rm
+SHELL=cmd.exe
 endif
 
-# Uncomment the following if you want avrdude's erase cycle counter.
-# Note that this counter needs to be initialized first using -Yn,
-# see avrdude manual.
-#AVRDUDE_ERASE += -y
+#########################################################################
 
-# Uncomment the following if you do /not/ wish a verification to be
-# performed after programming the device.
-AVRDUDE_FLAGS += -V
+all:: $(PROJECT).hex $(PROJECT).bin $(PROJECT).disasm
 
-# Increase verbosity level.  Please use this when submitting bug
-# reports about avrdude. See <http://savannah.nongnu.org/projects/avrdude> 
-# to submit bug reports.
-#AVRDUDE_FLAGS += -v -v
+$(PROJECT).bin: $(PROJECT).elf
+	$(OBJCOPY) -O binary $(PROJECT).elf $(PROJECT).bin
 
+$(PROJECT).hex: $(PROJECT).elf
+	$(OBJCOPY) -R .stack -O ihex $(PROJECT).elf $(PROJECT).hex
+	
+$(PROJECT).disasm: $(PROJECT).elf
+	$(OBJDUMP) -d $(PROJECT).elf >$(PROJECT).disasm
+	
+$(PROJECT).elf: $(LSCRIPT) $(OBJECTS)
+	$(LD) $(LDFLAGS) $(OBJECTS) $(LIBS) -o $(PROJECT).elf
+	$(SIZE) $(PROJECT).elf
 
-#-------------------------------------------------------------------------------
+clean:
+	$(REMOVE) -f $(OBJECTS)
+	$(REMOVE) -f $(PROJECT).hex
+	$(REMOVE) -f $(PROJECT).elf
+	$(REMOVE) -f $(PROJECT).map
+	$(REMOVE) -f $(PROJECT).bin
+	$(REMOVE) -f $(PROJECT).disasm
 
-# Define directories, if needed.
-DIRAVR = c:/winavr
-DIRAVRBIN = $(DIRAVR)/bin
-DIRAVRUTILS = $(DIRAVR)/utils/bin
-DIRINC = .
-DIRLIB = $(DIRAVR)/avr/lib
+program: $(PROJECT).bin
+	cp $(PROJECT).bin $(PROGRAMMING_PORT)
 
-
-# Define programs and commands.
-SHELL = sh
-
-CC = avr-gcc -g
-
-OBJCOPY = avr-objcopy
-OBJDUMP = avr-objdump
-SIZE = avr-size
-
-
-
-TOUCH = touch
-REMOVE = rm -f
-COPY = cp
-
-HEXSIZE = $(SIZE) --target=$(FORMAT) $(TARGET).hex
-ELFSIZE = $(SIZE) -A $(TARGET).elf
-
-
-# Define Messages
-# English
-MSG_ERRORS_NONE = Errors: none
-MSG_BEGIN = -------- begin --------
-MSG_END = --------  end  --------
-MSG_SIZE_BEFORE = Size before: 
-MSG_SIZE_AFTER = Size after:
-MSG_COFF = Converting to AVR COFF:
-MSG_EXTENDED_COFF = Converting to AVR Extended COFF:
-MSG_FLASH = Creating load file for Flash:
-MSG_EEPROM = Creating load file for EEPROM:
-MSG_EXTENDED_LISTING = Creating Extended Listing:
-MSG_SYMBOL_TABLE = Creating Symbol Table:
-MSG_LINKING = Linking:
-MSG_COMPILING = Compiling:
-MSG_ASSEMBLING = Assembling:
-MSG_CLEANING = Cleaning project:
-
-
-TARGET_PLATFORM  = -DCC2420DB
-
-# Define all object files.
-OBJ = $(SRC:.c=.o) $(ASRC:.S=.o) 
-
-# Define all listing files.
-LST = $(ASRC:.S=.lst) $(SRC:.c=.lst)
-
-# Combine all necessary flags and optional flags.
-# Add target processor to flags.
-ALL_CFLAGS = -mmcu=$(MCU) -Os -I. $(CFLAGS) $(TARGET_PLATFORM)
-ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
-
-
-# Default target.
-all: begin gccversion sizebefore $(TARGET).elf $(TARGET).hex $(TARGET).eep \
-	$(TARGET).lss $(TARGET).sym sizeafter finished end
-
-# Eye candy.
-# AVR Studio 3.x does not check make's exit code but relies on
-# the following magic strings to be generated by the compile job.
-begin:
-	@echo
-	@echo
-	@echo $(MSG_BEGIN)
-
-finished:
-	@echo $(MSG_ERRORS_NONE)
-	@echo Platform: $(PLATFORM_TYPE)
-end:
-	@echo $(MSG_END)
-ifdef PLATFORM_ERROR
-	@echo $(PLATFORM_ERROR)  $(PLATFORM_TYPE)
+ifdef LPC_DEPLOY
+DEPLOY_COMMAND = $(subst PROJECT,$(PROJECT),$(LPC_DEPLOY))
+deploy:
+	$(DEPLOY_COMMAND)
 endif
 
-# Display size of file.
-sizebefore:
-	@if [ -f $(TARGET).elf ]; then echo; echo $(MSG_SIZE_BEFORE); $(ELFSIZE); echo; fi
+#########################################################################
+#  Default rules to compile .c and .cpp file to .o
+#  and assemble .s files to .o
 
-sizeafter:
-	@if [ -f $(TARGET).elf ]; then echo; echo $(MSG_SIZE_AFTER); $(ELFSIZE); echo; fi
-
-
-
-# Display compiler version information.
-gccversion : 
-	@$(CC) --version
-
-
-# Convert ELF to COFF for use in debugging / simulating in
-# AVR Studio or VMLAB.
-COFFCONVERT=$(OBJCOPY) --debugging \
-	--change-section-address .data-0x800000 \
-	--change-section-address .bss-0x800000 \
-	--change-section-address .noinit-0x800000 \
-	--change-section-address .eeprom-0x810000 
-
-
-coff: $(TARGET).elf
+.c.o :
 	@echo
-	@echo $(MSG_COFF) $(TARGET).cof
-	$(COFFCONVERT) -O coff-avr $< $(TARGET).cof
+	@echo "Compiling: " $<
+	$(GPP) $(GPFLAGS) -c $< -o $(<:.c=.o)
 
-
-extcoff: $(TARGET).elf
+.cpp.o :
 	@echo
-	@echo $(MSG_EXTENDED_COFF) $(TARGET).cof
-	$(COFFCONVERT) -O coff-ext-avr $< $(TARGET).cof
+	@echo "Compiling: " $<
+	$(GPP) $(GPFLAGS) -c $< -o $(<:.cpp=.o)
 
-
-# Program the device.  
-#program: $(TARGET).hex $(TARGET).eep
-program: $(TARGET).hex 
-ifeq ($(PROG_TYPE),avrdude)
-	$(AVRDUDE) $(AVRDUDE_FLAGS) $(AVRDUDE_WRITE_FLASH) $(AVRDUDE_WRITE_EEPROM)
-endif
-ifeq ($(PROG_TYPE),uisp)
-	$(OBJCOPY) --output-target=srec $(TARGET).elf $(TARGET).srec 
-	$(UISP) $(UISP_FLAGS)
-endif
-
-
-
-# Create final output files (.hex, .eep) from ELF output file.
-%.hex: %.elf
+.S.o :
 	@echo
-	@echo $(MSG_FLASH) $@
-	$(OBJCOPY) -O $(FORMAT) -R .eeprom $< $@
+	@echo "Assembling: " $<
+	$(AS) $(ASFLAGS) -c $< -o $(<:.S=.o)
 
-%.eep: %.elf
-	@echo
-	@echo $(MSG_EEPROM) $@
-	-$(OBJCOPY) -j .eeprom --set-section-flags=.eeprom="alloc,load" \
-	--change-section-lma .eeprom=0 -O $(FORMAT) $< $@
-
-# Create extended listing file from ELF output file.
-%.lss: %.elf
-	@echo
-	@echo $(MSG_EXTENDED_LISTING) $@
-	$(OBJDUMP) -h -S $< > $@
-
-# Create a symbol table from ELF output file.
-%.sym: %.elf
-	@echo
-	@echo $(MSG_SYMBOL_TABLE) $@
-	avr-nm -n $< > $@
-
-
-# Link: create ELF output file from object files.
-.SECONDARY : $(TARGET).elf
-.PRECIOUS : $(OBJ)
-%.elf: $(OBJ)
-	@echo
-	@echo $(MSG_LINKING) $@
-	$(CC) $(ALL_CFLAGS) $(OBJ) --output $@ $(LDFLAGS)
-
-
-# Compile: create object files from C source files.
-%.o : %.c
-	@echo
-	@echo $(MSG_COMPILING) $<
-	$(CC) -c $(ALL_CFLAGS) $< -o $@
-
-# Compile: create assembler files from C source files.
-%.s : %.c
-	$(CC) -S $(ALL_CFLAGS) $< -o $@
-
-
-# Assemble: create object files from assembler source files.
-%.o : %.S
-	@echo
-	@echo $(MSG_ASSEMBLING) $<
-	$(CC) -c $(ALL_ASFLAGS) $< -o $@
-
-
-# Target: clean project.
-clean: begin clean_list finished end
-
-clean_list :
-	@echo
-	@echo $(MSG_CLEANING)
-	$(REMOVE) $(TARGET).hex
-	$(REMOVE) $(TARGET).eep
-	$(REMOVE) $(TARGET).obj
-	$(REMOVE) $(TARGET).cof
-	$(REMOVE) $(TARGET).elf
-	$(REMOVE) $(TARGET).map
-	$(REMOVE) $(TARGET).obj
-	$(REMOVE) $(TARGET).a90
-	$(REMOVE) $(TARGET).sym
-	$(REMOVE) $(TARGET).lnk
-	$(REMOVE) $(TARGET).lss
-	$(REMOVE) $(TARGET).srec
-	$(REMOVE) $(OBJ)
-	$(REMOVE) $(LST)
-	$(REMOVE) $(SRC:.c=.s)
-	$(REMOVE) $(SRC:.c=.d)
-
-
-# Automatically generate C source code dependencies. 
-# (Code originally taken from the GNU make user manual and modified 
-# (See README.txt Credits).)
-#
-# Note that this will work with sh (bash) and sed that is shipped with WinAVR
-# (see the SHELL variable defined above).
-# This may not work with other shells or other seds.
-#
-%.d: %.c
-	set -e; $(CC) -MM $(ALL_CFLAGS) $< \
-	| sed 's,\(.*\)\.o[ :]*,\1.o \1.d : ,g' > $@; \
-	[ -s $@ ] || rm -f $@
-
-
-# Remove the '-' if you want to see the dependency files generated.
--include $(SRC:.c=.d)
-
-
-# Listing of phony targets.
-.PHONY : all begin finish end sizebefore sizeafter gccversion coff extcoff \
-	clean clean_list program
-
+#########################################################################
