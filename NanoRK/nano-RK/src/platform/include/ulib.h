@@ -33,12 +33,12 @@
 #include <nrk_events.h>
 #include <stdio.h>
 
-char getc0();
-char getc1();
+char getc2();
+char getc3();
 //int putc0(char, FILE * fp);
 //int putc1(char, FILE *fp);
-void putc0(char x);
-void putc1(char x);
+void putc2(char x);
+void putc3(char x);
 
 uint8_t nrk_uart_data_ready(uint8_t uart_num);
 
@@ -48,9 +48,45 @@ int8_t nrk_uart_rx_signal_get();
 void nrk_kprintf(const char *addr);
 void nrk_setup_ports();
 void nrk_init_hardware();
-void nrk_setup_uart(uint16_t baudrate);
-void setup_uart1(uint16_t baudrate);
+void nrk_setup_uart(uint32_t baudrate);
+void setup_uart3(uint32_t baudrate);
+void setup_uart2(uint32_t baudrate);
 
+//---------------------------------------------------------------------------------------------
+// LPC17xx related definitions ///Abhijeet
+
+void initLED(void) ;
+void setupSPIPins(void);
+void setup_uartPins(void);
+void PINSEL_ConfigPin(PINSEL_CFG_Type *PinCfg);
+void set_PinFunc ( uint8_t portnum, uint8_t pinnum, uint8_t funcnum);
+void set_ResistorMode ( uint8_t portnum, uint8_t pinnum, uint8_t modenum);
+void set_OpenDrainMode( uint8_t portnum, uint8_t pinnum, uint8_t modenum);
+void GPIO_SetDir(uint8_t portNum, uint32_t bitValue, uint8_t dir);
+void GPIO_ClearValue(uint8_t portNum, uint32_t bitValue);
+void GPIO_SetValue(uint8_t portNum, uint32_t bitValue);
+uint32_t GPIO_ReadValue(uint8_t portNum);
+void GPIO_Toggle(uint8_t portNum, uint32_t bitValue);
+uint32_t CLKPWR_GetPCLK (uint32_t ClkType);
+uint32_t CLKPWR_GetPCLKSEL (uint32_t ClkType);
+void UART_ConfigStructInit(UART_CFG_Type *UART_InitStruct);
+
+void UART_Init(LPC_UART_TypeDef *UARTx, UART_CFG_Type *UART_ConfigStruct);
+void UART_ConfigStructInit(UART_CFG_Type *UART_InitStruct);
+
+
+//---------------------------------------------------------------------------------------------
+// GPIO related definitions  (see also nrk_gpio_raw functions for platform specific access)
+// these macros provide simplified gpio access for
+// higher level programs. Pins are defined has NRK_<pin name>;
+// mapping to the hardware is done in ulib.c
+int8_t nrk_gpio_set(uint32_t pin);
+int8_t nrk_gpio_clr(uint32_t pin);
+int8_t nrk_gpio_get(uint8_t pin);
+int8_t nrk_gpio_toggle(uint32_t pin);
+int8_t nrk_gpio_direction(uint32_t pin, uint8_t pin_direction);
+
+int8_t nrk_gpio_pullups( uint8_t enable );
 
 //---------------------------------------------------------------------------------------------
 // LED related definitions
@@ -62,16 +98,6 @@ int8_t nrk_led_toggle(int led);
 // Button related definitions
 int8_t nrk_get_button(uint8_t b);
 
-//---------------------------------------------------------------------------------------------
-// GPIO related definitions  (see also nrk_gpio_raw functions for platform specific access)
-// these macros provide simplified gpio access for
-// higher level programs. Pins are defined has NRK_<pin name>;
-// mapping to the hardware is done in ulib.c
-int8_t nrk_gpio_set( uint8_t pin );
-int8_t nrk_gpio_clr( uint8_t pin );
-int8_t nrk_gpio_get( uint8_t pin );
-int8_t nrk_gpio_toggle( uint8_t pin );
-int8_t nrk_gpio_direction(uint8_t pin, uint8_t pin_direction);
-int8_t nrk_gpio_pullups( uint8_t enable );
+
 
 #endif
