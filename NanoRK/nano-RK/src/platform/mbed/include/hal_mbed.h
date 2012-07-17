@@ -29,7 +29,7 @@
 
 #define MBED_H
 
-#define NRK_DEFAULT_UART 1
+#define NRK_DEFAULT_UART 3
 
 #define RED_LED         3
 #define GREEN_LED       2

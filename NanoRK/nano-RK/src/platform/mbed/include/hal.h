@@ -1,28 +1,28 @@
 /******************************************************************************
-*  Nano-RK, a real-time operating system for sensor networks.
-*  Copyright (C) 2007, Real-Time and Multimedia Lab, Carnegie Mellon University
-*  All rights reserved.
-*
-*  This is the Open Source Version of Nano-RK included as part of a Dual
-*  Licensing Model. If you are unsure which license to use please refer to:
-*  http://www.nanork.org/nano-RK/wiki/Licensing
-*
-*  This program is free software: you can redistribute it and/or modify
-*  it under the terms of the GNU General Public License as published by
-*  the Free Software Foundation, version 2.0 of the License.
-*
-*  This program is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-*  Contributing Authors (specific to this file):
-*  Chipcon Development Team 
-*  Anthony Rowe
-*******************************************************************************/
+ *  Nano-RK, a real-time operating system for sensor networks.
+ *  Copyright (C) 2007, Real-Time and Multimedia Lab, Carnegie Mellon University
+ *  All rights reserved.
+ *
+ *  This is the Open Source Version of Nano-RK included as part of a Dual
+ *  Licensing Model. If you are unsure which license to use please refer to:
+ *  http://www.nanork.org/nano-RK/wiki/Licensing
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, version 2.0 of the License.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Contributing Authors (specific to this file):
+ *  Chipcon Development Team 
+ *  Anthony Rowe
+ *******************************************************************************/
 
 
 #ifndef HAL_H
@@ -43,10 +43,10 @@ typedef uint32_t   NRK_STK;                   // Each stack entry is 32-bit wide
 
 // Enables SPI, selects "master", clock rate FCK / 2, and SPI mode 0
 #define SPI_INIT() \
-    do { \
-        SPCR = BM(SPE) | BM(MSTR); \
-        SPSR = BM(SPI2X); \
-    } while (0)
+do { \
+SPCR = BM(SPE) | BM(MSTR); \
+SPSR = BM(SPI2X); \
+} while (0)
 //-------------------------------------------------------------------------------------------------------
 
 
@@ -59,88 +59,88 @@ typedef uint32_t   NRK_STK;                   // Each stack entry is 32-bit wide
 // SPI_ENABLE() and SPI_DISABLE() are located in the devboard header file (CS_N uses GPIO)
 
 #define FASTSPI_WAIT() \
-    do { \
-        while (!(SPSR & BM(SPIF))); \
-    } while (0) 
+do { \
+while (!(SPSR & BM(SPIF))); \
+} while (0) 
 
 #define FASTSPI_TX(x) \
-    do { \
-        SPDR = x; \
-        FASTSPI_WAIT(); \
-    } while (0)
+do { \
+SPDR = x; \
+FASTSPI_WAIT(); \
+} while (0)
 
 #define FASTSPI_RX(x) \
-    do { \
-        SPDR = 0; \
-        FASTSPI_WAIT(); \
-        x = SPDR; \
-    } while (0)
+do { \
+SPDR = 0; \
+FASTSPI_WAIT(); \
+x = SPDR; \
+} while (0)
 
 #define FASTSPI_RX_GARBAGE() \
-    do { \
-        SPDR = 0; \
-        FASTSPI_WAIT(); \
-    } while (0)
+do { \
+SPDR = 0; \
+FASTSPI_WAIT(); \
+} while (0)
 
 #define FASTSPI_TX_WORD_LE(x) \
-    do { \
-        FASTSPI_TX(x); \
-        FASTSPI_TX((x) >> 8); \
-    } while (0)
-    
+do { \
+FASTSPI_TX(x); \
+FASTSPI_TX((x) >> 8); \
+} while (0)
+
 #define FASTSPI_TX_WORD(x) \
-    do { \
-        FASTSPI_TX(((uint16_t)(x)) >> 8); \
-        FASTSPI_TX((uint8_t)(x)); \
-    } while (0)
-    
+do { \
+FASTSPI_TX(((uint16_t)(x)) >> 8); \
+FASTSPI_TX((uint8_t)(x)); \
+} while (0)
+
 #define FASTSPI_TX_MANY(p,c) \
-    do { \
-        for (uint8_t spiCnt = 0; spiCnt < (c); spiCnt++) { \
-            FASTSPI_TX(((uint8_t*)(p))[spiCnt]); \
-        } \
-    } while (0)
-        
+do { \
+for (uint8_t spiCnt = 0; spiCnt < (c); spiCnt++) { \
+FASTSPI_TX(((uint8_t*)(p))[spiCnt]); \
+} \
+} while (0)
+
 #define FASTSPI_RX_WORD_LE(x) \
-    do { \
-        SPDR = 0; \
-        FASTSPI_WAIT(); \
-        x = SPDR; \
-        SPDR = 0; \
-        FASTSPI_WAIT(); \
-        x |= SPDR << 8; \
-    } while (0)
+do { \
+SPDR = 0; \
+FASTSPI_WAIT(); \
+x = SPDR; \
+SPDR = 0; \
+FASTSPI_WAIT(); \
+x |= SPDR << 8; \
+} while (0)
 
 #define FASTSPI_RX_WORD(x) \
-    do { \
-        SPDR = 0; \
-        FASTSPI_WAIT(); \
-        x = SPDR << 8; \
-        SPDR = 0; \
-        FASTSPI_WAIT(); \
-        x |= SPDR; \
-    } while (0)
-    
+do { \
+SPDR = 0; \
+FASTSPI_WAIT(); \
+x = SPDR << 8; \
+SPDR = 0; \
+FASTSPI_WAIT(); \
+x |= SPDR; \
+} while (0)
+
 #define FASTSPI_RX_MANY(p,c) \
-    do { \
-        for (uint8_t spiCnt = 0; spiCnt < (c); spiCnt++) { \
-            FASTSPI_RX((p)[spiCnt]); \
-        } \
-    } while (0)
-        
+do { \
+for (uint8_t spiCnt = 0; spiCnt < (c); spiCnt++) { \
+FASTSPI_RX((p)[spiCnt]); \
+} \
+} while (0)
+
 // Register address:
 #define FASTSPI_TX_ADDR(a) \
-    do { \
-        SPDR = a; \
-        FASTSPI_WAIT(); \
-    } while (0)
+do { \
+SPDR = a; \
+FASTSPI_WAIT(); \
+} while (0)
 
 // Register address:
 #define FASTSPI_RX_ADDR(a) \
-    do { \
-        SPDR = (a) | 0x40; \
-        FASTSPI_WAIT(); \
-    } while (0)
+do { \
+SPDR = (a) | 0x40; \
+FASTSPI_WAIT(); \
+} while (0)
 
 
 
@@ -153,35 +153,40 @@ typedef uint32_t   NRK_STK;                   // Each stack entry is 32-bit wide
 
 //-------------------------------------------------------------------------------------------------------
 // General
-#define ENABLE_GLOBAL_INT()         /* Dalton Banks do { asm ("sei\n\t" ::); } while (0) */
-#define DISABLE_GLOBAL_INT()        /* Dalton Banks do { asm ("cli\n\t" ::); } while (0) */
+#define ENABLE_GLOBAL_INT()         do { asm ("cpsie i\n\t" ::); } while (0)
+#define DISABLE_GLOBAL_INT()        do { asm ("cpsid i\n\t" ::); } while (0)
 //-------------------------------------------------------------------------------------------------------
 
+// Abhijeet
 
 //-------------------------------------------------------------------------------------------------------
-// UART1 interrupts
-#define ENABLE_UART1_INT()          do { UCSR1B |= (BM(UDRIE1) | BM(RXCIE1)); } while (0)
-#define DISABLE_UART1_INT()         do { UCSR1B &= ~(BM(UDRIE1) | BM(RXCIE1)); } while (0) 
+// UART3 interrupts
+#define ENABLE_UART3_INT()          do { LPC_UART3->IER |= ((uint32_t)(1<<1)); } while (0) //check if recieve complete int required
+#define DISABLE_UART3_INT()         do { LPC_UART3->IER &= (~((uint32_t)(1<<1))) & ((uint32_t)(0x307)); } while (0) 
 
-#define ENABLE_UART1_TX_INT()       do { UCSR1B |= BM(UDRIE1); } while (0)
-#define DISABLE_UART1_TX_INT()      do { UCSR1B &= ~BM(UDRIE1); } while (0) 
-#define CLEAR_UART1_TX_INT()        do { UCSR1A &= ~BM(UDRE1); } while (0)
-#define SET_UART1_TX_INT()          do { UCSR1A |= BM(UDRE1); } while (0)
+#define ENABLE_UART3_TX_INT()       do { ENABLE_UART3_INT() } while (0)
+#define DISABLE_UART3_TX_INT()      do { DISABLE_UART3_INT()  } while (0) 
+#define CLEAR_UART3_TX_INT()        do { /*UCSR1A &= ~BM(UDRE1); */} while (0)
+#define SET_UART3_TX_INT()          do { /*UCSR1A |= BM(UDRE1);*/ } while (0)
 
-#define ENABLE_UART1_RX_INT()       do { UCSR1B |= BM(RXCIE1); } while (0)
-#define DISABLE_UART1_RX_INT()      do { UCSR1B &= ~BM(RXCIE1); } while (0) 
-#define CLEAR_UART1_RX_INT()        do { UCSR1A &= ~BM(RXC1); } while (0)
+#define ENABLE_UART3_RX_INT()       do { LPC_UART3->IER |= ((uint32_t)(1<<0));/*UCSR1B |= BM(RXCIE1);*/ } while (0)  //M3 has interrupt to check if data is availabe, not if data recieve is complete...Abhijeet
+
+#define DISABLE_UART3_RX_INT()      do { LPC_UART3->IER &= (~((uint32_t)(1<<0))) & ((uint32_t)(0x307));/*UCSR1B &= ~BM(RXCIE1);*/ } while (0) 
+#define CLEAR_UART3_RX_INT()        do { /*UCSR1A &= ~BM(RXC1); */} while (0)
 
 
+#define ENABLE_UART2_INT()          do { LPC_UART2->IER |= ((uint32_t)(1<<1)); } while (0) //check if recieve complete int required
+#define DISABLE_UART2_INT()         do { LPC_UART2->IER &= (~((uint32_t)(1<<1))) & ((uint32_t)(0x307)); } while (0) 
 
-#define ENABLE_UART0_TX_INT()       do { UCSR0B |= BM(UDRIE0); } while (0)
-#define DISABLE_UART0_TX_INT()      do { UCSR0B &= ~BM(UDRIE0); } while (0) 
-#define CLEAR_UART0_TX_INT()        do { UCSR0A &= ~BM(UDRE0); } while (0)
-#define SET_UART0_TX_INT()          do { UCSR0A |= BM(UDRE0); } while (0)
 
-#define ENABLE_UART0_RX_INT()       do { UCSR0B |= BM(RXCIE0); } while (0)
-#define DISABLE_UART0_RX_INT()      do { UCSR0B &= ~BM(RXCIE0); } while (0) 
-#define CLEAR_UART0_RX_INT()        do { UCSR0A &= ~BM(RXC0); } while (0)
+#define ENABLE_UART2_TX_INT()       do { ENABLE_UART2_INT() } while (0)
+#define DISABLE_UART2_TX_INT()      do { DISABLE_UART2_INT()  } while (0) 
+#define CLEAR_UART2_TX_INT()        do { /*UCSR0A &= ~BM(UDRE0);*/ } while (0)
+#define SET_UART2_TX_INT()          do { /*UCSR0A |= BM(UDRE0);*/ } while (0)
+
+#define ENABLE_UART2_RX_INT()       do { LPC_UART2->IER |= ((uint32_t)(1<<0)); } while (0)
+#define DISABLE_UART2_RX_INT()      do { LPC_UART2->IER &= (~((uint32_t)(1<<0))) & ((uint32_t)(0x307)); } while (0) 
+#define CLEAR_UART2_RX_INT()        do {/* UCSR0A &= ~BM(RXC0);*/ } while (0)
 
 
 //-------------------------------------------------------------------------------------------------------
@@ -213,11 +218,11 @@ typedef uint32_t   NRK_STK;                   // Each stack entry is 32-bit wide
 
 // Initialization
 #define PWM0_INIT(period) \
-    do { \
-        OCR0 = 0; \
-        TCCR0 = BM(WGM00) | BM(COM01) | BM(COM00); \
-        PWM0_SET_PERIOD(period); \
-    } while(0)
+do { \
+OCR0 = 0; \
+TCCR0 = BM(WGM00) | BM(COM01) | BM(COM00); \
+PWM0_SET_PERIOD(period); \
+} while(0)
 
 // Sets the PWM period
 #define PWM0_SET_PERIOD(period) do { TCCR0 = ((TCCR0 & ~0x07) | (period)); } while (0)
@@ -275,59 +280,63 @@ typedef uint32_t   NRK_STK;                   // Each stack entry is 32-bit wide
 //          One or more of the UART_OPT constants defined below. The value 0 gives one stop bit, no
 //          parity and 5 bits per char.
 //-------------------------------------------------------------------------------------------------------
-#define INIT_UART1(baudRate,options) \
-    do { \
-        UBRR1H = (baudRate) >> 8; \
-        UBRR1L = (baudRate); \
-        UCSR1C = (uint8_t) options; \
-        if (options > 0xFF) { \
-            UCSR1B |= 0x04; \
-        } else { \
-            UCSR1B &= ~0x04; \
-        } \
-        UCSR1A |= BM(U2X1); \
-    } while (0)
 
-#define INIT_UART0(baudRate,options) \
-    do { \
-        UBRR0H = (baudRate) >> 8; \
-        UBRR0L = (baudRate); \
-        UCSR0C = (uint8_t) options; \
-        if (options > 0xFF) { \
-            UCSR0B |= 0x04; \
-        } else { \
-            UCSR0B &= ~0x04; \
-        } \
-        UCSR0A |= BM(U2X0); \
-    } while (0)
-
-// Baud rate codes for use with the INIT_UART1 macro
-#define UART_BAUDRATE_2K4           383 
-#define UART_BAUDRATE_4K8           191 
-#define UART_BAUDRATE_9K6           95 
-#define UART_BAUDRATE_14K4          63   
-#define UART_BAUDRATE_19K2          47 
-#define UART_BAUDRATE_28K8          31   
-#define UART_BAUDRATE_38K4          23 
-#define UART_BAUDRATE_57K6          15 
-// change 8 to 7 below for correct oscillator
-#define UART_BAUDRATE_115K2         7
-#define UART_BAUDRATE_230K4         3
-#define UART_BAUDRATE_250K          3
-//#define UART_BAUDRATE_500K          1   
-//#define UART_BAUDRATE_1M            0
-    
-// Options for use with the INIT_UART1 macro
-#define UART_OPT_ONE_STOP_BIT       0
-#define UART_OPT_TWO_STOP_BITS      0x08
-#define UART_OPT_NO_PARITY          0
-#define UART_OPT_EVEN_PARITY        0x20
-#define UART_OPT_ODD_PARITY         0x30
-#define UART_OPT_5_BITS_PER_CHAR    0
-#define UART_OPT_6_BITS_PER_CHAR    0x02
-#define UART_OPT_7_BITS_PER_CHAR    0x04
-#define UART_OPT_8_BITS_PER_CHAR    0x06
-#define UART_OPT_9_BITS_PER_CHAR    0x0406
+/* Moved to ulib.c..Abhijeet
+ #define INIT_UART1(baudRate,options) \
+ do { \
+ UBRR1H = (baudRate) >> 8; \
+ UBRR1L = (baudRate); \
+ UCSR1C = (uint8_t) options; \
+ if (options > 0xFF) { \
+ UCSR1B |= 0x04; \
+ } else { \
+ UCSR1B &= ~0x04; \
+ } \
+ UCSR1A |= BM(U2X1); \
+ } while (0)
+ 
+ #define INIT_UART0(baudRate,options) \
+ do { \
+ UBRR0H = (baudRate) >> 8; \
+ UBRR0L = (baudRate); \
+ UCSR0C = (uint8_t) options; \
+ if (options > 0xFF) { \
+ UCSR0B |= 0x04; \
+ } else { \
+ UCSR0B &= ~0x04; \
+ } \
+ UCSR0A |= BM(U2X0); \
+ } while (0)
+ 
+ 
+ // Baud rate codes for use with the INIT_UART1 macro
+ #define UART_BAUDRATE_2K4           383 
+ #define UART_BAUDRATE_4K8           191 
+ #define UART_BAUDRATE_9K6           95 
+ #define UART_BAUDRATE_14K4          63   
+ #define UART_BAUDRATE_19K2          47 
+ #define UART_BAUDRATE_28K8          31   
+ #define UART_BAUDRATE_38K4          23 
+ #define UART_BAUDRATE_57K6          15 
+ // change 8 to 7 below for correct oscillator
+ #define UART_BAUDRATE_115K2         7
+ #define UART_BAUDRATE_230K4         3
+ #define UART_BAUDRATE_250K          3
+ //#define UART_BAUDRATE_500K          1   
+ //#define UART_BAUDRATE_1M            0
+ 
+ // Options for use with the INIT_UART1 macro
+ #define UART_OPT_ONE_STOP_BIT       0
+ #define UART_OPT_TWO_STOP_BITS      0x08
+ #define UART_OPT_NO_PARITY          0
+ #define UART_OPT_EVEN_PARITY        0x20
+ #define UART_OPT_ODD_PARITY         0x30
+ #define UART_OPT_5_BITS_PER_CHAR    0
+ #define UART_OPT_6_BITS_PER_CHAR    0x02
+ #define UART_OPT_7_BITS_PER_CHAR    0x04
+ #define UART_OPT_8_BITS_PER_CHAR    0x06
+ #define UART_OPT_9_BITS_PER_CHAR    0x0406
+ */
 //-------------------------------------------------------------------------------------------------------
 
 
@@ -335,10 +344,14 @@ typedef uint32_t   NRK_STK;                   // Each stack entry is 32-bit wide
 // Enable/disable macros
 
 // Enable/disable UART1
-#define ENABLE_UART0()              (UCSR0B |= (BM(RXEN0) | BM(TXEN0))) 
-#define DISABLE_UART0()             (UCSR0B &= ~(BM(RXEN0) | BM(TXEN0)))
-#define ENABLE_UART1()              (UCSR1B |= (BM(RXEN1) | BM(TXEN1))) 
-#define DISABLE_UART1()             (UCSR1B &= ~(BM(RXEN1) | BM(TXEN1)))
+#define ENABLE_UART3()              (LPC_UART3->TER |= ((uint8_t)(1<<7))) 
+#define DISABLE_UART3()             (LPC_UART3->TER &= (~((uint8_t)(1<<7))) & ((uint8_t)(0x80)))
+
+
+#define ENABLE_UART2()              (LPC_UART2->TER |= ((uint8_t)(1<<7))) 
+#define DISABLE_UART2()             (LPC_UART2->TER &= (~((uint8_t)(1<<7))) & ((uint8_t)(0x80)))
+
+
 //-------------------------------------------------------------------------------------------------------
 
 
@@ -351,32 +364,32 @@ typedef uint32_t   NRK_STK;                   // Each stack entry is 32-bit wide
 //          UART1_WAIT_AND_SEND(pData[i]);
 //      }
 
-#define UART1_WAIT()                do { while (!(UCSR1A & BM(UDRE1))); /*CLEAR_UART1_TX_INT();*/ } while (0)
+#define UART2_WAIT()                do {while (!(LPC_UART2->LSR & ((uint8_t)(1<<5)))); /*CLEAR_UART0_TX_INT(); */} while (0)
 
-#define UART1_WAIT_RX()             do { while (!(UCSR1A & BM(RXC1))); CLEAR_UART1_RX_INT(); } while (0)
+#define UART2_WAIT_RX()             do { while (!(LPC_UART2->LSR & ((uint8_t)(1<<0)))); /*CLEAR_UART0_RX_INT();*/ } while (0)
 
-#define UART1_SEND(x)               do { UDR1 = (x); } while (0)
+#define UART2_SEND(x)               do { LPC_UART2->THR = x & ((uint8_t)0xFF); } while (0)
 
-#define UART1_WAIT_AND_SEND(x)      do { UART1_WAIT(); UART1_SEND(x); } while (0)
+#define UART2_WAIT_AND_SEND(x)      do { UART2_WAIT(); UART2_SEND(x); } while (0)
 
-#define UART1_RECEIVE(x)            do { (x) = UDR1; } while (0)
+#define UART2_RECEIVE(x)            do { (x) = (LPC_UART2->RBR & ((uint8_t)0xFF)); } while (0)
 
-#define UART1_WAIT_AND_RECEIVE(x)   do { /*UDR1 = 0;*/ UART1_WAIT_RX(); UART1_RECEIVE(x); } while (0)
+#define UART2_WAIT_AND_RECEIVE(x)   do { /*UDR1 = 0;*/ UART2_WAIT_RX(); UART2_RECEIVE(x); } while (0)
 
- 
-#define UART0_WAIT()                do { while (!(UCSR0A & BM(UDRE0))); CLEAR_UART0_TX_INT(); } while (0)
 
-#define UART0_WAIT_RX()             do { while (!(UCSR0A & BM(RXC0))); CLEAR_UART0_RX_INT(); } while (0)
+#define UART3_WAIT()                do {while (!(LPC_UART3->LSR & ((uint8_t)(1<<5)))); /*CLEAR_UART0_TX_INT(); */} while (0)
 
-#define UART0_SEND(x)               do { UDR0 = (x); } while (0)
+#define UART3_WAIT_RX()             do { while (!(LPC_UART3->LSR & ((uint8_t)(1<<0)))); /*CLEAR_UART0_RX_INT();*/ } while (0)
 
-#define UART0_WAIT_AND_SEND(x)      do { UART0_WAIT(); UART0_SEND(x); } while (0)
+#define UART3_SEND(x)               do { LPC_UART3->THR = x & ((uint8_t)0xFF); } while (0)
 
-#define UART0_RECEIVE(x)            do { (x) = UDR0; } while (0)
+#define UART3_WAIT_AND_SEND(x)      do { UART3_WAIT(); UART3_SEND(x); } while (0)
 
-#define UART0_WAIT_AND_RECEIVE(x)   do { /*UDR1 = 0;*/ UART0_WAIT_RX(); UART0_RECEIVE(x); } while (0)
+#define UART3_RECEIVE(x)            do { (x) = (LPC_UART3->RBR & ((uint8_t)0xFF)); } while (0)
 
-            
+#define UART3_WAIT_AND_RECEIVE(x)   do { /*UDR1 = 0;*/ UART3_WAIT_RX(); UART3_RECEIVE(x); } while (0)
+
+
 
 /*******************************************************************************************************
  *******************************************************************************************************

@@ -41,27 +41,28 @@ void Task1(void);
 void nrk_create_taskset();
 
 DigitalOut myled(LED1);
-
+DigitalOut myled1(LED2);
 int
 main ()
 {
-  //nrk_setup_ports();
+  printf("in main");
+  nrk_setup_ports();
   //nrk_setup_uart(UART_BAUDRATE_115K2);
+  while (1) {
+        myled = 1;
+        //myled1 = 1;
+        nrk_led_set(1);
+    }
+    
+    
 
   nrk_init();
 
   nrk_time_set(0,0);
   //nrk_create_taskset ();
   nrk_start();
-
-  while(1) {
-    myled = 1;
-    wait(0.2);
-    myled = 0;
-    wait(0.2);
-  }
-
-  return 0;
+    //nrk_gpio_set();
+   return 0;
 }
 
 void Task1()
