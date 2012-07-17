@@ -1,6 +1,5 @@
 *.swp
 *.d
-*.o
 *.disasm
 *.bin
 *.hex

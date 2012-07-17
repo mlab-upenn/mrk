@@ -41,8 +41,6 @@ Serial pc(USBTX, USBRX); // tx, rx
 
 void nrk_create_taskset();
 
-DigitalOut myled(LED1);
-DigitalOut myled1(LED2);
 int main ()
 {
     pc.printf("in main");
@@ -52,7 +50,6 @@ int main ()
     // Timer test
     _nrk_setup_timer();
 
-    myled = 1;
     while (1) {
     }
 
@@ -114,6 +111,7 @@ extern "C" void TIMER0_IRQHandler (void) {
     if((LPC_TIM0->IR & 0x01) == 0x01) // if MR0 interrupt
     {
         LPC_TIM0->IR |= (1 << 0); // Clear MR0 interrupt flag
+        nrk_led_toggle(ORANGE_LED);
     }
 }
 
