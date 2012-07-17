@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 PROJECT=HelloWorld
-GCC4MBED_DIR=/Users/dbanks/mbed_offline
 LIBS_PREFIX=
 LIBS_SUFFIX=
 GCC4MBED_DELAYED_STDIO_INIT=1

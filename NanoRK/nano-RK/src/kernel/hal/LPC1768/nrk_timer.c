@@ -54,7 +54,7 @@ void _nrk_setup_timer() {
     LPC_TIM0->PR = 93750; // set prescale to 93750 (1024 Hz timer)
     
     LPC_TIM0->MR0 = 254; // match0 compare value (8-bit)
-    LPC_TIM0->MCR |= BM(0)|BM(2); // interrupt and reset on match0 compare
+    LPC_TIM0->MCR |= BM(0)|BM(1); // interrupt and reset on match0 compare
     
     NVIC_EnableIRQ(TIMER0_IRQn); // enable timer interrupt
     
@@ -64,7 +64,8 @@ void _nrk_setup_timer() {
     LPC_SC->PCLKSEL0 |= BM(4)|BM(5); // clock = CCLK/4 (24 MHz)
     LPC_TIM1->PR = 0; // set prescale to 3 (8 MHz timer)
     
-    LPC_TIM1->MR0 = 65535;
+    LPC_TIM1->MR0 = 65535; // match0 compare value (16-bit)
+    LPC_TIM1->MCR |= BM(0)|BM(1); // interrupt and reset on match0 compare
     
     NVIC_EnableIRQ(TIMER1_IRQn); // enable timer interrupt
     
@@ -318,7 +319,7 @@ void TIMER2_COMPA_vect( void ) __attribute__ ( ( signal,naked ));
 void TIMER2_COMPA_vect(void) {
     asm volatile (
                   "push    r0 \n\t" \
-                  "in      r0, __SREG__  \n\t" \ 
+                  "in      r0, __SREG__  \n\t" \
                   "push    r0  \n\t" \
                   "push    r1 \n\t" \
                   "push    r2 \n\t" \
