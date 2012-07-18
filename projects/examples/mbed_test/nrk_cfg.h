@@ -26,7 +26,8 @@
 // This will only activate if the scheduler fails.
 /* Dalton Banks - commented out for compilation */
 // #define NRK_WATCHDOG
-#define NRK_REBOOT_ON_ERROR
+/* Dalton Banks - commented out for execution */
+// #define NRK_REBOOT_ON_ERROR
 //#define NRK_SOFT_REBOOT_ON_ERROR
 
 

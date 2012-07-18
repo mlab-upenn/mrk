@@ -375,8 +375,7 @@ void _nrk_scheduler()
 #endif
     nrk_stack_pointer_restore();
     //nrk_int_enable();
-    /* Dalton Banks */
-    //nrk_start_high_ready_task();
+    nrk_start_high_ready_task();
 
 }
 

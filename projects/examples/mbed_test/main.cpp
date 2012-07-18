@@ -37,29 +37,37 @@ NRK_STK Stack1[NRK_APP_STACKSIZE];
 nrk_task_type TaskOne;
 void Task1(void);
 
-Serial pc(USBTX, USBRX); // tx, rx
+
 
 void nrk_create_taskset();
 
 int main ()
 {
-    pc.printf("in main");
     nrk_setup_ports();
     //nrk_setup_uart(UART_BAUDRATE_115K2);
 
     // Timer test
-    _nrk_setup_timer();
-
-    while (1) {
-    }
 
     nrk_init();
     nrk_time_set(0,0);
-
-
-
     //nrk_create_taskset ();
     nrk_start();
+
+    while (1) {
+        nrk_led_toggle(ORANGE_LED);
+        wait(0.2);
+        nrk_led_toggle(ORANGE_LED);
+        wait(0.2);
+    }
+
+
+    while (1) {
+        nrk_led_toggle(ORANGE_LED);
+        wait(0.2);
+        nrk_led_toggle(ORANGE_LED);
+        wait(0.2);
+    }
+
     //nrk_gpio_set();
     return 0;
 }
