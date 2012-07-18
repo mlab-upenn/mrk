@@ -46,7 +46,7 @@
 // has been over written on all suspend calls
 #define NRK_STACK_CHECK
 
-//#define KERNEL_STK_ARRAY
+#define KERNEL_STK_ARRAY
 // Leave NRK_NO_POWER_DOWN define in if the target can not wake up from sleep 
 // because it has no asynchronously clocked
 // #define NRK_NO_POWER_DOWN

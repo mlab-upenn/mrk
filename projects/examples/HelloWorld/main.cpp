@@ -16,22 +16,18 @@
    to be built under GCC.
 */
 #include <mbed.h>
-#include <foo.h>
+extern "C" void test(int value);
 
 DigitalOut myled(LED1);
-DigitalOut myled2(LED2);
 
-int blink = 1;
+int value = 0;
 
 int main() 
 {
     while(1) 
     {
-        toggle(&blink);
-        myled = blink;
+        test(value);
         wait(0.2);
-        toggle(&blink);
-        myled = blink;
-        wait(0.2);
+        value = ~value;
     }
 }

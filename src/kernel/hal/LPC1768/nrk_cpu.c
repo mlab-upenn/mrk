@@ -35,6 +35,8 @@
 #include <nrk_timer.h>
 #include <nrk_error.h>
 
+Serial pc2(USBTX, USBRX); // tx, rx
+
 #define BUILD_DATE "Date: " __DATE__ "\n"
 /* Constants required to set up the initial stack. */
 #define INITIAL_XPSR			( 0x01000000 )
@@ -142,6 +144,7 @@ void *nrk_task_stk_init (void (*task)(), NRK_STK *ptos, NRK_STK *pbos)
 /* Dalton Banks - changed all stack pointers to NRK_STK types */
 void nrk_stack_pointer_init()
 {
+    pc2.printf("enter nrk_stack_pointer_init()\r\n");
     NRK_STK *stkc;
     #ifdef KERNEL_STK_ARRAY
             stkc = &nrk_kernel_stk[NRK_KERNEL_STACKSIZE-1];
@@ -150,6 +153,7 @@ void nrk_stack_pointer_init()
         #else
             stkc = (NRK_STK *)(NRK_KERNEL_STK_TOP-NRK_KERNEL_STACKSIZE);
             *stkc = STK_CANARY_VAL;
+    pc2.printf("nrk_stack_pointer_init debug point\r\n");
             stkc = (NRK_STK *)NRK_KERNEL_STK_TOP;
             nrk_kernel_stk_ptr = (NRK_STK *)NRK_KERNEL_STK_TOP;
         #endif
@@ -165,7 +169,8 @@ void nrk_stack_pointer_restore()
     unsigned char *stkc;
 
     #ifdef KERNEL_STK_ARRAY
-            stkc = (uint16_t*)&nrk_kernel_stk[NRK_KERNEL_STACKSIZE-1];
+            /* Dalton Banks - changed (uint16_t*) cast to (unsigned char*) */
+            stkc = (unsigned char*)&nrk_kernel_stk[NRK_KERNEL_STACKSIZE-1];
     #else
             stkc = (unsigned char *)NRK_KERNEL_STK_TOP;
     #endif

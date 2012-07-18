@@ -41,6 +41,7 @@
 #include <nrk_stats.h>
 #include <nrk_sw_wdt.h>
 
+
 uint8_t _nrk_cpu_state;
 
 // This define was moved into nrk_platform_time.h since it needs to be different based on the clk speed

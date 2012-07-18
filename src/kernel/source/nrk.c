@@ -292,7 +292,11 @@ stkc = NRK_KERNEL_STK_TOP;
     // *stkc++ = (uint16_t)((uint16_t)_nrk_timer_tick&0xFF);
     // *stkc = (uint16_t)((uint16_t)_nrk_timer_tick>>8); 
      */
+    pc.printf("call nrk_target_start()\r\n");
     nrk_target_start();
+    //pc.printf("call nrk_foo()\r\n");
+    //nrk_foo();
+    pc.printf("call nrk_stack_pointer_init()\r\n");
     nrk_stack_pointer_init(); 
     pc.printf("call nrk_start_high_ready_task()\r\n");
     nrk_start_high_ready_task();	
@@ -361,5 +365,3 @@ uint16_t nrk_version (void)
 {
     return (NRK_VERSION);
 }
-
-

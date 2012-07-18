@@ -82,4 +82,4 @@ main.o: main.cpp /Users/dbanks/mbed_offline/external/mbed/mbed.h \
  /Users/dbanks/mbed_offline/arm-2011.03/bin/../lib/gcc/arm-none-eabi/4.5.2/../../../../arm-none-eabi/include/sys/stat.h \
  /Users/dbanks/mbed_offline/external/mbed/InterruptIn.h \
  /Users/dbanks/mbed_offline/external/mbed/wait_api.h \
- /Users/dbanks/mbed_offline/external/mbed/rtc_time.h foo.h
+ /Users/dbanks/mbed_offline/external/mbed/rtc_time.h

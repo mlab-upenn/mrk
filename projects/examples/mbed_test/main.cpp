@@ -30,45 +30,36 @@
 #include <nrk_timer.h>
 #include <nrk_stack_check.h>
 #include <nrk_stats.h>
-#include <mbed.h>
 
+Serial pc3(USBTX, USBRX); // tx, rx
 
 NRK_STK Stack1[NRK_APP_STACKSIZE];
 nrk_task_type TaskOne;
 void Task1(void);
 
-
-
 void nrk_create_taskset();
 
 int main ()
 {
+    pc3.printf("begin main()\r\n");
     nrk_setup_ports();
     //nrk_setup_uart(UART_BAUDRATE_115K2);
 
     // Timer test
-
     nrk_init();
+
+    nrk_led_clr(ORANGE_LED);
+    nrk_led_clr(BLUE_LED);
+    nrk_led_clr(GREEN_LED);
+    nrk_led_clr(RED_LED);
+
     nrk_time_set(0,0);
-    //nrk_create_taskset ();
+    nrk_create_taskset();
     nrk_start();
 
     while (1) {
-        nrk_led_toggle(ORANGE_LED);
-        wait(0.2);
-        nrk_led_toggle(ORANGE_LED);
-        wait(0.2);
     }
 
-
-    while (1) {
-        nrk_led_toggle(ORANGE_LED);
-        wait(0.2);
-        nrk_led_toggle(ORANGE_LED);
-        wait(0.2);
-    }
-
-    //nrk_gpio_set();
     return 0;
 }
 
@@ -110,23 +101,4 @@ void nrk_create_taskset()
     TaskOne.offset.nano_secs= 0;
     nrk_activate_task (&TaskOne);
 
-
-
 }
-
-
-extern "C" void TIMER0_IRQHandler (void) {
-    if((LPC_TIM0->IR & 0x01) == 0x01) // if MR0 interrupt
-    {
-        LPC_TIM0->IR |= (1 << 0); // Clear MR0 interrupt flag
-        nrk_led_toggle(ORANGE_LED);
-    }
-}
-
-extern "C" void TIMER1_IRQHandler (void) {
-    if((LPC_TIM1->IR & 0x01) == 0x01) // if MR0 interrupt
-    {
-        LPC_TIM1->IR |= (1 << 0); // Clear MR0 interrupt flag
-    }
-}
-

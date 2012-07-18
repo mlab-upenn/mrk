@@ -1,16 +1,4 @@
-# Copyright 2011 Adam Green (http://mbed.org/users/AdamGreen/)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# mbed offline compilation-specific parameters
 PROJECT=HelloWorld
 LIBS_PREFIX=
 LIBS_SUFFIX=
@@ -19,11 +7,14 @@ GCC4MBED_DELAYED_STDIO_INIT=1
 # Platform name  cc2420DK, firefly, micaZ, firefly2_1, firefly2_2, firefly2_3
 PLATFORM = mbed
 
-# main file
+# Target file name (without extension).
 TARGET = main
 
+# Set the Port that you programmer is connected to 
+PROGRAMMING_PORT = /Volumes/MBED
+
 # Set this such that the nano-RK directory is the base path
-NANORK_DIR = $(GCC4MBED_DIR)/NanoRK/nano-RK
+NANORK_DIR = $(GCC4MBED_DIR)/mrk
 
 # Set platform specific defines 
 # The following will be defined based on the PLATFORM variable:
@@ -31,6 +22,7 @@ NANORK_DIR = $(GCC4MBED_DIR)/NanoRK/nano-RK
 # MCU (e.g. atmega32, atmega128, atmega1281) 
 # RADIO (e.g. cc2420)
 include $(NANORK_DIR)/include/platform.mk
+
 
 # Add extra source files. 
 # For example:
@@ -42,5 +34,6 @@ include $(NANORK_DIR)/include/platform.mk
 # EXTRAINCDIRS += $(ROOT_DIR)/src/platform/include
 EXTRAINCDIRS = 
 
+
 #  This is where the final compile and download happens
-include $(GCC4MBED_DIR)/build/gcc4mbed.mk
+include $(NANORK_DIR)/include/platform/mbed/common.mk

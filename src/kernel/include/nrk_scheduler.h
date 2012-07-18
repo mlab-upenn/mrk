@@ -47,7 +47,7 @@ extern uint16_t next_next_wakeup;
 uint16_t _nrk_get_next_next_wakeup();
 
 // defined in hardware specific assembly file
-void nrk_start_high_ready_task();
+extern "C" void nrk_start_high_ready_task();
 
 #endif
 

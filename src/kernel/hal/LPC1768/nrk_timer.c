@@ -385,3 +385,19 @@ SIGNAL(SIG_OUTPUT_COMPARE1A) {
 	return;  	
 } 
 */
+
+extern "C" void TIMER0_IRQHandler (void) {
+    if((LPC_TIM0->IR & 0x01) == 0x01) // if MR0 interrupt
+    {
+        LPC_TIM0->IR |= (1 << 0); // Clear MR0 interrupt flag
+        nrk_led_toggle(ORANGE_LED);
+    }
+}
+
+extern "C" void TIMER1_IRQHandler (void) {
+    if((LPC_TIM1->IR & 0x01) == 0x01) // if MR0 interrupt
+    {
+        LPC_TIM1->IR |= (1 << 0); // Clear MR0 interrupt flag
+    }
+}
+
