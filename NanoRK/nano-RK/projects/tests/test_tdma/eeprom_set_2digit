@@ -1,2 +1,0 @@
-#!/bin/bash
-../../../tools/EEPROM_mac_set/config-eeprom /dev/ttyUSB1 000000$1 15
