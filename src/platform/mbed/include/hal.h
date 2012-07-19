@@ -153,8 +153,11 @@ FASTSPI_WAIT(); \
 
 //-------------------------------------------------------------------------------------------------------
 // General
-#define ENABLE_GLOBAL_INT()         do { asm ("cpsie i\n\t" ::); } while (0)
-#define DISABLE_GLOBAL_INT()        do { asm ("cpsid i\n\t" ::); } while (0)
+
+extern "C" void ENABLE_GLOBAL_INT();
+extern "C" void DISABLE_GLOBAL_INT();
+//#define ENABLE_GLOBAL_INT()         do { asm ("cpsie i\n\t" ::); } while (0)
+//#define DISABLE_GLOBAL_INT()        do { asm ("cpsid i\n\t" ::); } while (0)
 //-------------------------------------------------------------------------------------------------------
 
 // Abhijeet
